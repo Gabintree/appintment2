@@ -32,8 +32,8 @@ public class ConnectController {
 
         testService.save(testDto);
 
-        // System.out.println("testController.save");
-        // System.out.println("testDto : " + testDto);
+        System.out.println("testController.save");
+        System.out.println("testDto : " + testDto);
         
         return "index";
 
