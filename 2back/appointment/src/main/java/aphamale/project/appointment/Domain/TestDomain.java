@@ -1,46 +1,48 @@
 package aphamale.project.appointment.Domain;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 
-import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
+import lombok.Setter;
 
 @Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@ToString(exclude = "getTesTList")
-@Table(name="user")
+@Setter
+@Table(name="userInfo")
 public class TestDomain {
-    @Id 
+    @Id // 기본키라는 뜻임  //@GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private String id;
+
+    @Column
     private String password;
+
+    @Column
     private String name;
+   
+    @Column
     private String gender;
+
+    @Column
     private int age;
+
+    @Column
     private String phone;
-    private String user_gbn;
-    private String remark;
-    private Timestamp insert_date;
-    private Timestamp update_date;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Builder.Default
-    private ArrayList<TestDomain> getTesTList = new ArrayList<>();
+    @Column
+    private String userGbn;
 
-    public TestDomain(String id, String password, String name, String gender, int age, String phone, String user_gbn, String remark, Timestamp insert_date, Timestamp update_date){
+    @Column
+    private String hospitalId;
 
-    }
+    @Column
+    private Timestamp insertDate;
+
+    @Column
+    private Timestamp updateDate;
+
     
 }

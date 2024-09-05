@@ -1,4 +1,4 @@
--- create table user(
+-- create table user_info(
 -- id varchar(30),
 -- password varchar(50) not null,
 -- name varchar(30),
@@ -12,7 +12,34 @@
 -- primary key(id)
 -- );
 
--- insert into user (id, password, name, gender, age, phone, user_gbn, hospital_id, insert_date, update_date) 
+-- insert into user_info (id, password, name, gender, age, phone, user_gbn, hospital_id, insert_date, update_date) 
 -- 		  values ('admin0', '0000', '사용자측', '0', 30, '010-1234-1234', '0', null, now(), now() ) ;
 
-select * from user;
+-- create table reserve(
+-- id varchar(30),
+-- hospital_id varchar(30),
+-- hospital_name varchar(30),
+-- hospital_address varchar(100),
+-- subject varchar(30), -- 진료과목 
+-- reserve_date datetime,
+-- reserve_time time,
+-- remark varchar(100), -- 예약시 메세지(증상 등) 
+-- primary key(id, hospital_id)
+-- );
+
+-- create table hospital_status(
+-- id varchar(30),
+-- flag varchar(1),
+-- primary key(id)
+-- );
+
+
+
+
+select * from user_info
+
+
+
+ 
+
+
