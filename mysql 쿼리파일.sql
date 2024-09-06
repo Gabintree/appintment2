@@ -3,9 +3,10 @@ USE APPOINTMENT;
 create table user_info(
 user_id varchar(30),
 user_pw varchar(50) not null,
-name varchar(30),
+user_name varchar(30),
+resident_no varchar(30),
+birth_date date,
 gender varchar(1), -- 0 : 여성, 1: 남성
-age int,
 phone varchar(30),
 insert_date datetime, -- 가입일
 update_date datetime, -- 수정일
