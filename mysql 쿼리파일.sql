@@ -23,6 +23,7 @@
 -- subject varchar(30), -- 진료과목 
 -- reserve_date datetime,
 -- reserve_time time,
+-- alarm_flag varchar(1), -- 알림톡 수신 여부
 -- remark varchar(100), -- 예약시 메세지(증상 등) 
 -- primary key(id, hospital_id)
 -- );
