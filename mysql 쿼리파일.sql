@@ -1,3 +1,5 @@
+USE APPOINTMENT;
+
 -- create table user_info(
 -- id varchar(30),
 -- password varchar(50) not null,
@@ -30,6 +32,7 @@
 
 -- create table hospital_status(
 -- id varchar(30),
+-- hospital_id varchar(30),
 -- flag varchar(1),
 -- primary key(id)
 -- );
