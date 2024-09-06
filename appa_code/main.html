@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>손쉬운 병원 예약</title>
+    <link rel="stylesheet" href="./main.css">
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">로고</div>
+        <nav>
+            <a class="login" href="#">로그인</a>
+            <a class="signup" href="#">회원가입</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>불필요한 대기시간과 복잡한 절차없이, 스마트하고 편리한 예약 시스템을 경험해보세요.</h2>
+                <h1>손쉬운 병원 예약<br>이제 클릭 한 번으로!</h1>
+            </div>
+        </section>
+
+        <section class="search">
+            <div class="search-bar">
+                <select><option>시/도 선택</option></select>
+                <select><option>구/군 선택</option></select>
+                <select><option>진료과 선택</option></select>
+                <input type="date" placeholder="날짜 선택">
+                <input type="time" placeholder="시간 선택">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="card-container">
+                <button class="nav-button left">&lt;</button>
+                <div class="card">
+                    <h3>진료과</h3>
+                    <h2>병원 이름</h2>
+                    <p>운영시간: 09:00 - 18:00</p>
+                    <p>거리: 1.5km</p>
+                </div>
+                <div class="card">
+                    <h3>진료과</h3>
+                    <h2>병원 이름</h2>
+                    <p>운영시간: 09:00 - 18:00</p>
+                    <p>거리: 1.5km</p>
+                </div>
+                <div class="card">
+                    <h3>진료과</h3>
+                    <h2>병원 이름</h2>
+                    <p>운영시간: 09:00 - 18:00</p>
+                    <p>거리: 1.5km</p>
+                </div>
+                <button class="nav-button right">&gt;</button>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

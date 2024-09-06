@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>병원 예약 시스템 - 환자 대시보드</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            padding: 20px;
+            flex-shrink: 0;
+        }
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: #333;
+        }
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid #dee2e6;
+            background-color: #f8f9fa;
+            height: 60px;
+            box-sizing: border-box;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+        .top-section, .bottom-section {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px;
+        }
+        .top-section {
+            display: flex;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .left-content {
+            flex: 3;
+            padding-right: 20px;
+            border-right: 1px solid #dee2e6;
+        }
+        .right-content {
+            flex: 1;
+            padding-left: 20px;
+        }
+        .search-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .search-option {
+            flex: 1;
+            min-width: 0;
+        }
+        input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: left;
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+        height: 40px;
+        box-sizing: border-box;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: transparent;
+        background: transparent;
+        cursor: pointer;
+    }
+    .date-input input[type="date"] {
+        width: auto;
+        margin-left: 5px;
+    }
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+        .dropbtn {
+            width: 100%;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            height: 40px;
+            box-sizing: border-box;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {background-color: #f1f1f1}
+        .show {display:block;}
+        .search-button {
+            padding: 10px 15px;
+            background-color: #eaf4ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            height: 40px;
+            box-sizing: border-box;
+        }
+        .hospital-card {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .date-range {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .date-input {
+            display: flex;
+            align-items: center;
+        }
+        .date-input label {
+            margin-right: 5px;
+            white-space: nowrap;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>메뉴</h2>
+        <ul>
+            <li><a href="#hospitals">병원 목록</a></li>
+            <li><a href="#appointments">예약 내역</a></li>
+            <li><a href="#manage">예약 관리</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <div class="welcome-message">어서오세요, 여수연님</div>
+            <div class="user-info">
+                <a href="#mypage">마이페이지</a>
+                <div class="user-avatar">YSY</div>
+                <span>여수연님</span>
+            </div>
+        </div>
+        <div class="content-area">
+            <div class="top-section">
+                <div class="left-content">
+                    <h1>환자 대시보드</h1>
+                    <div class="dashboard-section" id="hospitals">
+                        <h2>병원 목록</h2>
+                        <div class="search-options">
+                            <div class="search-option">
+                                <div class="dropdown">
+                                    <button onclick="toggleDropdown('city')" class="dropbtn">시/도 선택</button>
+                                    <div id="cityDropdown" class="dropdown-content">
+                                        <a href="#" onclick="selectOption('city', '서울')">서울</a>
+                                        <a href="#" onclick="selectOption('city', '경기')">경기</a>
+                                        <!-- 다른 시/도 옵션들 -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="search-option">
+                                <div class="dropdown">
+                                    <button onclick="toggleDropdown('district')" class="dropbtn">구/군 선택</button>
+                                    <div id="districtDropdown" class="dropdown-content">
+                                        <a href="#" onclick="selectOption('district', '강남구')">강남구</a>
+                                        <a href="#" onclick="selectOption('district', '서초구')">서초구</a>
+                                        <!-- 다른 구/군 옵션들 -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="search-option">
+                                <div class="dropdown">
+                                    <button onclick="toggleDropdown('department')" class="dropbtn">진료과목 선택</button>
+                                    <div id="departmentDropdown" class="dropdown-content">
+                                        <a href="#" onclick="selectOption('department', '내과')">내과</a>
+                                        <a href="#" onclick="selectOption('department', '외과')">외과</a>
+                                        <!-- 다른 진료과목 옵션들 -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="search-option">
+                                <div class="dropdown">
+                                    <input type="date" id="dateInput" class="dropbtn" onchange="selectDate(this.value)">
+                                </div>
+                            </div>
+                            <div class="search-option">
+                                <div class="dropdown">
+                                    <button onclick="toggleDropdown('time')" class="dropbtn">시간 선택</button>
+                                    <div id="timeDropdown" class="dropdown-content">
+                                        <!-- 시간 옵션들은 JavaScript로 동적으로 생성됩니다 -->
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="search-button" onclick="searchHospitals()">🔍</button>
+                        </div>
+                        <div class="hospital-list" id="hospital-results">
+                            <!-- 병원 검색 결과가 여기에 표시됩니다 -->
+                        </div>
+                    </div>
+                </div>
+                <div class="right-content">
+                    <div class="dashboard-section" id="summary">
+                        <h2>예약 요약</h2>
+                        <p>총 예약 건수: 3건</p>
+                        <p>다음 예약: 2024년 3월 20일</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-section">
+                <div class="dashboard-section" id="appointments">
+                    <h2>예약 내역</h2>
+                    <div class="date-range">
+                        <div class="date-input">
+                            <label for="start-date">시작일</label>
+                            <input type="date" id="start-date" name="start-date">
+                        </div>
+                        <div class="date-input">
+                            <label for="end-date">종료일</label>
+                            <input type="date" id="end-date" name="end-date">
+                        </div>
+                        <button onclick="filterAppointments()">조회</button>
+                    </div>
+                    <table id="appointments-table">
+                        <thead>
+                            <tr>
+                                <th>날짜</th>
+                                <th>시간</th>
+                                <th>병원</th>
+                                <th>진료과</th>
+                                <th>상태</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-body">
+                            <!-- 예약 내역이 여기에 동적으로 추가됩니다 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 예시 예약 데이터
+        const appointments = [
+            { date: '2024-03-20', time: '14:00', hospital: '서울 중앙 병원', department: '내과', status: '예약 완료' },
+            { date: '2024-03-25', time: '10:30', hospital: '강남 세브란스 병원', department: '정형외과', status: '예약 완료' },
+            { date: '2024-04-05', time: '11:00', hospital: '부산 대학 병원', department: '피부과', status: '예약 완료' },
+            { date: '2024-08-15', time: '09:30', hospital: '서울 아산 병원', department: '안과', status: '예약 완료' },
+            { date: '2024-09-01', time: '13:00', hospital: '연세 세브란스 병원', department: '이비인후과', status: '예약 완료' }
+        ];
+
+        // 예약된 시간 예시 (실제로는 서버에서 가져와야 합니다)
+        const bookedTimes = ['10:00', '14:30', '16:00'];
+
+        function toggleDropdown(id) {
+            document.getElementById(id + "Dropdown").classList.toggle("show");
+        }
+
+        function selectOption(type, value) {
+            document.querySelector(`#${type}Dropdown`).previousElementSibling.textContent = value;
+            document.querySelector(`#${type}Dropdown`).classList.remove("show");
+            searchHospitals();
+        }
+
+        function selectDate(value) {
+            document.querySelector('#dateDropdown').previousElementSibling.textContent = value;
+            document.querySelector('#dateDropdown').classList.remove("show");
+            searchHospitals();
+        }
+
+        function selectDate(value) {
+        document.getElementById('dateInput').value = value;
+        searchHospitals();
+    }
+
+        function generateTimeOptions() {
+            const timeDropdown = document.getElementById('timeDropdown');
+            timeDropdown.innerHTML = ''; // 기존 옵션 초기화
+
+            for (let hour = 9; hour < 18; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                    const isBooked = bookedTimes.includes(time);
+                    const option = document.createElement('a');
+                    option.href = '#';
+                    option.textContent = time;
+                    if (isBooked) {
+                        option.classList.add('disabled');
+                    } else {
+                        option.onclick = function() { selectTime(time); };
+                    }
+                    timeDropdown.appendChild(option);
+                }
+            }
+        }
+
+        function selectTime(time) {
+            document.querySelector('#timeDropdown').previousElementSibling.textContent = time;
+            document.querySelector('#timeDropdown').classList.remove("show");
+            searchHospitals();
+        }
+        function selectDate(value) {
+        document.getElementById('dateInput').value = value;
+        searchHospitals();
+    }
+
+    function searchHospitals() {
+        const city = document.querySelector('.search-options .dropbtn:nth-of-type(1)').textContent;
+        const district = document.querySelector('.search-options .dropbtn:nth-of-type(2)').textContent;
+        const department = document.querySelector('.search-options .dropbtn:nth-of-type(3)').textContent;
+        const date = document.getElementById('dateInput').value;
+        const time = document.querySelector('.search-options .dropbtn:nth-of-type(5)').textContent;
+            // 여기서 실제로는 서버에 요청을 보내 병원 목록을 가져와야 합니다.
+            // 지금은 예시로 간단한 결과를 표시합니다.
+            const results = `
+                <div class="hospital-card">
+                    <h3>서울 중앙 병원</h3>
+         
+  <p>진료과목: ${department !== '진료과목 선택' ? department : '모든 과목'}</p>
+                    <p>위치: ${city !== '시/도 선택' ? city : ''} ${district !== '구/군 선택' ? district : ''}</p>
+                    <p>날짜: ${date !== '날짜 선택' ? date : '날짜 미지정'}</p>
+                    <p>시간: ${time !== '시간 선택' ? time : '시간 미지정'}</p>
+                </div>
+            `;
+
+            document.getElementById('hospital-results').innerHTML = results;
+        }
+
+        function filterAppointments() {
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            
+            const filteredAppointments = appointments.filter(appointment => {
+                return appointment.date >= startDate && appointment.date <= endDate;
+            });
+
+            displayAppointments(filteredAppointments);
+        }
+
+        function displayAppointments(appointmentsToDisplay) {
+            const tbody = document.getElementById('appointments-body');
+            tbody.innerHTML = '';
+
+            appointmentsToDisplay.forEach(appointment => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${appointment.date}</td>
+                    <td>${appointment.time}</td>
+                    <td>${appointment.hospital}</td>
+                    <td>${appointment.department}</td>
+                    <td>${appointment.status}</td>
+                    <td>
+                        <button onclick="changeAppointment('${appointment.date}', '${appointment.time}')">변경</button>
+                        <button onclick="cancelAppointment('${appointment.date}', '${appointment.time}')">취소</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function changeAppointment(date, time) {
+            alert(`${date} ${time} 예약을 변경합니다.`);
+            // 여기에 예약 변경 로직을 구현합니다.
+        }
+
+        function cancelAppointment(date, time) {
+            alert(`${date} ${time} 예약을 취소합니다.`);
+            // 여기에 예약 취소 로직을 구현합니다.
+        }
+
+        // 전역 클릭 이벤트 리스너 추가
+        window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn') && !event.target.matches('input[type="date"]')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+
+        // 페이지 로드 시 초기 데이터 표시 및 시간 옵션 생성
+        window.onload = function() {
+            displayAppointments(appointments);
+            generateTimeOptions();
+            searchHospitals();
+        };
+    </script>
+</body>
+</html>
