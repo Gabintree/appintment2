@@ -19,6 +19,8 @@ group_id varchar(30), -- 기관ID
 hospital_name varchar(30),
 hospital_address varchar(100),
 tell_no varchar(30),
+insert_date datetime, -- 가입일
+update_date datetime, -- 수정일
 primary key(hospital_id, group_id)
 );
 
@@ -58,8 +60,6 @@ references hospital_info(hospital_id, group_id)
 
 
 select * from user_info
-
-sel
 
 
 
