@@ -11,11 +11,13 @@ USE APPOINTMENT;
 -- hospital_id varchar(30), -- uer_gbn이 1일 경우 기관ID 입력 필수, 기본값 null
 -- insert_date datetime, -- 가입일
 -- update_date datetime, -- 수정일
--- primary key(id)
+-- primary key(id),
+-- unique key uk_key (hospital_id)
 -- );
 
 -- insert into user_info (id, password, name, gender, age, phone, user_gbn, hospital_id, insert_date, update_date) 
 -- 		  values ('admin0', '0000', '사용자측', '0', 30, '010-1234-1234', '0', null, now(), now() ) ;
+
 
 -- create table reserve(
 -- id varchar(30),
@@ -27,14 +29,21 @@ USE APPOINTMENT;
 -- reserve_time time,
 -- alarm_flag varchar(1), -- 알림톡 수신 여부
 -- remark varchar(100), -- 예약시 메세지(증상 등) 
--- primary key(id, hospital_id)
+-- primary key(id, hospital_id),
+-- foreign key(id)
+-- references user_info(id)
 -- );
+
+
+
 
 -- create table hospital_status(
 -- id varchar(30),
 -- hospital_id varchar(30),
 -- flag varchar(1),
--- primary key(id)
+-- primary key(id, hospital_id),
+-- foreign key(id)
+-- references user_info(id)
 -- );
 
 
