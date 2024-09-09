@@ -1,3 +1,6 @@
+-- 스키마 생성
+create database APPOINTMENT;
+
 USE APPOINTMENT;
 
 create table user_info(
@@ -16,6 +19,7 @@ primary key(user_id)
 create table hospital_info(
 hospital_id varchar(30),
 hospital_pw varchar(50) not null,
+corporate_no varchar(30), -- 사업자등록번호
 group_id varchar(30), -- 기관ID
 hospital_name varchar(30),
 hospital_address varchar(100),
