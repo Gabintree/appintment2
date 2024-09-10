@@ -9,8 +9,6 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -22,6 +20,7 @@ public class ConnectController {
     // 생성자 주입 방식(컨트롤러가 서비스에 있는 변수나 매서드를 사용할 수 있다는 뜻??)
     private final UserInfoService userInfoService;        
 
+    // 테스트
     @GetMapping("/api/hello")
     public String test() {
         return "Hello, world!";
@@ -59,15 +58,12 @@ public class ConnectController {
 
         if (loginResult != null) {
             // login 성공
-            session.setAttribute("loginId", loginResult.getUserId());
-
-            return "userDashboard"; // 사용자 계정이면 환자 대시보드, 관리자 계정이면 병원 대시보드로 이동 
+            return "login 성공"; // 사용자 계정이면 환자 대시보드, 관리자 계정이면 병원 대시보드로 이동 
         }
         else{
             // login 실패
-            return "login";  
+            return "login 실패";  
         }
-
     }
     
     

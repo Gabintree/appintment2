@@ -24,6 +24,7 @@ public class UserInfoDto {
     private Timestamp insertDate;
     private Timestamp updateDate;
 
+    // entity -> dto  객체로 변환하는 메서드
     public static UserInfoDto ToUserinfoDto(UserInfoDomain userInfoDomain){
         UserInfoDto userInfoDto = new UserInfoDto();
         userInfoDto.setUserId(userInfoDomain.getUserId());

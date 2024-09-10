@@ -14,7 +14,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="userInfo") // 테이블을 생성하는 기능인 듯
+@Table(name="userInfo") // 테이블을 지정하는 기능인 듯
 public class UserInfoDomain {
     @Id // 기본키라는 뜻임  //@GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private String userId; // 계정
@@ -43,7 +43,7 @@ public class UserInfoDomain {
     @Column
     private Timestamp updateDate; // 정보수정일
 
-    // entity -> dto 객체로 변환하는 메서드
+    // dto -> entity 객체로 변환하는 메서드
     public static UserInfoDomain ToUserInfoDomain(UserInfoDto userInfoDto){
 
         UserInfoDomain userInfoDomain = new UserInfoDomain();

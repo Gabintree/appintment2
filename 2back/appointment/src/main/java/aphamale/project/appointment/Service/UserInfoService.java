@@ -30,7 +30,7 @@ public class UserInfoService {
 
         // 1. 회원이 입력한 id로 db에서 조회 함.
         // 2. db에서 조회된 비밀번호와 사용자가 입력한 비밀번호가 일치하는 지 판단
-        Optional<UserInfoDomain> byUserId = userInfoRepository.findByUserInfoId(userInfoDto.getUserId());
+        Optional<UserInfoDomain> byUserId = userInfoRepository.findByUserId(userInfoDto.getUserId());
 
         if (byUserId.isPresent()) {
             // 조회 결과가 있다(해당 계정을 가진 회원 정보가 있다.)

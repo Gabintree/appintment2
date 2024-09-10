@@ -13,6 +13,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfoDomain, String
 
     // id로 회원 정보 조회 (select * from user_info where user_id = ?)
     // Optional은 null 방지 기능이라고 함.
-    Optional<UserInfoDomain> findByUserInfoId(String userId);
+    // findBy + 컬럼명
+    Optional<UserInfoDomain> findByUserId(String userId);
     
 }
