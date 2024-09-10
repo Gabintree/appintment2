@@ -3,6 +3,7 @@ package aphamale.project.appointment.Dto;
 import java.security.Timestamp;
 import java.sql.Date;
 
+import aphamale.project.appointment.Domain.UserInfoDomain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor // 기본 생성자를 자동으로 만들어 줌
 @ToString
-public class TestDto {
+public class UserInfoDto {
     private String userId;
     private String userPw;
     private String userName;
@@ -22,4 +23,15 @@ public class TestDto {
     private String phone;
     private Timestamp insertDate;
     private Timestamp updateDate;
+
+    public static UserInfoDto ToUserinfoDto(UserInfoDomain userInfoDomain){
+        UserInfoDto userInfoDto = new UserInfoDto();
+        userInfoDto.setUserId(userInfoDomain.getUserId());
+        userInfoDto.setUserPw(userInfoDomain.getUserPw());
+
+        return userInfoDto;
+    }
+
+
+
 }

@@ -3,7 +3,7 @@ package aphamale.project.appointment.Domain;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-import aphamale.project.appointment.Dto.TestDto;
+import aphamale.project.appointment.Dto.UserInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name="userInfo") // 테이블을 생성하는 기능인 듯
-public class TestDomain {
+public class UserInfoDomain {
     @Id // 기본키라는 뜻임  //@GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private String userId; // 계정
 
@@ -44,14 +44,14 @@ public class TestDomain {
     private Timestamp updateDate; // 정보수정일
 
     // entity -> dto 객체로 변환하는 메서드
-    public static TestDomain ToTestDomain(TestDto testDto){
+    public static UserInfoDomain ToUserInfoDomain(UserInfoDto userInfoDto){
 
-        TestDomain testDomain = new TestDomain();
+        UserInfoDomain userInfoDomain = new UserInfoDomain();
 
-        testDomain.setUserId(testDto.getUserId());
-        testDomain.setUserPw(testDto.getUserPw());
+        userInfoDomain.setUserId(userInfoDto.getUserId());
+        userInfoDomain.setUserPw(userInfoDto.getUserPw());
 
-        return testDomain;
+        return userInfoDomain;
     }
 
     

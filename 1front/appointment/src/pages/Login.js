@@ -8,13 +8,13 @@ const Login = () => {
 
     useEffect(() => {
         axios.get('/api/login')
-        .then(response => setLogin(response.data), setUserPw(response.data))
+        .then(response => setLogin(response.data))
         .catch(error => console.log(error))
     }, []);
 
     return(
         <div>            
-            <form action="api/login">
+            <form action="api/login" method="post">
                 <input type="text" name="userId" placeholder="아이디"></input>
                 <input type="text" name="userPw" placeholder="비밀번호"></input>
                 <input type="submit" value="로그인"></input>

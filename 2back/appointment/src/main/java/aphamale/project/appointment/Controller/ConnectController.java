@@ -3,11 +3,16 @@ package aphamale.project.appointment.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
-import aphamale.project.appointment.Dto.TestDto;
-import aphamale.project.appointment.Service.TestService;
+import aphamale.project.appointment.Dto.UserInfoDto;
+import aphamale.project.appointment.Service.UserInfoService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
 
 
 
@@ -15,29 +20,56 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class ConnectController {
     // 생성자 주입 방식(컨트롤러가 서비스에 있는 변수나 매서드를 사용할 수 있다는 뜻??)
-    private final TestService testService;        
+    private final UserInfoService userInfoService;        
 
     @GetMapping("/api/hello")
     public String test() {
         return "Hello, world!";
     }    
 
+    // 회원가입
     @GetMapping("/api/save")
     public String SaveForm() {
         return "save";
     }
 
+    // 회원가입 data insert
     @PostMapping("/api/save")
-    public String Save(@ModelAttribute TestDto testDto) {
+    public String Save(@ModelAttribute UserInfoDto userInfoDto) {
 
-        testService.save(testDto);
+        userInfoService.save(userInfoDto);
 
         System.out.println("testController.save");
-        System.out.println("testDto : " + testDto);
+        System.out.println("testDto : " + userInfoDto);
         
         return "login";
+    }
+
+    // 로그인
+    @GetMapping("/api/login")
+    public String loginForm() {
+        return "login";
+    }    
+
+    // 로그인 data select  
+    @PostMapping("/api/login")
+    public String login(@ModelAttribute UserInfoDto userInfoDto, HttpSession session) {
+
+        UserInfoDto loginResult = userInfoService.login(userInfoDto);
+
+        if (loginResult != null) {
+            // login 성공
+            session.setAttribute("loginId", loginResult.getUserId());
+
+            return "userDashboard"; // 사용자 계정이면 환자 대시보드, 관리자 계정이면 병원 대시보드로 이동 
+        }
+        else{
+            // login 실패
+            return "login";  
+        }
 
     }
+    
     
     
 
