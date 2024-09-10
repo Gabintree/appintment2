@@ -1,5 +1,6 @@
 package aphamale.project.appointment.Domain;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 import aphamale.project.appointment.Dto.TestDto;
@@ -16,42 +17,39 @@ import lombok.Setter;
 @Table(name="userInfo") // 테이블을 생성하는 기능인 듯
 public class TestDomain {
     @Id // 기본키라는 뜻임  //@GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
-    private String id;
+    private String userId; // 계정
 
     @Column
-    private String password;
+    private String userPw; // 비밀번호
 
     @Column
-    private String name;
+    private String userName; // 성명
+
+    @Column
+    private String residentNo; // 주민등록번호
+
+    @Column
+    private Date birthDate; // 생년월일    
    
     @Column
-    private String gender;
+    private String gender; // 성별
 
     @Column
-    private int age;
+    private String phone; // 연락처
 
     @Column
-    private String phone;
+    private Timestamp insertDate; // 회원가입일
 
     @Column
-    private String userGbn;
-
-    @Column
-    private String hospitalId;
-
-    @Column
-    private Timestamp insertDate;
-
-    @Column
-    private Timestamp updateDate;
+    private Timestamp updateDate; // 정보수정일
 
     // entity -> dto 객체로 변환하는 메서드
     public static TestDomain ToTestDomain(TestDto testDto){
 
         TestDomain testDomain = new TestDomain();
 
-        testDomain.setId(testDto.getId());
-        testDomain.setPassword(testDto.getPassword());
+        testDomain.setUserId(testDto.getUserId());
+        testDomain.setUserPw(testDto.getUserPw());
 
         return testDomain;
     }

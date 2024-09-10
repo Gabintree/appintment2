@@ -45,8 +45,8 @@ function App() {
             <a href='/api/list'>목록 조회 </a> */}
 
             <form action="api/save" method="post">
-                <input type="text" name="id" placeholder="아이디"></input>
-                <input type="text" name="password" placeholder="비밀번호"></input>
+                <input type="text" name="userId" placeholder="아이디"></input>
+                <input type="text" name="userPw" placeholder="비밀번호"></input>
                 <input type="submit" value="회원가입"></input>
             </form>
         </div>

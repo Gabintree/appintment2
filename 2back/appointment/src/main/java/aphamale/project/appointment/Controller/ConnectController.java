@@ -35,7 +35,7 @@ public class ConnectController {
         System.out.println("testController.save");
         System.out.println("testDto : " + testDto);
         
-        return "index";
+        return "login";
 
     }
     
