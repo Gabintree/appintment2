@@ -3,7 +3,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom"; // Router 사�
 import axios from "axios";
 import NavBar from "./components/NavBar";
 import Home from "./pages/home";
-import Login from "./pages/login"; // fix) 가빈님 로그인 페이지 파일 Login.js를 login.js로 수정함
+import Login from "./pages/Login"; // fix) 가빈님 로그인 페이지 파일 Login.js를 login.js로 수정할까요?
 import Register from "./pages/register";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
     <BrowserRouter>
       <NavBar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
