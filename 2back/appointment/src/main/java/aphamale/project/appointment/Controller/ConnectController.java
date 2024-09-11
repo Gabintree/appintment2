@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 import aphamale.project.appointment.Dto.UserInfoDto;
+import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.UserInfoService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -11,14 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-
-
-
 @RestController
 @RequiredArgsConstructor
 public class ConnectController {
     // 생성자 주입 방식(컨트롤러가 서비스에 있는 변수나 매서드를 사용할 수 있다는 뜻??)
-    private final UserInfoService userInfoService;        
+    private final UserInfoService userInfoService;      
+    private final HospitalApiService hospitalApiService;  
 
     // 테스트
     @GetMapping("/api/hello")
@@ -65,6 +64,21 @@ public class ConnectController {
             return "login 실패";  
         }
     }
+
+    // 회원가입
+    // @GetMapping("/api/list")
+    // public String ListForm() {
+    //     return "get List";
+    // }
+
+    @GetMapping("/api/list")
+    public String getList() {
+
+        hospitalApiService.SelectListApi();
+
+        return "get API";
+    }
+    
     
     
     
