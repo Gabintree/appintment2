@@ -28,9 +28,6 @@
 import React, {useEffect, useState} from 'react';
 import {  Routes, Route, BrowserRouter } from "react-router-dom";
 import axios from 'axios';
-import Login from './pages/Login';
-import Home from './pages/Home';
-
 function App() {
    const [hello, setHello] = useState('')
 
@@ -42,7 +39,10 @@ function App() {
 
     return (
         <div>
-            백엔드에서 가져온 데이터입니다 : {hello}
+            <h1 className="text-3xl font-bold underline">
+                백엔드에서 가져온 데이터입니다 : {hello}
+            </h1>
+
             {/* <a href='/api/save'>회원가입 </a> <br></br>
             <a href='/api/login'>로그인 </a> <br></br>
             <a href='/api/list'>목록 조회 </a> <br></br> */}
