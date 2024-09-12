@@ -1,8 +1,12 @@
 package aphamale.project.appointment.Controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
+
+import aphamale.project.appointment.Dto.HospitalApiDto;
 import aphamale.project.appointment.Dto.UserInfoDto;
 import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.UserInfoService;
@@ -65,16 +69,21 @@ public class ConnectController {
         }
     }
 
-    // 회원가입
+    // // 병원 목록 조회
     // @GetMapping("/api/list")
     // public String ListForm() {
     //     return "get List";
     // }
 
-    @GetMapping("/api/list")
-    public String getList() {
+    // 병원 목록 조회 api
+    @PostMapping("/api/list")
+    public String getList(@ModelAttribute HospitalApiDto hospitalParam) {
 
-        hospitalApiService.SelectListApi();
+        List<HospitalApiDto> hospitalList = hospitalApiService.SelectListApi(hospitalParam);
+        for(int i = 0; i < hospitalList.size(); i++){
+            System.out.println(hospitalList.get(i));
+        }
+        System.out.println();
 
         return "get API";
     }
