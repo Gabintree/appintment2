@@ -93,12 +93,7 @@ public class ConnectController {
         return "get API";
     }
 
-    // // 병원 목록 조회
-    // @GetMapping("/api/send")
-    // public String sendForm() {
-    //     return "get sendMsg";
-    // }
-
+    // sms 문자 전송
     @GetMapping("/api/send")
     public String sendMessage() {
 
