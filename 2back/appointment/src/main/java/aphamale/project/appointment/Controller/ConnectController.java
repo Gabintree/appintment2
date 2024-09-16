@@ -34,45 +34,45 @@ public class ConnectController {
         return "Hello, world!";
     }    
 
-    // 회원가입
-    @GetMapping("/api/save")
-    public String SaveForm() {
-        return "save";
-    }
+    // // 회원가입
+    // @GetMapping("/api/save")
+    // public String SaveForm() {
+    //     return "save";
+    // }
 
-    // 회원가입 data insert
-    @PostMapping("/api/save")
-    public String Save(@ModelAttribute UserInfoDto userInfoDto) {
+    // // 회원가입 data insert
+    // @PostMapping("/api/save")
+    // public String Save(@ModelAttribute UserInfoDto userInfoDto) {
 
-        userInfoService.save(userInfoDto);
+    //     userInfoService.save(userInfoDto);
 
-        System.out.println("testController.save");
-        System.out.println("testDto : " + userInfoDto);
+    //     System.out.println("testController.save");
+    //     System.out.println("testDto : " + userInfoDto);
         
-        return "login";
-    }
+    //     return "login";
+    // }
 
-    // 로그인
-    @GetMapping("/api/login")
-    public String loginForm() {
-        return "login";
-    }    
+    // // 로그인
+    // @GetMapping("/api/login")
+    // public String loginForm() {
+    //     return "login";
+    // }    
 
-    // 로그인 data select  
-    @PostMapping("/api/login")
-    public String login(@ModelAttribute UserInfoDto userInfoDto, HttpSession session) {
+    // // 로그인 data select  
+    // @PostMapping("/api/login")
+    // public String login(@ModelAttribute UserInfoDto userInfoDto, HttpSession session) {
 
-        UserInfoDto loginResult = userInfoService.login(userInfoDto);
+    //     UserInfoDto loginResult = userInfoService.login(userInfoDto);
 
-        if (loginResult != null) {
-            // login 성공
-            return "login 성공"; // 사용자 계정이면 환자 대시보드, 관리자 계정이면 병원 대시보드로 이동 
-        }
-        else{
-            // login 실패
-            return "login 실패";  
-        }
-    }
+    //     if (loginResult != null) {
+    //         // login 성공
+    //         return "login 성공"; // 사용자 계정이면 환자 대시보드, 관리자 계정이면 병원 대시보드로 이동 
+    //     }
+    //     else{
+    //         // login 실패
+    //         return "login 실패";  
+    //     }
+    // }
 
     // 병원 목록 조회
     @GetMapping("/api/list")

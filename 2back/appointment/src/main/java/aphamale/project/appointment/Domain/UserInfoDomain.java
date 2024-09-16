@@ -43,6 +43,7 @@ public class UserInfoDomain {
     @Column
     private Timestamp updateDate; // 정보수정일
 
+
     // dto -> entity 객체로 변환하는 메서드
     public static UserInfoDomain ToUserInfoDomain(UserInfoDto userInfoDto){
 
