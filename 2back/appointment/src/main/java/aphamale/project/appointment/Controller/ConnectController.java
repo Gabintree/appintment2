@@ -7,15 +7,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 
 import aphamale.project.appointment.Dto.HospitalApiDto;
-import aphamale.project.appointment.Dto.UserInfoDto;
 import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.MessageApiService;
 import aphamale.project.appointment.Service.UserInfoService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 

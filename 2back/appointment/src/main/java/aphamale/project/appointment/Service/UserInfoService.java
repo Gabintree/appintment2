@@ -1,14 +1,11 @@
 package aphamale.project.appointment.Service;
 
-import java.util.Optional;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.UserInfoDto;
 import aphamale.project.appointment.Repository.UserInfoRepository;
-import lombok.RequiredArgsConstructor;
 
 @Service
 //@RequiredArgsConstructor
@@ -27,6 +24,7 @@ public class UserInfoService {
 
         String userId = userInfoDto.getUserId();
         String userPw = userInfoDto.getUserPw();
+        String jwtRole = userInfoDto.getJwtRole();
 
         String bool = "false"; // 리턴 값
 
@@ -46,6 +44,7 @@ public class UserInfoService {
 
             userInfoDomain.setUserId(userId);
             userInfoDomain.setUserPw(bCryptPasswordEncoder.encode(userPw)); // 암호화
+            userInfoDomain.setJwtRole(jwtRole);
 
             // 저장
             userInfoRepository.save(userInfoDomain);
