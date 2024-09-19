@@ -16,6 +16,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import aphamale.project.appointment.Jwt.JwtFilter;
+import aphamale.project.appointment.Jwt.JwtUtil;
 import aphamale.project.appointment.Jwt.LoginFilter;
 
 
@@ -26,9 +28,12 @@ public class SecurityConfig {
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration) {
+    private final JwtUtil jwtUtil;
+
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil) {
 
         this.authenticationConfiguration = authenticationConfiguration;
+        this.jwtUtil = jwtUtil;
     }    
 
     //AuthenticationManager Bean 등록
@@ -64,14 +69,8 @@ public class SecurityConfig {
 
     // 인가 작업, 세션 설정 등 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{    
         
-        //LoiginFilter 경로 변경(자동으로 /login을 찾아 적용한다고 함, 그래서 변경 처리)
-        // LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration));
-        // loginFilter.setFilterProcessesUrl("/api/login");
-        // loginFilter.setUsernameParameter("userId"); // userId로 변경
-        // loginFilter.setPasswordParameter("userPw"); // userPw로 변경     
-
         // csrf disable, jwt방식은 STATELESS로 관리를 하기 때문에 disable 해도 된다고 한다.
         http.csrf((auth) -> auth.disable());
 
@@ -88,10 +87,12 @@ public class SecurityConfig {
                             .requestMatchers("/api/admin").hasRole("ADMIN") // ADMIN 권한을 가진 자만 접근 허용
                             .anyRequest().authenticated()); // 그 외는 로그인한 사용자만 접근 허용
           
+       // LoginFilter 보다 먼저 실행되도록, JwtFilter 등록 
+        http
+        .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
+       
         // 필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
-        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
-        //http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
-        //http.addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
         
 
         // 세션 설정                    
