@@ -1,7 +1,11 @@
 package aphamale.project.appointment.Service;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.UserInfoDto;
@@ -20,11 +24,12 @@ public class UserInfoService {
 
     }
 
+    // 회원가입
     public String JoinProcess(UserInfoDto userInfoDto){
 
         String userId = userInfoDto.getUserId();
         String userPw = userInfoDto.getUserPw();
-        String jwtRole = userInfoDto.getJwtRole();
+        String jwtRole = "USER"; // 사용자 계정의 ROLE은 USER로 저장.
 
         String bool = "false"; // 리턴 값
 
@@ -60,6 +65,14 @@ public class UserInfoService {
 
         return bool;
     }
+
+
+    // @Transactional
+    // @Modifying
+    // @Query("update userInfo a set a.jwtRefresh = :refresh where a.userId = :userId")
+    // public void updatejwtRefreshToken(@Param("userId") String userId, @Param("jwtRefresh") String refresh){
+
+    // }
 
     // // jwt 시큐리티 적용 전
     // // 회원가입 

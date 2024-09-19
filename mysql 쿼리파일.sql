@@ -5,7 +5,7 @@ USE APPOINTMENT;
 
 create table user_info(
 user_id varchar(30),
-user_pw varchar(100) not null, -- 암호화처리 하면서 100으로 길이 변경
+user_pw varchar(500) not null, -- 암호화처리 하면서 100으로 길이 변경
 user_name varchar(30),
 resident_no varchar(30),
 birth_date date,
@@ -14,12 +14,13 @@ phone varchar(30),
 insert_date datetime, -- 가입일
 update_date datetime, -- 수정일
 jwt_role varchar(30), -- jwt 로그인 권한 검증시 필요
+jwt_refresh varchar(1000), -- jwt refresh token 값
 primary key(user_id)
 );
 
 create table hospital_info(
 hospital_id varchar(30),
-hospital_pw varchar(100) not null, -- 암호화처리 하면서 100으로 길이 변경
+hospital_pw varchar(500) not null, -- 암호화처리 하면서 100으로 길이 변경
 corporate_no varchar(30), -- 사업자등록번호
 group_id varchar(30), -- 기관ID
 hospital_name varchar(30),
@@ -28,6 +29,7 @@ tell_no varchar(30),
 insert_date datetime, -- 가입일
 update_date datetime, -- 수정일
 jwt_role varchar(30), -- jwt 로그인 권한 검증시 필요
+jwt_refresh varchar(1000), -- jwt refresh token 값
 primary key(hospital_id, group_id)
 );
 
@@ -79,8 +81,6 @@ primary key(hospital_id, group_id),
 foreign key(hospital_id, group_id)
 references hospital_info(hospital_id, group_id)
 );
-
-
 
 select * from user_info;
 

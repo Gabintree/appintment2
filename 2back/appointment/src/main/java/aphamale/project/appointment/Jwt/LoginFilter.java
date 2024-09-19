@@ -3,6 +3,7 @@ package aphamale.project.appointment.Jwt;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,8 +11,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.CustomUserDetails;
+import aphamale.project.appointment.Repository.UserInfoRepository;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -23,7 +27,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     // 토큰 발행 
     private final JwtUtil jwtUtil;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    private final UserInfoRepository userInfoRepository;
+
+    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserInfoRepository userInfoRepository) {
 
         this.authenticationManager = authenticationManager;
         //LoiginFilter 경로 변경(자동으로 /login을 찾아 적용한다고 함, 그래서 변경 처리)    
@@ -32,6 +38,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         this.setPasswordParameter("userPw"); // userPw로 변경 
 
         this.jwtUtil = jwtUtil;
+        this.userInfoRepository = userInfoRepository;
     }      
 
     @Override
@@ -63,12 +70,38 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        // toeken 발행 요청
-        String token = jwtUtil.createJwt(userId, role, 24*60*60*1000L); // 24*60*60*1000L 이렇게 하면 하루인 듯
+        // 토큰 생성
+        String access = jwtUtil.createJwt("access", userId, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);     
 
-        // 발급된 token 담아 사용, 접두사 "Bearer " 필요, 띄워쓰기 필수
-        response.addHeader("Authorization", "Bearer " + token);
+        // db에 refresh Token 저장
+        addRefreshToken(userId, refresh, 86400000L);
+        
+        //응답 설정
+        response.setHeader("access", access); // 헤더에 액세스 토큰 넣고
+        response.addCookie(createCookie("refresh", refresh)); // 쿠키에 리프레쉬 토큰 넣고
+        response.setStatus(HttpStatus.OK.value()); // 응답 상태 코드
 
+
+
+
+        // 리프레쉬 토큰 발급 전 소스
+        // // userId 찾기
+        // CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+        // String userId = customUserDetails.getUsername();
+
+        // // role 찾기
+        // Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        // Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        // GrantedAuthority auth = iterator.next();
+
+        // String role = auth.getAuthority();
+
+        // // toeken 발행 요청
+        // String token = jwtUtil.createJwt(userId, role, 24*60*60*1000L); // 24*60*60*1000L 이렇게 하면 하루인 듯
+
+        // // 발급된 token 담아 사용, 접두사 "Bearer " 필요, 띄워쓰기 필수
+        // response.addHeader("Authorization", "Bearer " + token);
 
     }    
 
@@ -77,6 +110,31 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
 
         response.setStatus(401);
+    }    
+
+    // 쿠키 생성 매서드
+    private Cookie createCookie(String key, String value) {
+
+        Cookie cookie = new Cookie(key, value); // value에는 jwt 값
+        cookie.setMaxAge(24*60*60); // 쿠키의 생명 주기 하루?
+        //cookie.setSecure(true); // https 통신을 할 경우 
+        //cookie.setPath("/"); // 쿠키가 적용될 범위 설정
+        cookie.setHttpOnly(true); // 클라이언트 -> 서버로 접근하지 못하게 필수적으로 막는 것.
+    
+        return cookie;
+    }
+
+    // db에 refresh Token update 매서드
+    private void addRefreshToken(String userId, String refresh, Long expiredMs) {
+
+        // Date date = new Date(System.currentTimeMillis() + expiredMs); // 만료 기한 사용 안 하므로
+        // userInfoDomain.setExpiration(date.toString()); // 만료 기한 사용 안 하므로 w주석
+    
+        UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
+        userInfoDomain.setJwtRefresh(refresh);
+
+        userInfoRepository.save(userInfoDomain);
+
     }    
 
 }

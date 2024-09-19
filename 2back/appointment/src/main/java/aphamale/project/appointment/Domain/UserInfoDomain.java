@@ -3,6 +3,8 @@ package aphamale.project.appointment.Domain;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import aphamale.project.appointment.Dto.UserInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name="userInfo") // 테이블을 지정하는 기능인 듯
+@DynamicUpdate
 public class UserInfoDomain {
     @Id // 기본키라는 뜻임  //@GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private String userId; // 계정
@@ -45,6 +48,9 @@ public class UserInfoDomain {
 
     @Column
     private String jwtRole; // jwt 로그인시 권한 검증 필요 
+
+    @Column
+    private String jwtRefresh; // jwt refresh token 값 저장
 
 
     // dto -> entity 객체로 변환하는 메서드

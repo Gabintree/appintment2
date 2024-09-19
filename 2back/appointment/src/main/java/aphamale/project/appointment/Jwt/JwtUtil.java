@@ -34,6 +34,12 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
     }   
 
+    // 카테고리 구분(액세스 토큰인지, 리프레쉬 토큰인지)
+    public String getCategory(String token){
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
+    }
+
     // 유효기간 검증
     public Boolean isExpired(String token) {
 
@@ -41,8 +47,9 @@ public class JwtUtil {
     }   
 
     // 토큰 생성
-    public String createJwt(String username, String role, Long expriedMs){
+    public String createJwt(String category, String username, String role, Long expriedMs){
         return Jwts.builder()
+                .claim("category", category) // 액세스인지, 리프레쉬인지
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발행 시간

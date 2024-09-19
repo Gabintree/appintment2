@@ -1,7 +1,5 @@
 package aphamale.project.appointment.Config;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
@@ -16,11 +14,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import aphamale.project.appointment.Jwt.JwtFilter;
 import aphamale.project.appointment.Jwt.JwtUtil;
 import aphamale.project.appointment.Jwt.LoginFilter;
+import aphamale.project.appointment.Repository.UserInfoRepository;
 import jakarta.servlet.http.HttpServletRequest;
 
 
@@ -33,14 +30,17 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil) {
+    private final UserInfoRepository userInfoRepository;
+
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil, UserInfoRepository userInfoRepository) {
 
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.userInfoRepository = userInfoRepository;
     }    
 
     //AuthenticationManager Bean 등록
-	@Bean // SecurityFilterChain에 Bean등록 했으므로 여기꺼는 주석
+	@Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 
         return configuration.getAuthenticationManager();
@@ -88,6 +88,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> auth
                             .requestMatchers("/api/login", "/", "/api/join").permitAll() // 해당 경로에서는 모든 권한을 허용
                             .requestMatchers("/api/admin").hasRole("ADMIN") // ADMIN 권한을 가진 자만 접근 허용
+                            .requestMatchers("/api/reissue").permitAll() // 액세스 토큰이 만료된 상태로 접근 불가능으로 모든 권한 허용
                             .anyRequest().authenticated()); // 그 외는 로그인한 사용자만 접근 허용
           
        // LoginFilter 보다 먼저 실행되도록, JwtFilter 등록 
@@ -95,7 +96,7 @@ public class SecurityConfig {
         .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
        
         // 필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
-        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, userInfoRepository), UsernamePasswordAuthenticationFilter.class);
         
 
         // 세션 설정                    

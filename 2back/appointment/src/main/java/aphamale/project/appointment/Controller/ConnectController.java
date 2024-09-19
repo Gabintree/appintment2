@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class ConnectController {
 
-    // 생성자 주입 방식(컨트롤러가 서비스에 있는 변수나 매서드를 사용할 수 있다는 뜻??)
-    private final UserInfoService userInfoService;      
+    // 생성자 주입 방식(컨트롤러가 서비스에 있는 변수나 매서드를 사용할 수 있다는 뜻??)  
     private final HospitalApiService hospitalApiService;  
     private final MessageApiService messageApiService;
 
