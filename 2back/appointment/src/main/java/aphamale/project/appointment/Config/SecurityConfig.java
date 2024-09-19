@@ -1,6 +1,8 @@
 package aphamale.project.appointment.Config;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import aphamale.project.appointment.Jwt.JwtFilter;
 import aphamale.project.appointment.Jwt.JwtUtil;
 import aphamale.project.appointment.Jwt.LoginFilter;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @Configuration
@@ -51,20 +54,20 @@ public class SecurityConfig {
     }
 
     // 허용 HTTP Method, cors?
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+    // @Bean
+    // public CorsConfigurationSource corsConfigurationSource() {
+    //     CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("HEAD","GET","POST","PUT","DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true);
+    //     configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+    //     configuration.setAllowedMethods(Arrays.asList("HEAD","GET","POST","PUT","DELETE"));
+    //     configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+    //     configuration.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     source.registerCorsConfiguration("/**", configuration);
 
-        return source;
-    }
+    //     return source;
+    // }
     
 
     // 인가 작업, 세션 설정 등 
@@ -98,6 +101,26 @@ public class SecurityConfig {
         // 세션 설정                    
         http.sessionManagement((session) -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 꼭 이 상태 STATELESS
+
+        http.cors((cors) -> cors
+                    .configurationSource(new CorsConfigurationSource() {
+                        
+                        @Override
+                        public CorsConfiguration getCorsConfiguration(HttpServletRequest request){
+                            CorsConfiguration configuration = new CorsConfiguration();
+
+                            configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                            configuration.setAllowedMethods(Collections.singletonList("*"));
+                            configuration.setAllowCredentials(true);
+                            configuration.setAllowedHeaders(Collections.singletonList("*"));
+                            configuration.setMaxAge(3600L);
+
+                            configuration.setExposedHeaders(Collections.singletonList("Authoriztion"));
+
+                            return configuration;
+
+                        }
+                    }));   
 
      return http.build();
     }
