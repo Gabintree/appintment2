@@ -9,7 +9,7 @@ const NavBar = () => {
         <Container>
           <Navbar.Brand href="/home">병원예약</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="/Login">로그인</Nav.Link>
+            <Nav.Link href="/login">로그인</Nav.Link>
             <Nav.Link href="/register">회원가입</Nav.Link>
           </Nav>
         </Container>

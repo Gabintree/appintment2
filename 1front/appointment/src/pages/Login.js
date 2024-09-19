@@ -1,4 +1,6 @@
-const login = () => {
+import React from "react";
+
+const Login = () => {
   // const [userId, setUserId] = useState('');
   // const [userPw, setUserPw] = userState('');
   // const [loginCheck, setLoginCheck] = userState(false); // 로그인 상태 체크
@@ -20,4 +22,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

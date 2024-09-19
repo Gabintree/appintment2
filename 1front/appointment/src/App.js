@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom"; // Router 사용때 에러발생 -> BrowserRouter 대체
 import axios from "axios";
+
 import NavBar from "./components/NavBar";
-import Home from "./pages/home";
-import Login from "./pages/Login"; // fix) 가빈님 로그인 페이지 파일 Login.js를 login.js로 수정할까요?
-import Register from "./pages/register";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import UserDashboard from "./pages/UserDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   // NavBar 레이아웃 테스트
   return (
     <BrowserRouter>
       <NavBar />
+      {/* 라우팅 설정 */}
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/UserDashboard" element={<UserDashboard />} />
+        <Route path="/AdminDashboard" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );

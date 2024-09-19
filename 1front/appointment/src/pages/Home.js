@@ -1,6 +1,6 @@
 import React from "react";
 
-const home = () => {
+const Home = () => {
   return (
     <div>
       <p>Home 화면입니다</p>
@@ -8,4 +8,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default Home;
