@@ -22,7 +22,6 @@ const Register = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    // 비밀번호 확인
     if (password !== password2) {
       setError("비밀번호가 일치하지 않습니다!");
       return;
@@ -30,8 +29,10 @@ const Register = () => {
     try {
       // TODO: 회원가입 처리 로직 await registeruser(user, password ..)
       if (tab === "user") {
+        // 사용자 회원가입 로직
         navigate("/UserDashboard");
       } else {
+        // 관리자 회원가입 로직
         navigate("/AdminDashboard");
       }
     } catch (err) {
@@ -44,23 +45,23 @@ const Register = () => {
       <h1>Logo</h1>
       {/* 회원가입 종류 (사용자, 관리자) 선택란 */}
       <Card.Header>
-        <Nav variant="tabs" defaultActiveKey="#user-register">
+        {/* Fixed) activeKey추가: 현재 활성화된 tab상태 제어 */}
+        <Nav variant="tabs" activeKey={tab}>
           <Nav.Item>
-            {/* Default 사용자 회원가입 페이지 */}
-            <Nav.Link
-              href="#user-register"
-              active={tab === "user"}
-              onClick={() => handleTabSelect("user")}
-            >
+            {/* 사용자 회원가입 페이지 */}
+            <Nav.Link eventKey="user" onClick={() => handleTabSelect("user")}>
               사용자
             </Nav.Link>
           </Nav.Item>
           {/* 관리자 회원가입  페이지*/}
           <Nav.Item>
-            <Nav.Link href="#admin-register">관리자</Nav.Link>
+            <Nav.Link eventKey="admin" onClick={() => handleTabSelect("admin")}>
+              관리자
+            </Nav.Link>
           </Nav.Item>
         </Nav>
       </Card.Header>
+
       {/* 회원정보 등록 */}
       <Card.Body>
         <Form onSubmit={handleSubmit}>
