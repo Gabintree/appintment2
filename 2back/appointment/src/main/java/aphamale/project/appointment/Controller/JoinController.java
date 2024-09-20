@@ -7,6 +7,7 @@ import aphamale.project.appointment.Dto.UserInfoDto;
 import aphamale.project.appointment.Service.UserInfoService;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -19,7 +20,7 @@ public class JoinController {
     }
     
     @PostMapping("/api/join")
-    public String postJoin( UserInfoDto userInfoDto) {
+    public String postJoin(@RequestBody UserInfoDto userInfoDto) {
         
        String joinResult = userInfoService.JoinProcess(userInfoDto);
         
