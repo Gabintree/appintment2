@@ -12,8 +12,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+
+import aphamale.project.appointment.Jwt.CustomLogoutFilter;
 import aphamale.project.appointment.Jwt.JwtFilter;
 import aphamale.project.appointment.Jwt.JwtUtil;
 import aphamale.project.appointment.Jwt.LoginFilter;
@@ -98,6 +101,9 @@ public class SecurityConfig {
         // 필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
         http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, userInfoRepository), UsernamePasswordAuthenticationFilter.class);
         
+
+        // Logout 필터 추가, LogoutFilter.class 보다 먼저 실행 됨.
+        http.addFilterBefore(new CustomLogoutFilter(jwtUtil, userInfoRepository), LogoutFilter.class);
 
         // 세션 설정                    
         http.sessionManagement((session) -> session

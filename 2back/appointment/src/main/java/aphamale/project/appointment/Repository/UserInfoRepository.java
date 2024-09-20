@@ -19,8 +19,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfoDomain, String
     Boolean existsByUserId(String userId);
 
     // DB에 저장된 refresh token 값 조회 
-    UserInfoDomain findByJwtRefresh(String JwtRefresh);
-
+    //UserInfoDomain findByJwtRefresh(String JwtRefresh);
     
     
     }
