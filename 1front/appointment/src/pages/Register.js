@@ -38,46 +38,42 @@ const Register = () => {
       // TODO: 회원가입 처리 로직 await registeruser(user, password ..)
       if (tab === "user") {
         // 사용자 회원가입 로직
-        //navigate("/UserDashboard");
+        const data = {
+          "userId" : user,
+          "userPw" : password,
+          "userName" : name,
+          "residentNo" : regNo,
+          "birthDate" : new Date(birthday),
+          "gender" : gender,
+          "phone" : phone
+        }
+
+        await axios.post('/api/join', JSON.stringify(data),{
+          headers : {
+            "Content-Type" : "application/json; charset=utf8"
+          }
+        }
+      )
+        .then(function (response){
+          //console.log('회원가입 성공', response);
+          if(response.data == true){
+            alert("회원가입이 완료되었습니다.");
+            navigate("/UserDashboard");
+          }
+          else{
+            alert("이미 가입된 ID입니다. 관리자에게 문의하세요.");
+          }
+        })
+        .catch(function(error){
+          console.log('회원가입 실패T.T', error)
+          alert("회원가입이 실패하였습니다. 관리자에게 문의하세요.");
+        })
       } else {
         // 관리자 회원가입 로직
         navigate("/AdminDashboard");
       }
     } catch (err) {
       setError("등록 중 오류가 발생했습니다.");
-    }
-  }
-
-  const data = {
-    "userId" : user,
-    "userPw" : password,
-    "userName" : name,
-    "residentNo" : regNo,
-    "birthDate" : new Date(birthday),
-    "gender" : gender,
-    "phone" : phone
-  }
-
-  const postJoinData = async () => {
-
-    try{
-      await axios.post('/api/join', JSON.stringify(data),{
-        headers : {
-          "Content-Type" : "application/json; charset=utf8"
-        }
-      }
-    )
-      .then(function (response){
-        console.log('회원가입 성공', response);
-        alert("회원가입이 완료되었습니다.");
-        navigate("/UserDashboard");
-      })
-      .catch(function(error){
-        console.log('회원가입 실패T.T', error)
-        alert("회원가입이 실패하였습니다. 관리자에게 문의하세요.");
-      })
-    }catch(error){
-      console.log('error : ', error);
     }
   }
 
@@ -147,6 +143,7 @@ const Register = () => {
             </Nav.Link>
           </Nav.Item>
           {/* 관리자 회원가입  페이지*/}
+          
           <Nav.Item>
             <Nav.Link eventKey="admin" onClick={() => handleTabSelect("admin")}>
               관리자
@@ -156,95 +153,98 @@ const Register = () => {
       </Card.Header>
 
       {/* 회원정보 등록 */}
-      <Card.Body>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formUsername">
-            <Form.Label>아이디</Form.Label>
-            <Form.Control
-              type="text"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formPassword">
-            <Form.Label>비밀번호</Form.Label>
-            <Form.Control
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formConfirmPassword">
-            <Form.Label>비밀번호 확인</Form.Label>
-            <Form.Control
-              type="password"
-              value={password2}
-              onChange={(e) => setPassword2(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formUsername2">
-            <Form.Label>이름</Form.Label>
-            <Form.Control
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formUserRegNo">
-            <Form.Label>주민등록번호</Form.Label>
-            <Form.Control
-              type="text"
-              maxLength={8}
-              value={regNo}
-              onChange={(e) => RegNoOnChange(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formUserBirthDay">
-            <Form.Label>생년월일</Form.Label>
-            <Form.Control
-              type="date"
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formUserGender">
-            <Form.Label>성별 </Form.Label>
-            <Form.Label>남성 </Form.Label>
-            <Form.Control 
-              type="radio"
-              value={0}
-              defaultChecked={true}
-              checked={ischecked0}
-              onClick={(e) => genderOnChange(e.target.value)} 
-            />
-            <Form.Label>여성 </Form.Label>
-            <Form.Control
-              type="radio"
-              value={1}
-              defaultChecked={false}              
-              checked={ischecked1}
-              onClick={(e) => genderOnChange(e.target.value)}              
-            />                     
-          </Form.Group>                     
-          <Form.Group controlId="formUserPhone">
-            <Form.Label>연락처</Form.Label>
-            <Form.Control
-              type="text"
-              value={phone}
-              onChange={(e) => phoneOnChange(e.target.value)}
-            />
-          </Form.Group>        
-          {error && (
-            <div className="mt-3">
-              <Alert variant="danger">{error}</Alert>
-            </div>
-          )}
-          <Button className="mt-3" variant="primary" type="submit" onClick={postJoinData}>
-            가입하기
-          </Button>
-        </Form>
-      </Card.Body>
+        <Card.Body>
+          <Form onSubmit={handleSubmit}>
+            <div className="userJoinData">
+            <Form.Group controlId="formUsername">
+              <Form.Label>아이디</Form.Label>
+              <Form.Control
+                type="text"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formPassword">
+              <Form.Label>비밀번호</Form.Label>
+              <Form.Control
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formConfirmPassword">
+              <Form.Label>비밀번호 확인</Form.Label>
+              <Form.Control
+                type="password"
+                value={password2}
+                onChange={(e) => setPassword2(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formUsername2">
+              <Form.Label>이름</Form.Label>
+              <Form.Control
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formUserRegNo">
+              <Form.Label>주민등록번호</Form.Label>
+              <Form.Control
+                type="text"
+                maxLength={8}
+                value={regNo}
+                onChange={(e) => RegNoOnChange(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formUserBirthDay">
+              <Form.Label>생년월일</Form.Label>
+              <Form.Control
+                type="date"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formUserGender">
+              <Form.Label>성별 </Form.Label>
+              <Form.Label>남성 </Form.Label>
+              <Form.Control 
+                type="radio"
+                value={0}
+                defaultChecked={true}
+                checked={ischecked0}
+                onClick={(e) => genderOnChange(e.target.value)} 
+              />
+              <Form.Label>여성 </Form.Label>
+              <Form.Control
+                type="radio"
+                value={1}
+                defaultChecked={false}              
+                checked={ischecked1}
+                onClick={(e) => genderOnChange(e.target.value)}              
+              />                     
+            </Form.Group>                     
+            <Form.Group controlId="formUserPhone">
+              <Form.Label>연락처</Form.Label>
+              <Form.Control
+                type="text"
+                value={phone}
+                onChange={(e) => phoneOnChange(e.target.value)}
+              />
+            </Form.Group>  
+            </div>     
+            {error && (
+              <div className="mt-3">
+                <Alert variant="danger">{error}</Alert>
+              </div>
+            )}
+            <Button className="mt-3" variant="primary" type="submit" onClick={handleSubmit}>
+              가입하기
+            </Button>
+          </Form>
+        </Card.Body>
     </Card>
+    
   );
 };
 export default Register;
