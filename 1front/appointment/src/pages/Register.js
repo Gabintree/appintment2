@@ -14,7 +14,7 @@ const Register = () => {
   const [regNo1, setRegNo1] = useState("");
   const [regNo2, setRegNo2] = useState("");
   const [birthday, setBirthday] = useState(""); // 생년월일  6자리
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState(0);
   const [phone, setPhone] = useState("");
 
   const [tab, setTab] = useState("user"); // 탭 상태 추가
@@ -54,7 +54,7 @@ const Register = () => {
     "userPw" : password,
     "userName" : name,
     "residentNo" : regNo1 + '-' + regNo2,
-    "birthDate" : birthday,
+    "birthDate" : new Date(birthday),
     "gender" : gender,
     "phone" : phone
   }
@@ -172,7 +172,7 @@ const Register = () => {
           <Form.Group controlId="formUserBirthDay">
             <Form.Label>생년월일</Form.Label>
             <Form.Control
-              type="text"
+              type="date"
               value={birthday}
               onChange={(e) => setBirthday(e.target.value)}
             />

@@ -1,12 +1,14 @@
 package aphamale.project.appointment.Service;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.UserInfoDto;
 import aphamale.project.appointment.Repository.UserInfoRepository;
-
 @Service
 //@RequiredArgsConstructor
 public class UserInfoService {
@@ -26,6 +28,13 @@ public class UserInfoService {
         String userId = userInfoDto.getUserId();
         String userPw = userInfoDto.getUserPw();
         String jwtRole = "USER"; // 사용자 계정의 ROLE은 USER로 저장.
+        String userName = userInfoDto.getUserName();
+        String residentNo = userInfoDto.getResidentNo();
+        Date birthDate = userInfoDto.getBirthDate();
+        String gender = userInfoDto.getGender();
+        String phone = userInfoDto.getPhone();
+
+
 
         String bool = "false"; // 리턴 값
 
@@ -41,11 +50,22 @@ public class UserInfoService {
         }
         else{
 
+            java.util.Date date = new java.util.Date();
+
             UserInfoDomain userInfoDomain = new UserInfoDomain();
 
             userInfoDomain.setUserId(userId);
             userInfoDomain.setUserPw(bCryptPasswordEncoder.encode(userPw)); // 암호화
             userInfoDomain.setJwtRole(jwtRole);
+            userInfoDomain.setUserName(userName);
+            userInfoDomain.setResidentNo(residentNo);
+            userInfoDomain.setBirthDate(birthDate);
+            userInfoDomain.setGender(gender);
+            userInfoDomain.setPhone(phone);
+            userInfoDomain.setInsertDate(new Timestamp(date.getTime()));
+
+
+
 
             // 저장
             userInfoRepository.save(userInfoDomain);
