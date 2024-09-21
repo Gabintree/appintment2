@@ -11,8 +11,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [name, setName] = useState("");
-  const [regNo1, setRegNo1] = useState("");
-  const [regNo2, setRegNo2] = useState("");
+  const [regNo, setRegNo] = useState("");
   const [birthday, setBirthday] = useState(""); // 생년월일  6자리
   const [gender, setGender] = useState(0);
   const [phone, setPhone] = useState("");
@@ -53,7 +52,7 @@ const Register = () => {
     "userId" : user,
     "userPw" : password,
     "userName" : name,
-    "residentNo" : regNo1 + '-' + regNo2,
+    "residentNo" : regNo,
     "birthDate" : new Date(birthday),
     "gender" : gender,
     "phone" : phone
@@ -80,6 +79,7 @@ const Register = () => {
     }
   }
 
+  // 라디오 버튼 단일 선택 처리 
   function genderOnChange(selectGender) {
     console.log("gender값 : " , selectGender);
     if (selectGender == 0){
@@ -92,8 +92,14 @@ const Register = () => {
       setIschecked1(true);
       setGender(selectGender);
     }
-  } 
- 
+  }
+  
+  function RegNoOnChange(regNo){  
+
+    // 주민등록번호 형식(하이픈 추가)
+    setRegNo(regNo.replace(/[^0-9]/g, '').replace(/^(\d{0,6})(\d{0,7})$/g, '$1-$2').replace(/-{1,2}$/g, ''));
+  }
+
   return (
     <Card>
       <h1>Logo</h1>
@@ -155,18 +161,9 @@ const Register = () => {
             <Form.Label>주민등록번호</Form.Label>
             <Form.Control
               type="text"
-              value={regNo1}
-              onChange={(e) => setRegNo1(e.target.value)}
-            />
-            <Form.Control
-              type="text"
-              value="-"
-              disabled={true}          
-            />
-            <Form.Control
-              type="text"
-              value={regNo2}
-              onChange={(e) => setRegNo2(e.target.value)}
+              maxLength={8}
+              value={regNo}
+              onChange={(e) => RegNoOnChange(e.target.value)}
             />
           </Form.Group>
           <Form.Group controlId="formUserBirthDay">
