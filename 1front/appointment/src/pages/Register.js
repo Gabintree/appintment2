@@ -69,10 +69,12 @@ const Register = () => {
     )
       .then(function (response){
         console.log('회원가입 성공', response);
+        alert("회원가입이 완료되었습니다.");
         navigate("/UserDashboard");
       })
       .catch(function(error){
         console.log('회원가입 실패T.T', error)
+        alert("회원가입이 실패하였습니다. 관리자에게 문의하세요.");
       })
     }catch(error){
       console.log('error : ', error);
@@ -93,11 +95,42 @@ const Register = () => {
       setGender(selectGender);
     }
   }
+
+  // 휴대폰 형식(하이픈 추가)
+  function phoneOnChange(phone){ 
+
+    if(phone.length === 10){
+      setPhone(phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
+    }
+    else if(phone.length === 13){
+      setPhone(phone.replace(/-/g, '').replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'));
+    }
+    else{
+      setPhone(phone);
+    }
+  }
   
+  // 주민등록번호 형식(하이픈 추가) 및 성별 체크 
   function RegNoOnChange(regNo){  
 
-    // 주민등록번호 형식(하이픈 추가)
     setRegNo(regNo.replace(/[^0-9]/g, '').replace(/^(\d{0,6})(\d{0,7})$/g, '$1-$2').replace(/-{1,2}$/g, ''));
+
+    if(regNo.length === 7){
+      const regNo1 = regNo.substring(6);
+
+      console.log(regNo1);
+
+      if(regNo1 == 1 || regNo1 == 3 ){
+        setIschecked0(true);
+        setIschecked1(false);
+        console.log("남성 :", gender);
+      }
+      else if(regNo1 == 2 || regNo1 == 4 ){
+        setIschecked0(false);
+        setIschecked1(true);
+        console.log("여성 :", gender);
+      }
+    }
   }
 
   return (
@@ -180,16 +213,16 @@ const Register = () => {
             <Form.Control 
               type="radio"
               value={0}
-              checked={ischecked0}
               defaultChecked={true}
+              checked={ischecked0}
               onClick={(e) => genderOnChange(e.target.value)} 
             />
             <Form.Label>여성 </Form.Label>
             <Form.Control
               type="radio"
               value={1}
+              defaultChecked={false}              
               checked={ischecked1}
-              defaultChecked={false}
               onClick={(e) => genderOnChange(e.target.value)}              
             />                     
           </Form.Group>                     
@@ -198,7 +231,7 @@ const Register = () => {
             <Form.Control
               type="text"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => phoneOnChange(e.target.value)}
             />
           </Form.Group>        
           {error && (
