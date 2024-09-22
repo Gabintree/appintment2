@@ -1,12 +1,14 @@
 import { Card, Form, Button, Nav, Alert, FormCheck } from "react-bootstrap";
 import React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { json, useNavigate } from "react-router-dom"; // useRouter 대신 useNavigate 사용
 import axios from "axios";
 import UserDashboard from "./UserDashboard";
 import AdminDashboard from "./AdminDashboard";
 
 const Register = () => {
+  
+  // 사용자 컬럼
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -16,16 +18,50 @@ const Register = () => {
   const [gender, setGender] = useState(0);
   const [phone, setPhone] = useState("");
 
+  // 관리자 컬럼
+  const [adminId, setAdminId] = useState("");
+
   const [tab, setTab] = useState("user"); // 탭 상태 추가
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [ischecked0, setIschecked0] = useState();
   const [ischecked1, setIschecked1] = useState();
 
+  const userForm = useRef();
+  const adminForm = useRef();
+  const [userIsHidden, setUserIsHidden] = useState(true); // 기본값 숨김 처리
+  const [adminIsHidden, setAdminIsHidden] = useState(true); // 기본값 숨김 처리
+
   // TODO: 관리자 버튼을 클릭할 때 사용자 버튼이 동시에 눌려지는 문제 해결
   // TODO: 관리자 회원가입에 회원정보 입력하고 제출하면 사용자 대시보드로 이동함
   function handleTabSelect(selectedTab) {
     setTab(selectedTab);
+
+    // 사용자 
+    if(selectedTab == "user"){
+  
+      // 사용자 form 보여주기
+      setUserIsHidden(false);
+      // 관리자 form 숨김
+      setAdminIsHidden(true);
+
+    }
+    // 관리자
+    else if(selectedTab == "admin"){
+
+      // 관리자 form 보여주기
+      setAdminIsHidden(false);
+      // 사용자 form 숨김 
+      setUserIsHidden(true);
+
+    }
+    else{
+      // 모두 hidden 처리
+      setUserIsHidden(true);
+      setAdminIsHidden(true);
+    }
+
+
   }
 
   async function handleSubmit(e) {
@@ -154,8 +190,7 @@ const Register = () => {
 
       {/* 회원정보 등록 */}
         <Card.Body>
-          <Form onSubmit={handleSubmit}>
-            <div className="userJoinData">
+          <Form id="userJoinData" ref={userForm} hidden={userIsHidden} onSubmit={handleSubmit}>
             <Form.Group controlId="formUsername">
               <Form.Label>아이디</Form.Label>
               <Form.Control
@@ -231,8 +266,7 @@ const Register = () => {
                 value={phone}
                 onChange={(e) => phoneOnChange(e.target.value)}
               />
-            </Form.Group>  
-            </div>     
+            </Form.Group>     
             {error && (
               <div className="mt-3">
                 <Alert variant="danger">{error}</Alert>
@@ -242,8 +276,20 @@ const Register = () => {
               가입하기
             </Button>
           </Form>
+          {/* 관리자 회원가입 Form */}
+          <Form id="adminJoinData" ref={adminForm} hidden={adminIsHidden} onSubmit={handleSubmit}>
+            <Form.Group controlId="formAdminId">
+              <Form.Label>아이디</Form.Label>
+              <Form.Control
+              type="text"
+              value={adminId}
+              onChange={(e) => setAdminId(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
         </Card.Body>
     </Card>
+
     
   );
 };
