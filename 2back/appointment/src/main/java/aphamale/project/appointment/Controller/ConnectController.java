@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import aphamale.project.appointment.Dto.HospitalApiDto;
 import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.MessageApiService;
-import aphamale.project.appointment.Service.UserInfoService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;

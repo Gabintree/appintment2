@@ -6,14 +6,14 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import aphamale.project.appointment.Domain.UserInfoDomain;
+import aphamale.project.appointment.Domain.HospitalInfoDomain;
 
-public class CustomUserDetails implements UserDetails{
+public class CustomAdminUserDetails implements UserDetails{
 
-    private final UserInfoDomain userInfoDomain;
+    private final HospitalInfoDomain hospitalInfoDomain;
 
-    public CustomUserDetails(UserInfoDomain userInfoDomain){
-        this.userInfoDomain = userInfoDomain;
+    public CustomAdminUserDetails(HospitalInfoDomain hospitalInfoDomain){
+        this.hospitalInfoDomain = hospitalInfoDomain;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class CustomUserDetails implements UserDetails{
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority(){
-                return userInfoDomain.getJwtRole();
+                return hospitalInfoDomain.getJwtRole();
             }
         });   
 
@@ -33,7 +33,7 @@ public class CustomUserDetails implements UserDetails{
     @Override
     public String getPassword() {
 
-        return userInfoDomain.getUserPw();
+        return hospitalInfoDomain.getHospitalPw();
 
         //throw new UnsupportedOperationException("Unimplemented method 'getPassword'");
     }
@@ -41,7 +41,7 @@ public class CustomUserDetails implements UserDetails{
     @Override
     public String getUsername() {
         
-        return userInfoDomain.getUserId();
+        return hospitalInfoDomain.getHospitalId();
         
         //throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
     }

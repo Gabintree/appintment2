@@ -11,8 +11,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import aphamale.project.appointment.Domain.HospitalInfoDomain;
 import aphamale.project.appointment.Domain.UserInfoDomain;
+import aphamale.project.appointment.Dto.CustomAdminUserDetails;
 import aphamale.project.appointment.Dto.CustomUserDetails;
+import aphamale.project.appointment.Repository.HospitalInfoRepository;
 import aphamale.project.appointment.Repository.UserInfoRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -28,8 +31,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
 
     private final UserInfoRepository userInfoRepository;
+    private final HospitalInfoRepository hospitalInfoRepository;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserInfoRepository userInfoRepository) {
+    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, 
+                       UserInfoRepository userInfoRepository, HospitalInfoRepository hospitalInfoRepository) {
 
         this.authenticationManager = authenticationManager;
         //LoiginFilter 경로 변경(자동으로 /login을 찾아 적용한다고 함, 그래서 변경 처리)    
@@ -39,6 +44,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         this.jwtUtil = jwtUtil;
         this.userInfoRepository = userInfoRepository;
+        this.hospitalInfoRepository = hospitalInfoRepository;
     }      
 
     @Override
@@ -59,10 +65,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
-        // userId 찾기
-        CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
-        String userId = customUserDetails.getUsername();
-
         // role 찾기
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -70,12 +72,28 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
+        // userId 찾기
+        String userId = "";
+        if(role.equals("USER")){
+            // 사용자    
+            CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+            userId = customUserDetails.getUsername();
+        }
+        else{
+            // 관리자
+            CustomAdminUserDetails customAdminUserDetails = (CustomAdminUserDetails)authentication.getPrincipal();
+            userId = customAdminUserDetails.getUsername();
+        }
+
+
         // 토큰 생성
         String access = jwtUtil.createJwt("access", userId, role, 600000L);
         String refresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);     
 
         // db에 refresh Token 저장
-        addRefreshToken(userId, refresh, 86400000L);
+        addRefreshToken(userId, refresh, role, 86400000L);
+
+
         
         //응답 설정
         response.setHeader("access", access); // 헤더에 액세스 토큰 넣고
@@ -125,15 +143,25 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     // db에 refresh Token update 매서드
-    private void addRefreshToken(String userId, String refresh, Long expiredMs) {
+    private void addRefreshToken(String userId, String refresh, String role, Long expiredMs) {
 
         // Date date = new Date(System.currentTimeMillis() + expiredMs); // 만료 기한 사용 안 하므로
         // userInfoDomain.setExpiration(date.toString()); // 만료 기한 사용 안 하므로 w주석
-    
-        UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
-        userInfoDomain.setJwtRefresh(refresh);
 
-        userInfoRepository.save(userInfoDomain);
+        if(role.equals("USER")){
+            UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
+            userInfoDomain.setJwtRefresh(refresh);
+    
+            userInfoRepository.save(userInfoDomain);
+        }
+        else{
+            HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(userId);
+            hospitalInfoDomain.setJwtRefresh(refresh);
+
+            hospitalInfoRepository.save(hospitalInfoDomain);
+        }
+    
+
 
     }    
 

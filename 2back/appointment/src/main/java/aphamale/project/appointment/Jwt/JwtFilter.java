@@ -8,7 +8,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import aphamale.project.appointment.Domain.HospitalInfoDomain;
 import aphamale.project.appointment.Domain.UserInfoDomain;
+import aphamale.project.appointment.Dto.CustomAdminUserDetails;
 import aphamale.project.appointment.Dto.CustomUserDetails;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -31,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter{
             throws ServletException, IOException {
 
             // 헤더에서 access키에 담긴 토큰을 꺼냄
-            String accessToken = request.getHeader("access");
+             String accessToken = request.getHeader("access");
 
             // 토큰이 없다면 다음 필터로 넘김
             if (accessToken == null) {
@@ -76,15 +78,33 @@ public class JwtFilter extends OncePerRequestFilter{
             String userId = jwtUtil.getUsername(accessToken);
             String role = jwtUtil.getRole(accessToken);
 
-            UserInfoDomain userInfoDomain = new UserInfoDomain();
-            userInfoDomain.setUserId(userId);
-            userInfoDomain.setJwtRole(role);
-            CustomUserDetails customUserDetails = new CustomUserDetails(userInfoDomain);
+            if(role.equals("USER")){
+
+                UserInfoDomain userInfoDomain = new UserInfoDomain();
+                userInfoDomain.setUserId(userId);
+                userInfoDomain.setJwtRole(role);
+                CustomUserDetails customUserDetails = new CustomUserDetails(userInfoDomain);
+    
+    
+                // 토큰 생성 
+                Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            }
+            else{
+
+                HospitalInfoDomain hospitalInfoDomain = new HospitalInfoDomain();
+                hospitalInfoDomain.setHospitalId(userId);
+                hospitalInfoDomain.setJwtRole(role);
+                CustomAdminUserDetails customAdminUserDetails = new CustomAdminUserDetails(hospitalInfoDomain);
+    
+    
+                // 토큰 생성 
+                Authentication authToken = new UsernamePasswordAuthenticationToken(customAdminUserDetails, null, customAdminUserDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authToken);
 
 
-            // 토큰 생성 
-            Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
 
             filterChain.doFilter(request, response);               
 
