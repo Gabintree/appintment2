@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import LoginForm from "./pages/LoginForm";
 
 function App() {
   // NavBar 레이아웃 테스트
@@ -21,6 +22,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/UserDashboard" element={<UserDashboard />} />
         <Route path="/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/LoginForm" element={<LoginForm />} />
       </Routes>
     </BrowserRouter>
   );
