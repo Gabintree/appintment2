@@ -126,9 +126,6 @@ const Register = () => {
         })
       } else {
         // 관리자 회원가입 로직
-
-        console.log("관리자 들어오니?");
-
         const data = {
           "hospitalId" : adminId,
           "hospitalPw" : adminPw,
@@ -247,6 +244,20 @@ const Register = () => {
     }   
 
   }
+
+  // 사업자등록번호 형식(하이픈 추가)
+  function corporateNoOnChange(corporateNo){
+
+    if(corporateNo.length == 10){
+      const corporateNo1 = corporateNo.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3');
+
+      setCorporateNo(corporateNo1);
+    }
+    else{
+      setCorporateNo(corporateNo);
+    }
+  }
+
 
   return (
     <Card>
@@ -390,7 +401,8 @@ const Register = () => {
               <Form.Control
                 type="text"
                 value={corporateNo}
-                onChange={(e) => setCorporateNo(e.target.value)}
+                maxLength={10}
+                onChange={(e) => corporateNoOnChange(e.target.value)}
               />
             </Form.Group>
             <Form.Group controlId="formAdminGroupId">
