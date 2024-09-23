@@ -89,7 +89,7 @@ public class SecurityConfig {
 
         // 경로별 인가 작업
         http.authorizeHttpRequests((auth) -> auth
-                            .requestMatchers("/api/login", "/", "/api/join").permitAll() // 해당 경로에서는 모든 권한을 허용
+                            .requestMatchers("/api/login", "/", "/api/join", "/api/joinAdmin").permitAll() // 해당 경로에서는 모든 권한을 허용
                             .requestMatchers("/api/admin").hasRole("ADMIN") // ADMIN 권한을 가진 자만 접근 허용
                             .requestMatchers("/api/reissue").permitAll() // 액세스 토큰이 만료된 상태로 접근 불가능으로 모든 권한 허용
                             .anyRequest().authenticated()); // 그 외는 로그인한 사용자만 접근 허용

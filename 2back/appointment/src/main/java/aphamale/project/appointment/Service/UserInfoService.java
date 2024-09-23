@@ -1,6 +1,5 @@
 package aphamale.project.appointment.Service;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Service;
 import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.UserInfoDto;
 import aphamale.project.appointment.Repository.UserInfoRepository;
+
 @Service
 //@RequiredArgsConstructor
 public class UserInfoService {

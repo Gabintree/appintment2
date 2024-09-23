@@ -20,6 +20,13 @@ const Register = () => {
 
   // 관리자 컬럼
   const [adminId, setAdminId] = useState("");
+  const [adminPw, setAdminPw] = useState("");
+  const [adminPw2, setAdminPw2] = useState("");
+  const [corporateNo, setCorporateNo] = useState("");
+  const [groupId, setGroupId] = useState("");
+  const [adminName, setAdminName] = useState("");
+  const [adminAddress, setAdminAddress] = useState("");
+  const [tellNo, setTellNo] = useState();
 
   const [tab, setTab] = useState("user"); // 탭 상태 추가
   const [error, setError] = useState("");
@@ -64,10 +71,22 @@ const Register = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (password !== password2) {
-      setError("비밀번호가 일치하지 않습니다!");
-      return;
+
+    if(tab === "user"){
+
+      if (password !== password2) {
+        setError("비밀번호가 일치하지 않습니다!");
+        return;
+      }
+
+    }else{
+
+      if (adminPw !== adminPw2) {
+        setError("비밀번호가 일치하지 않습니다!");
+        return;
+      }
     }
+
     try {
       // TODO: 회원가입 처리 로직 await registeruser(user, password ..)
 
@@ -82,7 +101,7 @@ const Register = () => {
           "residentNo" : regNo,
           "birthDate" : numBirthDay, // 숫자만
           "gender" : gender,
-          "phone" : phone
+          "phone" : phone.replace(/-/g, "") // 숫자만
         }
 
         await axios.post('/api/join', JSON.stringify(data),{
@@ -107,7 +126,40 @@ const Register = () => {
         })
       } else {
         // 관리자 회원가입 로직
-        navigate("/AdminDashboard");
+
+        console.log("관리자 들어오니?");
+
+        const data = {
+          "hospitalId" : adminId,
+          "hospitalPw" : adminPw,
+          "corporateNo" : corporateNo,
+          "residentNo" : regNo.replace(/-/g, ""), // 숫자만
+          "groupId" : groupId, 
+          "hospitalName" : adminName,
+          "hospitalAddress" : adminAddress,
+          "tellNo" : tellNo.replace(/-/g, "") // 숫자만
+        }
+
+        await axios.post('/api/joinAdmin', JSON.stringify(data),{
+          headers : {
+            "Content-Type" : "application/json; charset=utf8"
+          }
+        }
+      )
+        .then(function (response){
+          //console.log('회원가입 성공', response);
+          if(response.data == true){
+            alert("회원가입이 완료되었습니다.");
+            navigate("/AdminDashboard");
+          }
+          else{
+            alert("이미 가입된 ID입니다. 관리자에게 문의하세요.");
+          }
+        })
+        .catch(function(error){
+          console.log('회원가입 실패T.T', error)
+          alert("회원가입이 실패하였습니다. 관리자에게 문의하세요.");
+        })
       }
     } catch (err) {
       setError("등록 중 오류가 발생했습니다.");
@@ -170,10 +222,9 @@ const Register = () => {
       // 생년월일 추가 
       birthdayOnChange(regNo);
     }
-
-
   }
 
+  // 생년월일 변환
   function birthdayOnChange(birthday){
 
     // 6자리 입력시 년월일 추가 
@@ -193,8 +244,7 @@ const Register = () => {
     }
     else{
       setBirthday(birthday);
-    }
-    
+    }   
 
   }
 
@@ -319,6 +369,70 @@ const Register = () => {
               onChange={(e) => setAdminId(e.target.value)}
               />
             </Form.Group>
+            <Form.Group controlId="formAdminPw">
+              <Form.Label>비밀번호</Form.Label>
+              <Form.Control
+              type="password"
+              value={adminPw}
+              onChange={(e) => setAdminPw(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formAdminConfirmPassword">
+              <Form.Label>비밀번호 확인</Form.Label>
+              <Form.Control
+                type="password"
+                value={adminPw2}
+                onChange={(e) => setAdminPw2(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formAdminCorporateNo">
+              <Form.Label>사업자등록번호</Form.Label>
+              <Form.Control
+                type="text"
+                value={corporateNo}
+                onChange={(e) => setCorporateNo(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formAdminGroupId">
+              <Form.Label>기관Id</Form.Label>
+              <Form.Control
+                type="text"
+                value={groupId}
+                onChange={(e) => setGroupId(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formAdminHospitalName">
+              <Form.Label>병원명</Form.Label>
+              <Form.Control
+                type="text"
+                value={adminName}
+                onChange={(e) => setAdminName(e.target.value)}
+              />
+            </Form.Group>     
+            <Form.Group controlId="formAdminHospitalAddress">
+              <Form.Label>병원 주소</Form.Label>
+              <Form.Control
+                type="text"
+                value={adminAddress}
+                onChange={(e) => setAdminAddress(e.target.value)}
+              />
+            </Form.Group>       
+            <Form.Group controlId="formAdminHospitalTellNo">
+              <Form.Label>연락처</Form.Label>
+              <Form.Control
+                type="text"
+                value={tellNo}
+                onChange={(e) => setTellNo(e.target.value)}
+              />
+            </Form.Group>  
+            {error && (
+              <div className="mt-3">
+                <Alert variant="danger">{error}</Alert>
+              </div>
+            )}
+            <Button className="mt-3" variant="primary" type="submit" onClick={handleSubmit}>
+              가입하기
+            </Button>                             
           </Form>
         </Card.Body>
     </Card>
