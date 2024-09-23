@@ -107,9 +107,7 @@ const Register = () => {
         await axios.post('/api/join', JSON.stringify(data),{
           headers : {
             "Content-Type" : "application/json; charset=utf8"
-          }
-        }
-      )
+          }})
         .then(function (response){
           //console.log('회원가입 성공', response);
           if(response.data == true){

@@ -64,9 +64,6 @@ public class UserInfoService {
             userInfoDomain.setPhone(phone);
             userInfoDomain.setInsertDate(new Timestamp(date.getTime()));
 
-
-
-
             // 저장
             userInfoRepository.save(userInfoDomain);
 
