@@ -8,7 +8,7 @@ user_id varchar(30),
 user_pw varchar(500) not null, -- 암호화처리 하면서 100으로 길이 변경
 user_name varchar(30),
 resident_no varchar(30),
-birth_date date,
+birth_date varchar(30), -- date에서 varcahr로 변경
 gender varchar(1), -- 0 : 여성, 1: 남성
 phone varchar(30),
 insert_date datetime, -- 가입일
@@ -32,9 +32,6 @@ jwt_role varchar(30), -- jwt 로그인 권한 검증시 필요
 jwt_refresh varchar(1000), -- jwt refresh token 값
 primary key(hospital_id, group_id)
 );
-
--- insert into user_info (id, password, name, gender, age, phone, user_gbn, hospital_id, insert_date, update_date) 
--- 		  values ('admin0', '0000', '사용자측', '0', 30, '010-1234-1234', '0', null, now(), now() ) ;
 
 
 -- create table reserve(
@@ -83,6 +80,7 @@ references hospital_info(hospital_id, group_id)
 );
 
 select * from user_info;
+
 
 
 

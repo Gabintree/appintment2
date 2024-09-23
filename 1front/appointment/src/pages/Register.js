@@ -60,8 +60,6 @@ const Register = () => {
       setUserIsHidden(true);
       setAdminIsHidden(true);
     }
-
-
   }
 
   async function handleSubmit(e) {
@@ -72,6 +70,9 @@ const Register = () => {
     }
     try {
       // TODO: 회원가입 처리 로직 await registeruser(user, password ..)
+
+      const numBirthDay = birthday.substring(0, 2) + birthday.substring(4, 6) +  birthday.substring(8, 10);
+
       if (tab === "user") {
         // 사용자 회원가입 로직
         const data = {
@@ -79,7 +80,7 @@ const Register = () => {
           "userPw" : password,
           "userName" : name,
           "residentNo" : regNo,
-          "birthDate" : new Date(birthday),
+          "birthDate" : numBirthDay, // 숫자만
           "gender" : gender,
           "phone" : phone
         }
@@ -162,7 +163,39 @@ const Register = () => {
         setIschecked1(true);
         console.log("여성 :", gender);
       }
+    }   
+
+    if(regNo.length === 6){
+
+      // 생년월일 추가 
+      birthdayOnChange(regNo);
     }
+
+
+  }
+
+  function birthdayOnChange(birthday){
+
+    // 6자리 입력시 년월일 추가 
+    if(birthday.length == 6){
+      
+      const year = birthday.substring(0, 2);
+      const month = birthday.substring(2, 4);
+      const day = birthday.substring(4, 6);
+
+      birthday = year + "년 " + month + "월 " + day + "일";
+
+      setBirthday(birthday);
+
+      // console.log(year);
+      // console.log(month);
+      // console.log(day);      
+    }
+    else{
+      setBirthday(birthday);
+    }
+    
+
   }
 
   return (
@@ -235,9 +268,9 @@ const Register = () => {
             <Form.Group controlId="formUserBirthDay">
               <Form.Label>생년월일</Form.Label>
               <Form.Control
-                type="date"
+                type="text"
                 value={birthday}
-                onChange={(e) => setBirthday(e.target.value)}
+                onChange={(e) => birthdayOnChange(e.target.value)}
               />
             </Form.Group>
             <Form.Group controlId="formUserGender">

@@ -18,7 +18,7 @@ public class UserInfoDto {
     private String userPw;
     private String userName;
     private String residentNo;
-    private Date birthDate;
+    private String birthDate;
     private String gender;
     private String phone;
     private Timestamp insertDate;

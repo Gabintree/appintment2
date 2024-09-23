@@ -32,7 +32,7 @@ public class UserInfoDomain {
     private String residentNo; // 주민등록번호
 
     @Column
-    private Date birthDate; // 생년월일    
+    private String birthDate; // 생년월일    
    
     @Column
     private String gender; // 성별
