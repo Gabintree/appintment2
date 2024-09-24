@@ -81,6 +81,7 @@ references hospital_info(hospital_id, group_id)
 );
 
 select * from user_info;
+select * from hospital_info;
 
 
 
