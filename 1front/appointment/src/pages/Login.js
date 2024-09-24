@@ -57,7 +57,7 @@ const Login = () => {
                         navigate("/UserDashboard");
                       }
                       else{
-                        navigate("/AdminDashboard");
+                        navigate("/HDashBoard");
                       }
                     }
                   })
