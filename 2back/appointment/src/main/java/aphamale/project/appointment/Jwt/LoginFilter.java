@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import aphamale.project.appointment.Domain.HospitalInfoDomain;
@@ -33,6 +34,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final UserInfoRepository userInfoRepository;
     private final HospitalInfoRepository hospitalInfoRepository;
 
+
     public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, 
                        UserInfoRepository userInfoRepository, HospitalInfoRepository hospitalInfoRepository) {
 
@@ -47,12 +49,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         this.hospitalInfoRepository = hospitalInfoRepository;
     }      
 
+
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         // 클라이언트 요청에서 userName, userPw 추출, userId는 ?? @_@??
         String userId = obtainUsername(request);
         String userPw = obtainPassword(request);
+        String role = request.getParameter("role");
 
 	    // 스프링 시큐리티에서 userName과 userPw 검증하기 위해서는 token에 담아야 함
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userId, userPw, null);
@@ -155,7 +160,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             userInfoRepository.save(userInfoDomain);
         }
         else{
-            HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(userId);
+            HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(userId).orElseThrow(() -> new UsernameNotFoundException(userId));
+            
             hospitalInfoDomain.setJwtRefresh(refresh);
 
             hospitalInfoRepository.save(hospitalInfoDomain);

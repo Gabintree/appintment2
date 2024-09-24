@@ -22,15 +22,13 @@ public class CustomAdminUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException{
 
-        HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(userId);
+        HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(userId).orElseThrow(() -> new UsernameNotFoundException(userId));  // (throw new UsernameNotFoundException(userId));
 
-        if(hospitalInfoDomain != null){
+        //if(hospitalInfoDomain != null){
 
             return new CustomAdminUserDetails(hospitalInfoDomain);
-        }
-
-
-        return null;
+        //}      
+        
         
     }
 
