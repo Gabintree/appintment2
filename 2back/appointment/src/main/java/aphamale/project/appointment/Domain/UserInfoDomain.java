@@ -43,6 +43,10 @@ public class UserInfoDomain {
     @Column
     private Timestamp updateDate; // 정보수정일
 
+    @Column
+    private String jwtRole; // jwt 로그인시 권한 검증 필요 
+
+
     // dto -> entity 객체로 변환하는 메서드
     public static UserInfoDomain ToUserInfoDomain(UserInfoDto userInfoDto){
 

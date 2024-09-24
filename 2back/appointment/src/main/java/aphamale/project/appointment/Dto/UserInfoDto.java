@@ -23,6 +23,7 @@ public class UserInfoDto {
     private String phone;
     private Timestamp insertDate;
     private Timestamp updateDate;
+    private String jwtRole; // jwt 로그인시 권한 검증
 
     // entity -> dto  객체로 변환하는 메서드
     public static UserInfoDto ToUserinfoDto(UserInfoDomain userInfoDomain){
