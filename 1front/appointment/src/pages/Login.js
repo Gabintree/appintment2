@@ -37,8 +37,6 @@ const Login = () => {
     async function handleSubmit(e) {
         e.preventDefault();
         
-        // 사용자 로그인
-        //if(formGbn == "userBtn"){
             try{
                   const formData = new FormData();
                   formData.append("userId", Id);
@@ -54,49 +52,23 @@ const Login = () => {
                 .then(function (response){
                     if(response.status == 200){
                       alert("로그인이 완료되었습니다.");
-                      navigate("/UserDashboard");
+
+                      if(formGbn === "userBtn"){
+                        navigate("/UserDashboard");
+                      }
+                      else{
+                        navigate("/AdminDashboard");
+                      }
                     }
-                    else{
-                      alert("ID와 비밀번호를 확인해주세요.");
-                    }
-                  })                                         
+                  })
+                  .catch(function(error){
+                    console.log("로그인 오류 : ", error);
+                    alert("ID와 비밀번호를 확인해주세요.");
+                  })                                       
             } catch (err) {
                 setError("로그인 중 오류가 발생했습니다. 관리자에게 문의하세요.");
             }
-        //}
-        // 관리자 로그인
-        // else if(formGbn == "adminBtn"){
-        //     try{
-        //         const formData = new FormData();
-        //         formData.append("userId", Id);
-        //         formData.append("userPw", Pw);
-
-        //         console.log(formData, "formData");
-
-        //       await axios.post('/api/loginAdmin', formData, {
-        //       headers : {
-        //            // "Content-Type" : "application/json; charset=utf8"
-        //               "Content-Type" :  "multipart/form-data"
-        //       }})   
-        //       .then(function (response){
-        //           if(response.status == 200){
-        //             alert("로그인이 완료되었습니다.");
-        //             navigate("/UserDashboard");
-        //           }
-        //           else{
-        //             alert("ID와 비밀번호를 확인해주세요.");
-        //           }
-        //         })                                         
-        //   } catch (err) {
-        //       setError("로그인 중 오류가 발생했습니다. 관리자에게 문의하세요.");
-        //   }            
-        // }
-        // else{
-        //     // 아무 것도 클릭하지 않음    
-        //     alert("로그인 유형을 선택 후 다시 시도하세요.");
-        //     return;
-        // }
-    }
+              }
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-200">
