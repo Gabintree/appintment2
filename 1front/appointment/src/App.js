@@ -10,6 +10,7 @@ import UserDashboard from "./pages/UserDashboard"; // 사용자 대시보드
 import HDashBoard from "./pages/HDashBoard"; // 관리자 대시보드
 import ReservationManagement from "./pages/ReservationManagement"; // (관리자)예약내역관리
 import StatusAndDetails from "./pages/StatusAndDetails.js"; // (관리자)상세보기
+import Footer from "./components/Footer.js";
 
 function App() {
   // NavBar 레이아웃 테스트
@@ -18,19 +19,18 @@ function App() {
       <NavBar />
       {/* 라우팅 설정 */}
       <Routes>
-        <Route path="/home" element={<Home />} /> 
+        <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/UserDashboard" element={<UserDashboard />} />
-        <Route path="/HDashBoard" element={<HDashBoard />}/>
+        <Route path="/HDashBoard" element={<HDashBoard />} />
         <Route path="/ReservationManagement" element={<ReservationManagement />} />
         <Route path="/StatusAndDetails" element={<StatusAndDetails />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }
-
-
 
 // 초기 테스트
 // import React, {useEffect, useState} from 'react';
@@ -60,12 +60,12 @@ function App() {
 //                 <input type="text" name="userPw" placeholder="비밀번호"></input>
 //                 <input type="submit" value="회원가입"></input>
 //             </form>
-            
+
 //             <form action="api/login" method="post">
 //                 <input type="text" name="userId" placeholder="아이디"></input>
 //                 <input type="password" name="userPw" placeholder="비밀번호"></input>
 //                 <input type="submit" value="로그인"></input>
-//             </form>    
+//             </form>
 
 //             {/* <BrowserRouter>
 //                 <Routes>
