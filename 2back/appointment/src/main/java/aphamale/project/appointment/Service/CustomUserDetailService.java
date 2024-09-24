@@ -35,4 +35,8 @@ public class CustomUserDetailService implements UserDetailsService {
     }
 
     
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/front_y

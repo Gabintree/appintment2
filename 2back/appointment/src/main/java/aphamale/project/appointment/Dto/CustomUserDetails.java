@@ -46,4 +46,8 @@ public class CustomUserDetails implements UserDetails{
         //throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
     }
     
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/front_y

@@ -1,7 +1,10 @@
 package aphamale.project.appointment.Service;
 
+<<<<<<< HEAD
 import java.sql.Timestamp;
 
+=======
+>>>>>>> origin/front_y
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,7 @@ import aphamale.project.appointment.Repository.UserInfoRepository;
 public class UserInfoService {
     private final UserInfoRepository userInfoRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+<<<<<<< HEAD
 
     public UserInfoService(UserInfoRepository userInfoRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
        
@@ -46,23 +50,55 @@ public class UserInfoService {
             // 이미 존재한다면,
             bool = "false";
 
+=======
+
+    public UserInfoService(UserInfoRepository userInfoRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
+       
+        this.userInfoRepository = userInfoRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+
+    }
+
+    public String JoinProcess(UserInfoDto userInfoDto){
+
+        String userId = userInfoDto.getUserId();
+        String userPw = userInfoDto.getUserPw();
+        String jwtRole = userInfoDto.getJwtRole();
+
+        String bool = "false"; // 리턴 값
+
+    try{
+        // 검증
+        Boolean isExist = userInfoRepository.existsByUserId(userId);
+
+        if (isExist){
+            // 이미 존재한다면,
+            bool = "false";
+
+>>>>>>> origin/front_y
             return bool;
         }
         else{
 
+<<<<<<< HEAD
             java.util.Date date = new java.util.Date();
 
+=======
+>>>>>>> origin/front_y
             UserInfoDomain userInfoDomain = new UserInfoDomain();
 
             userInfoDomain.setUserId(userId);
             userInfoDomain.setUserPw(bCryptPasswordEncoder.encode(userPw)); // 암호화
             userInfoDomain.setJwtRole(jwtRole);
+<<<<<<< HEAD
             userInfoDomain.setUserName(userName);
             userInfoDomain.setResidentNo(residentNo);
             userInfoDomain.setBirthDate(birthDate);
             userInfoDomain.setGender(gender);
             userInfoDomain.setPhone(phone);
             userInfoDomain.setInsertDate(new Timestamp(date.getTime()));
+=======
+>>>>>>> origin/front_y
 
             // 저장
             userInfoRepository.save(userInfoDomain);
@@ -79,6 +115,7 @@ public class UserInfoService {
         return bool;
     }
 
+<<<<<<< HEAD
 
     // @Transactional
     // @Modifying
@@ -87,6 +124,8 @@ public class UserInfoService {
 
     // }
 
+=======
+>>>>>>> origin/front_y
     // // jwt 시큐리티 적용 전
     // // 회원가입 
     // public void save(UserInfoDto userInfoDto){

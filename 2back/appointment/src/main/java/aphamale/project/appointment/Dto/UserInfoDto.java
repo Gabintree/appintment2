@@ -24,7 +24,10 @@ public class UserInfoDto {
     private Timestamp insertDate;
     private Timestamp updateDate;
     private String jwtRole; // jwt 로그인시 권한 검증
+<<<<<<< HEAD
     private String jwtRefresh; // jwt refresh token 값
+=======
+>>>>>>> origin/front_y
 
     // entity -> dto  객체로 변환하는 메서드
     public static UserInfoDto ToUserinfoDto(UserInfoDomain userInfoDomain){

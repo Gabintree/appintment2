@@ -1,11 +1,14 @@
 package aphamale.project.appointment.Controller;
 
+<<<<<<< HEAD
 import java.util.Collection;
 import java.util.Iterator;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+=======
+>>>>>>> origin/front_y
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +19,7 @@ public class MainController {
 
     @GetMapping("/")
     public String getMain() {
+<<<<<<< HEAD
 
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -27,6 +31,9 @@ public class MainController {
         String role = auth.getAuthority();
 
         return "Main Controller" + " " + userId + " " + role;
+=======
+        return "Main Controller";
+>>>>>>> origin/front_y
     }
     
 }

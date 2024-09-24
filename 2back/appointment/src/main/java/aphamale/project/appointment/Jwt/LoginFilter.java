@@ -3,12 +3,16 @@ package aphamale.project.appointment.Jwt;
 import java.util.Collection;
 import java.util.Iterator;
 
+<<<<<<< HEAD
 import org.springframework.http.HttpStatus;
+=======
+>>>>>>> origin/front_y
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+<<<<<<< HEAD
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,6 +24,12 @@ import aphamale.project.appointment.Repository.HospitalInfoRepository;
 import aphamale.project.appointment.Repository.UserInfoRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
+=======
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import aphamale.project.appointment.Dto.CustomUserDetails;
+import jakarta.servlet.FilterChain;
+>>>>>>> origin/front_y
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -31,12 +41,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     // 토큰 발행 
     private final JwtUtil jwtUtil;
 
+<<<<<<< HEAD
     private final UserInfoRepository userInfoRepository;
     private final HospitalInfoRepository hospitalInfoRepository;
 
 
     public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, 
                        UserInfoRepository userInfoRepository, HospitalInfoRepository hospitalInfoRepository) {
+=======
+    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+>>>>>>> origin/front_y
 
         this.authenticationManager = authenticationManager;
         //LoiginFilter 경로 변경(자동으로 /login을 찾아 적용한다고 함, 그래서 변경 처리)    
@@ -45,19 +59,27 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         this.setPasswordParameter("userPw"); // userPw로 변경 
 
         this.jwtUtil = jwtUtil;
+<<<<<<< HEAD
         this.userInfoRepository = userInfoRepository;
         this.hospitalInfoRepository = hospitalInfoRepository;
     }      
 
 
 
+=======
+    }      
+
+>>>>>>> origin/front_y
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         // 클라이언트 요청에서 userName, userPw 추출, userId는 ?? @_@??
         String userId = obtainUsername(request);
         String userPw = obtainPassword(request);
+<<<<<<< HEAD
         String role = request.getParameter("role");
+=======
+>>>>>>> origin/front_y
 
 	    // 스프링 시큐리티에서 userName과 userPw 검증하기 위해서는 token에 담아야 함
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userId, userPw, null);
@@ -70,6 +92,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
+<<<<<<< HEAD
+=======
+        // userId 찾기
+        CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+        String userId = customUserDetails.getUsername();
+
+>>>>>>> origin/front_y
         // role 찾기
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -77,6 +106,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
+<<<<<<< HEAD
         // userId 찾기
         String userId = "";
         if(role.equals("USER")){
@@ -125,6 +155,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // // 발급된 token 담아 사용, 접두사 "Bearer " 필요, 띄워쓰기 필수
         // response.addHeader("Authorization", "Bearer " + token);
+=======
+        // toeken 발행 요청
+        String token = jwtUtil.createJwt(userId, role, 24*60*60*1000L); // 24*60*60*1000L 이렇게 하면 하루인 듯
+
+        // 발급된 token 담아 사용, 접두사 "Bearer " 필요, 띄워쓰기 필수
+        response.addHeader("Authorization", "Bearer " + token);
+
+>>>>>>> origin/front_y
 
     }    
 
@@ -135,6 +173,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(401);
     }    
 
+<<<<<<< HEAD
     // 쿠키 생성 매서드
     private Cookie createCookie(String key, String value) {
 
@@ -171,4 +210,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     }    
 
+=======
+>>>>>>> origin/front_y
 }

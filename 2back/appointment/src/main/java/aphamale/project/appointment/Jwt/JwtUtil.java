@@ -23,9 +23,15 @@ public class JwtUtil {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
+<<<<<<< HEAD
     // username 검증, 여기 username은 jwt의 username 컬럼이므로.
     public String getUsername(String token){
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+=======
+    // username 검증
+    public String getUsername(String token){
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", String.class);
+>>>>>>> origin/front_y
     }
 
     // role 검증
@@ -34,12 +40,15 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
     }   
 
+<<<<<<< HEAD
     // 카테고리 구분(액세스 토큰인지, 리프레쉬 토큰인지)
     public String getCategory(String token){
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 
+=======
+>>>>>>> origin/front_y
     // 유효기간 검증
     public Boolean isExpired(String token) {
 
@@ -47,9 +56,14 @@ public class JwtUtil {
     }   
 
     // 토큰 생성
+<<<<<<< HEAD
     public String createJwt(String category, String username, String role, Long expriedMs){
         return Jwts.builder()
                 .claim("category", category) // 액세스인지, 리프레쉬인지
+=======
+    public String createJwt(String username, String role, Long expriedMs){
+        return Jwts.builder()
+>>>>>>> origin/front_y
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발행 시간

@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import aphamale.project.appointment.Dto.HospitalApiDto;
 import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.MessageApiService;
+<<<<<<< HEAD
+=======
+import aphamale.project.appointment.Service.UserInfoService;
+>>>>>>> origin/front_y
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +23,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class ConnectController {
 
+<<<<<<< HEAD
     // 생성자 주입 방식(컨트롤러가 서비스에 있는 변수나 매서드를 사용할 수 있다는 뜻??)  
+=======
+    // 생성자 주입 방식(컨트롤러가 서비스에 있는 변수나 매서드를 사용할 수 있다는 뜻??)
+    private final UserInfoService userInfoService;      
+>>>>>>> origin/front_y
     private final HospitalApiService hospitalApiService;  
     private final MessageApiService messageApiService;
 

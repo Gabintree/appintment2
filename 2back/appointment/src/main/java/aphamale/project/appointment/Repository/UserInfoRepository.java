@@ -13,13 +13,20 @@ public interface UserInfoRepository extends JpaRepository<UserInfoDomain, String
     // Optional은 null 방지 기능이라고 함.
     // findBy + 컬럼명
     //Optional<UserInfoDomain> findByUserId(String userId);
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/front_y
     UserInfoDomain findByUserId(String userId);
 
     // ID 존재 여부 true, false, JPA 내장 existsBy + 컬럼명
     Boolean existsByUserId(String userId);
+<<<<<<< HEAD
 
     // DB에 저장된 refresh token 값 조회 
     //UserInfoDomain findByJwtRefresh(String JwtRefresh);
+=======
+>>>>>>> origin/front_y
     
     
     }
