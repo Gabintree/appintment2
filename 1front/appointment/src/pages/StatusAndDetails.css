@@ -1,0 +1,74 @@
+/* src/StatusAndDetails.css */
+/* .status-and-details {
+    padding: 20px;
+} */
+
+.section-bar {
+    height: 50px;
+    /* 제목 높이 설정 */
+    border-top: 2px solid #000;
+    /* 위쪽 보더 3px */
+    border-bottom: 2px solid #000;
+    /* 아래쪽 보더 3px */
+    display: flex;
+    align-items: center;
+    /* 세로 가운데 정렬 */
+    font-size: 18px;
+    /* 제목 폰트 크기 */
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+}
+
+.section-content {
+    padding: 0 20px;
+    margin: 10px 0;
+}
+
+.p {
+    margin-bottom: 10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.action-button1 {
+    border: 1px solid #0FB7B1;
+    color: #0FB7B1;
+    background-color: transparent;
+    margin: 0 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.action-button2 {
+    border: 1px solid #FF675E;
+    color: #FF675E;
+    background-color: transparent;
+    margin: 0 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.notification-receive {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.notification-button {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #87DBD8;
+    ;
+    background-color: none;
+    border-radius: 50%;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.notification-button.active {
+    background-color: green;
+}

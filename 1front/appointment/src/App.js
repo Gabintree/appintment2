@@ -3,11 +3,13 @@ import { Routes, Route, BrowserRouter } from "react-router-dom"; // Router 사�
 import axios from "axios";
 
 import NavBar from "./components/NavBar";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import UserDashboard from "./pages/UserDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
+import Home from "./pages/Home"; // 메인
+import Login from "./pages/Login"; // 로그인
+import Register from "./pages/Register"; // 회원가입
+import UserDashboard from "./pages/UserDashboard"; // 사용자 대시보드
+import HDashBoard from "./pages/HDashBoard"; // 관리자 대시보드
+import ReservationManagement from "./pages/ReservationManagement"; // (관리자)예약내역관리
+import StatusAndDetails from "./pages/StatusAndDetails.js"; // (관리자)상세보기
 
 function App() {
   // NavBar 레이아웃 테스트
@@ -16,11 +18,13 @@ function App() {
       <NavBar />
       {/* 라우팅 설정 */}
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Home />} /> 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/UserDashboard" element={<UserDashboard />} />
-        <Route path="/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/HDashBoard" element={<HDashBoard />}/>
+        <Route path="/ReservationManagement" element={<ReservationManagement />} />
+        <Route path="/StatusAndDetails" element={<StatusAndDetails />} />
       </Routes>
     </BrowserRouter>
   );
