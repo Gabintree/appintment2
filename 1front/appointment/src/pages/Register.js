@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { json, useNavigate } from "react-router-dom"; // useRouter 대신 useNavigate 사용
 import axios from "axios";
 import UserDashboard from "./UserDashboard";
-import AdminDashboard from "./AdminDashboard";
+import AdminDashboard from "./HDashBoard";
 
 const Register = () => {
   // 사용자 컬럼
@@ -16,6 +16,7 @@ const Register = () => {
   const [birthday, setBirthday] = useState(""); // 생년월일  6자리
   const [gender, setGender] = useState(0);
   const [phone, setPhone] = useState("");
+  const [agreeGps, setAgreeGps] = useState("N"); // 기본값 미동의
 
   // 관리자 컬럼
   const [adminId, setAdminId] = useState("");
@@ -30,8 +31,11 @@ const Register = () => {
   const [tab, setTab] = useState("user"); // 탭 상태 추가
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [ischecked0, setIschecked0] = useState();
-  const [ischecked1, setIschecked1] = useState();
+  const [ischecked0, setIschecked0] = useState(); // 성별 버튼
+  const [ischecked1, setIschecked1] = useState(); // 성별 버튼
+  const [ischeckedGpsN, setIscheckedGpsN] = useState(); // 성별 버튼
+  const [ischeckedGpsY, setIscheckedGpsY] = useState(); // 성별 버튼
+
 
   const userForm = useRef();
   const adminForm = useRef();
@@ -94,6 +98,7 @@ const Register = () => {
           birthDate: numBirthDay, // 숫자만
           gender: gender,
           phone: phone.replace(/-/g, ""), // 숫자만
+          agreeGPS: agreeGps, // GPS 동의 여부
         };
 
         await axios
@@ -153,7 +158,7 @@ const Register = () => {
     }
   }
 
-  // 라디오 버튼 단일 선택 처리
+  // 성별 라디오 버튼 단일 선택 처리
   function genderOnChange(selectGender) {
     console.log("gender값 : ", selectGender);
     if (selectGender == 0) {
@@ -166,6 +171,21 @@ const Register = () => {
       setGender(selectGender);
     }
   }
+
+    // GPS 라디오 버튼 단일 선택 처리
+    function agreeGpsOnChange(selectGps) {
+      console.log("agreeGps값 : ", selectGps);
+      if (selectGps == "N") {
+        setIscheckedGpsN(true);
+        setIscheckedGpsY(false);
+        setAgreeGps(selectGps);
+      } else {
+        setIscheckedGpsN(false);
+        setIscheckedGpsY(true);
+        setAgreeGps(selectGps);
+      }
+    }
+
 
   // 휴대폰 형식(하이픈 추가)
   function phoneOnChange(phone) {
@@ -347,6 +367,26 @@ const Register = () => {
               onChange={(e) => phoneOnChange(e.target.value)}
             />
           </Form.Group>
+          {/* GPS 동의 여부 */}
+          <Form.Group controlId="formUserAgreeGPS">
+                      <Form.Label>GPS 동의 여부 </Form.Label>
+                      <Form.Check
+                        type="radio"
+                        label="미동의"
+                        value={"N"}
+                        defaultChecked={true}
+                        checked={ischeckedGpsN}
+                        onClick={(e) => agreeGpsOnChange(e.target.value)}
+                      />
+                      <Form.Check
+                        type="radio"
+                        label="동의"
+                        value={"Y"}
+                        defaultChecked={false}
+                        checked={ischeckedGpsY}
+                        onClick={(e) => agreeGpsOnChange(e.target.value)}
+                      />
+                    </Form.Group>          
           {error && (
             <div className="mt-3">
               <Alert variant="danger">{error}</Alert>

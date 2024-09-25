@@ -33,6 +33,7 @@ public class UserInfoService {
         String birthDate = userInfoDto.getBirthDate();
         String gender = userInfoDto.getGender();
         String phone = userInfoDto.getPhone();
+        String agreeGPS = userInfoDto.getAgreeGPS();
 
 
 
@@ -62,6 +63,7 @@ public class UserInfoService {
             userInfoDomain.setBirthDate(birthDate);
             userInfoDomain.setGender(gender);
             userInfoDomain.setPhone(phone);
+            userInfoDomain.setAgreeGPS(agreeGPS);
             userInfoDomain.setInsertDate(new Timestamp(date.getTime()));
 
             // 저장

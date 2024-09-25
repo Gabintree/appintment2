@@ -21,6 +21,7 @@ public class UserInfoDto {
     private String birthDate;
     private String gender;
     private String phone;
+    private String agreeGPS;
     private Timestamp insertDate;
     private Timestamp updateDate;
     private String jwtRole; // jwt 로그인시 권한 검증

@@ -41,6 +41,9 @@ public class UserInfoDomain {
     private String phone; // 연락처
 
     @Column
+    private String agreeGPS; // GPS 동의여부
+
+    @Column
     private Timestamp insertDate; // 회원가입일
 
     @Column
