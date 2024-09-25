@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class HospitalApiService {
 
     // 병원 목록 조회 
-    public List<HospitalApiDto> SelectListApi(HospitalApiDto hospitalParam){
+    public List<HospitalApiDto> SelectListApi(String selectedSido, String selectedGugun, String selectedBorC, String dayOfWeek){
 
         // 데이터 담을 list 생성
         List<HospitalApiDto> hospitalList = new ArrayList<>();
@@ -39,23 +39,23 @@ public class HospitalApiService {
             /* Service Key */
             urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=d3KfOE1rDJV%2B5DY%2BZbASj4tiwcbnOGVHXorQOI7Bk4SPggD3%2FgMOQa0jhRzs0GO%2FEPpcuEXEzeIJpy9AncxJNg%3D%3D"); 
             /* 주소(시도) */
-            urlBuilder.append("&" + URLEncoder.encode("Q0","UTF-8") + "=" + URLEncoder.encode("서울특별시", "UTF-8")); 
+            urlBuilder.append("&" + URLEncoder.encode("Q0","UTF-8") + "=" + URLEncoder.encode(selectedSido, "UTF-8")); 
             /* 주소(시군구) */
-            urlBuilder.append("&" + URLEncoder.encode("Q1","UTF-8") + "=" + URLEncoder.encode("강남구", "UTF-8")); 
+            urlBuilder.append("&" + URLEncoder.encode("Q1","UTF-8") + "=" + URLEncoder.encode(selectedGugun, "UTF-8")); 
             /* CODE_MST의'H000' 참조(B:병원, C:의원) */
-            urlBuilder.append("&" + URLEncoder.encode("QZ","UTF-8") + "=" + URLEncoder.encode("B", "UTF-8")); 
-            /* CODE_MST의'D000' 참조(D001~D029) */
-            urlBuilder.append("&" + URLEncoder.encode("QD","UTF-8") + "=" + URLEncoder.encode("D001", "UTF-8")); 
+            urlBuilder.append("&" + URLEncoder.encode("QZ","UTF-8") + "=" + URLEncoder.encode(selectedBorC, "UTF-8"));  // 모두
+            /* CODE_MST의'D000' 참조(D001~D029) 진료과목 */ 
+            urlBuilder.append("&" + URLEncoder.encode("QD","UTF-8") + "=" + URLEncoder.encode("D001", "UTF-8"));  // 
             /* 월~일요일(1~7), 공휴일(8) */
-            urlBuilder.append("&" + URLEncoder.encode("QT","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); 
+            urlBuilder.append("&" + URLEncoder.encode("QT","UTF-8") + "=" + URLEncoder.encode(dayOfWeek, "UTF-8")); // ??
              /* 기관명 */
             urlBuilder.append("&" + URLEncoder.encode("QN","UTF-8") + "=" + URLEncoder.encode("%", "UTF-8"));
             /* 순서 */
-            urlBuilder.append("&" + URLEncoder.encode("ORD","UTF-8") + "=" + URLEncoder.encode("NAME", "UTF-8")); 
+            urlBuilder.append("&" + URLEncoder.encode("ORD","UTF-8") + "=" + URLEncoder.encode("NAME", "UTF-8")); // 이름 순으로
              /* 페이지 번호 */
-            urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); // ??
             /* 목록 건수 */
-            urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); 
+            urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("100", "UTF-8")); // ??
         
             // URL 객체 생성
             //URL url = new URL(urlBuilder.toString()); // JAVA 20부터 사용불가 URI를 URL로 변환하는 방식으로 대체

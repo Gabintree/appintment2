@@ -11,6 +11,7 @@ import HDashBoard from "./pages/HDashBoard"; // 관리자 대시보드
 import ReservationManagement from "./pages/ReservationManagement"; // (관리자)예약내역관리
 import StatusAndDetails from "./pages/StatusAndDetails.js"; // (관리자)상세보기
 import Footer from "./components/Footer.js"; 
+import UserMyPage from "./pages/UserMyPage.js"; // 환자 마이페이지
 
 function App() {
   // NavBar 레이아웃 테스트
