@@ -14,7 +14,6 @@ import Footer from "./components/Footer.js";
 import UserMyPage from "./pages/UserMyPage.js"; // 환자 마이페이지
 
 function App() {
-  // NavBar 레이아웃 테스트
   return (
     <BrowserRouter>
       <NavBar />
