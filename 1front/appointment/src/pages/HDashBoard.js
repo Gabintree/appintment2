@@ -13,6 +13,28 @@ const HDashBoard = () => {
     const [reservations, setReservations] = useState([]); // 예약 내역 상태 추가
     const [isDetailsVisible, setIsDetailsVisible] = useState(false); // 상세보기 상태 추가
 
+    const [error, setError] = useState("");
+
+
+    // (로그인 인증) 토큰값 만료 체크 
+    const handleAccessToken = async () => {
+        try{
+            const accessToken = localStorage.getItem('login-token');
+            console.log("login-token 값 : ", accessToken);
+            
+            if(!accessToken){
+                throw error("인증이 만료되었습니다. 다시 로그인 해주세요.");
+            }
+        }catch (error) {
+            setError("인증에 오류가 발생했습니다. 관리자에게 문의해주세요.");
+        }
+    }
+
+    useEffect(() => {
+        // (로그인 인증) 토큰값 만료 체크  실행
+        handleAccessToken();
+    })
+
     useEffect(() => {
         // 로그인 시 사용자 이름을 가져오는 예시
         const fetchUserName = async () => {

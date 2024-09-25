@@ -61,29 +61,22 @@ public class ConnectController {
             int dayOfWeekValue = date.getDayOfWeek().getValue();
             String dayOfWeek = String.valueOf(dayOfWeekValue);
 
-
-
+            // 병원 조건으로 조회
             List<HospitalApiDto> hospitalList_B = hospitalApiService.SelectListApi(selectedSido, selectedGugun, "B", dayOfWeek); // 병원으로 한 번 조회
-
             finalHospitalList.addAll(hospitalList_B);
 
+            // 의원 조건으로 조회
             List<HospitalApiDto> hospitalList_C = hospitalApiService.SelectListApi(selectedSido, selectedGugun, "C", dayOfWeek); // 의원으로 한 번 조회
-
             finalHospitalList.addAll(hospitalList_C);
 
             // for(int i = 0; i < hospitalList.size(); i++){
             //     System.out.println(hospitalList.get(i));
             // }
-
-            System.out.println("return hospitalList");
-
-
         }catch(Exception ex){
            System.out.println(ex.toString());
         }   
         
         return finalHospitalList;
-
     }
 
     // sms 문자 전송

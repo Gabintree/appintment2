@@ -7,16 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @ResponseBody
-public class AdminController {
+public class UserController {
 
-    @GetMapping("/api/admin")
+    @GetMapping("/api/user/")
     public String getAdmin() {
-        return "Admin Controller";
+        return "user Controller";
     }
     
-    @GetMapping("/api/admin/adminId")
-    public String getAdminId() {
-        return "Admin Controller";
-    }
     
 }

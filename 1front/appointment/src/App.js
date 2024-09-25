@@ -27,6 +27,7 @@ function App() {
         <Route path="/HDashBoard" element={<HDashBoard />}/>
         <Route path="/ReservationManagement" element={<ReservationManagement />} />
         <Route path="/StatusAndDetails" element={<StatusAndDetails />} />
+        <Route path="/UserMyPage" element={<UserMyPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

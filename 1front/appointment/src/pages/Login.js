@@ -53,6 +53,11 @@ const Login = () => {
                     if(response.status == 200){
                       alert("로그인이 완료되었습니다.");
 
+                      // 액세스 토큰 로컬 스토리지에 저장
+                      if(response.headers.access){
+                        localStorage.setItem('login-token', response.headers.access);
+                      }
+
                       if(formGbn === "userBtn"){
                         navigate("/UserDashboard");
                       }
