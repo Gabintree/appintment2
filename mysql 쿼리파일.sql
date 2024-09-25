@@ -18,6 +18,7 @@ birth_date date,
 >>>>>>> origin/front_y
 gender varchar(1), -- 0 : 여성, 1: 남성
 phone varchar(30),
+agreeGPS varchar(1), -- Y : 동의, N : 미동의 
 insert_date datetime, -- 가입일
 update_date datetime, -- 수정일
 jwt_role varchar(30), -- jwt 로그인 권한 검증시 필요
