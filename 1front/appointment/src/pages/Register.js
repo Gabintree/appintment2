@@ -41,8 +41,6 @@ const Register = () => {
   const [userIsHidden, setUserIsHidden] = useState(false);
   const [adminIsHidden, setAdminIsHidden] = useState(true); // 기본값 숨김 처리
 
-  // TODO: 관리자 버튼을 클릭할 때 사용자 버튼이 동시에 눌려지는 문제 해결
-  // TODO: 관리자 회원가입에 회원정보 입력하고 제출하면 사용자 대시보드로 이동함
   function handleTabSelect(selectedTab) {
     setTab(selectedTab);
 

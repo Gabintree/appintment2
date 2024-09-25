@@ -1,4 +1,4 @@
-// HDashBoard.js 환자 대시보드
+// HDashBoard.js 관리자 대시보드
 import React, { useState, useEffect } from "react";
 import "./HDashBoard.css";
 import ReservationManagement from "./ReservationManagement";
