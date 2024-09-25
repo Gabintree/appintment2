@@ -1,6 +1,5 @@
 package aphamale.project.appointment.Dto;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 import aphamale.project.appointment.Domain.UserInfoDomain;

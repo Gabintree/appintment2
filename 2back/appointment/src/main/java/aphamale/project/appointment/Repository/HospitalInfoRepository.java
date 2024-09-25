@@ -15,6 +15,7 @@ public interface HospitalInfoRepository extends JpaRepository<HospitalInfoDomain
     // Optional은 null 방지 기능이라고 함.
     // findBy + 컬럼명
     Optional<HospitalInfoDomain> findByHospitalId(String hospitalId);
+    
     //HospitalInfoDomain findByHospitalId(String hospitalId);
 
     // ID 존재 여부 true, false, JPA 내장 existsBy + 컬럼명

@@ -1,15 +1,10 @@
 package aphamale.project.appointment.Controller;
 
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 
 import aphamale.project.appointment.Dto.HospitalApiDto;
@@ -17,10 +12,7 @@ import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.MessageApiService;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 
 

@@ -1,6 +1,5 @@
 package aphamale.project.appointment.Domain;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 import org.hibernate.annotations.DynamicUpdate;

@@ -2,10 +2,13 @@ package aphamale.project.appointment.Service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import aphamale.project.appointment.Domain.HospitalInfoDomain;
 import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Jwt.JwtUtil;
+import aphamale.project.appointment.Repository.HospitalInfoRepository;
 import aphamale.project.appointment.Repository.UserInfoRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,12 +19,12 @@ public class ReissueService {
 
     private final JwtUtil jwtUtil;
     private final UserInfoRepository userInfoRepository;
-    private final UserInfoService userInfoService;
+    private final HospitalInfoRepository hospitalInfoRepository;
 
-    public ReissueService(JwtUtil jwtUtil, UserInfoRepository userInfoRepository, UserInfoService userInfoService){
+    public ReissueService(JwtUtil jwtUtil, UserInfoRepository userInfoRepository, HospitalInfoRepository hospitalInfoRepository){
         this.jwtUtil = jwtUtil;
         this.userInfoRepository = userInfoRepository;
-        this.userInfoService = userInfoService;
+        this.hospitalInfoRepository = hospitalInfoRepository;
     }
 
 
@@ -48,9 +51,21 @@ public class ReissueService {
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST); // 리프레쉬 토큰이 없습니다.
         }       
 
-       // DB에 해당 userId에 저장된 refresh token 값 가져옴.
-       UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
-       String jwtRefresh = userInfoDomain.getJwtRefresh(); 
+        String jwtRefresh = "";
+
+        // 사용자 계정이면
+        if(role.equals("USER")){
+
+            // DB에 해당 userId에 저장된 refresh token 값 가져옴.
+            UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
+            jwtRefresh = userInfoDomain.getJwtRefresh(); 
+
+        }
+        else{
+            HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(userId).orElseThrow(() -> new UsernameNotFoundException(userId));
+            jwtRefresh = hospitalInfoDomain.getJwtRefresh();
+        }
+
 
         if(!refresh.equals(jwtRefresh)){
 

@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import aphamale.project.appointment.Dto.HospitalInfoDto;
 import aphamale.project.appointment.Dto.UserInfoDto;
-import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.HospitalInfoService;
 import aphamale.project.appointment.Service.UserInfoService;
 

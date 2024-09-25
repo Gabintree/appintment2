@@ -6,11 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import aphamale.project.appointment.Domain.HospitalInfoDomain;
-import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.HospitalInfoDto;
-import aphamale.project.appointment.Dto.UserInfoDto;
 import aphamale.project.appointment.Repository.HospitalInfoRepository;
-import aphamale.project.appointment.Repository.UserInfoRepository;
 
 @Service
 public class HospitalInfoService {
