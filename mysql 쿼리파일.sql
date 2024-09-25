@@ -57,26 +57,26 @@ primary key(hospital_id, group_id)
 >>>>>>> origin/front_y
 
 
--- create table reserve(
--- reserve_no varchar(30), -- 예약번호 
--- user_id varchar(30),
--- group_id varchar(30),
--- hospital_name varchar(30),
--- hospital_address varchar(100),
--- subject varchar(30), -- 진료과목 
--- reserve_date datetime,
--- reserve_time time,
--- alarm_flag varchar(1), -- 알림톡 수신 여부
--- reserve_status varchar(1), -- I는 예약완료, U는 변경완료 
--- remark varchar(100), -- 예약시 메세지(증상 등) 
--- insert_user varchar(30), -- 등록자
--- insert_date datetime, -- 등록일
--- update_user varchar(30), -- 변경자
--- update_date datetime, -- 변경일
--- primary key(reserve_no),
--- foreign key(user_id)
--- references user_info(user_id)
--- );
+create table reserve(
+reserve_no varchar(30), -- 예약번호 
+user_id varchar(30),
+group_id varchar(30),
+hospital_name varchar(30),
+hospital_address varchar(100),
+subject varchar(30), -- 진료과목 
+reserve_date datetime,
+reserve_time time,
+alarm_flag varchar(1), -- 알림톡 수신 여부
+reserve_status varchar(1), -- I는 예약완료, U는 변경완료 
+remark varchar(100), -- 예약시 메세지(증상 등) 
+insert_user varchar(30), -- 등록자
+insert_date datetime, -- 등록일
+update_user varchar(30), -- 변경자
+update_date datetime, -- 변경일
+primary key(reserve_no),
+foreign key(user_id)
+references user_info(user_id)
+);
 
 --  hospital_info 인덱스 생성 후 group_id 외래키 추가 처리 
 create index idx_group_id on hospital_info(group_id);
@@ -103,6 +103,7 @@ references hospital_info(hospital_id, group_id)
 );
 
 select * from user_info;
+select * from hospital_info;
 
 
 <<<<<<< HEAD
