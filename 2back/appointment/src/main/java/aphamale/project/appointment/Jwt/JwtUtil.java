@@ -56,8 +56,5 @@ public class JwtUtil {
                 .expiration(new Date(System.currentTimeMillis() + expriedMs)) // 토큰 만료(소멸) 시간
                 .signWith(secretKey) // 토큰 시그니처 
                 .compact(); // 토큰 발행
-    }
-
-
-    
+    }    
 }

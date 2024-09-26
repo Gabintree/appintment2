@@ -20,6 +20,7 @@ function App() {
       <NavBar />
       {/* 라우팅 설정 */}
       <Routes>
+        <Route path="/" element={<Home />} /> 
         <Route path="/home" element={<Home />} /> 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

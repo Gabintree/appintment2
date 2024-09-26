@@ -156,27 +156,28 @@ public class SecurityConfig {
 
         // 세션 설정                    
         http.sessionManagement((session) -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 꼭 이 상태 STATELESS
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 꼭 이 상태 STATELESS       
 
         http.cors((cors) -> cors
-                    .configurationSource(new CorsConfigurationSource() {
-                        
-                        @Override
-                        public CorsConfiguration getCorsConfiguration(HttpServletRequest request){
-                            CorsConfiguration configuration = new CorsConfiguration();
+        .configurationSource(new CorsConfigurationSource() {
+            
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request){
+                CorsConfiguration configuration = new CorsConfiguration();
 
-                            configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                            configuration.setAllowedMethods(Collections.singletonList("*"));
-                            configuration.setAllowCredentials(true);
-                            configuration.setAllowedHeaders(Collections.singletonList("*"));
-                            configuration.setMaxAge(3600L);
+                configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
+                configuration.setAllowedMethods(Collections.singletonList("*"));
+                configuration.setAllowedHeaders(Collections.singletonList("*"));
+                configuration.setAllowCredentials(true);
+                configuration.setMaxAge(3600L);
 
-                            configuration.setExposedHeaders(Collections.singletonList("Authoriztion"));
+                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
-                            return configuration;
+                return configuration;
 
-                        }
-                    }));   
+            }
+        }));   
+
 
      return http.build();
     }
@@ -224,13 +225,13 @@ public class SecurityConfig {
                         public CorsConfiguration getCorsConfiguration(HttpServletRequest request){
                             CorsConfiguration configuration = new CorsConfiguration();
 
-                            configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                            configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
                             configuration.setAllowedMethods(Collections.singletonList("*"));
-                            configuration.setAllowCredentials(true);
                             configuration.setAllowedHeaders(Collections.singletonList("*"));
+                            configuration.setAllowCredentials(true);
                             configuration.setMaxAge(3600L);
 
-                            configuration.setExposedHeaders(Collections.singletonList("Authoriztion"));
+                            configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
                             return configuration;
 

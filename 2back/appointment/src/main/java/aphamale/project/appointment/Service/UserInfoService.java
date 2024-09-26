@@ -27,7 +27,7 @@ public class UserInfoService {
 
         String userId = userInfoDto.getUserId();
         String userPw = userInfoDto.getUserPw();
-        String jwtRole = "USER"; // 사용자 계정의 ROLE은 USER로 저장.
+        String jwtRole = "ROLE_USER"; // 사용자 계정의 ROLE은 USER로 저장.
         String userName = userInfoDto.getUserName();
         String residentNo = userInfoDto.getResidentNo();
         String birthDate = userInfoDto.getBirthDate();

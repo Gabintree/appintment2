@@ -27,7 +27,7 @@ public class HospitalInfoService {
 
         String hospitalId = hospitalInfoDto.getHospitalId();
         String hospitalPw = hospitalInfoDto.getHospitalPw();
-        String jwtRole = "ADMIN"; // 병원 계정의 ROLE은 ADMIN으로 저장.
+        String jwtRole = "ROLE_ADMIN"; // 병원 계정의 ROLE은 ADMIN으로 저장.
         String corporateNo = hospitalInfoDto.getCorporateNo();
         String groupId = hospitalInfoDto.getGroupId();
         String hospitalName = hospitalInfoDto.getHospitalName();

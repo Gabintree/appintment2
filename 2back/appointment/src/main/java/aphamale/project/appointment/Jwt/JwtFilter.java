@@ -33,7 +33,14 @@ public class JwtFilter extends OncePerRequestFilter{
             throws ServletException, IOException {
 
             // 헤더에서 access키에 담긴 토큰을 꺼냄
-             String accessToken = request.getHeader("access");
+            String accessToken = request.getHeader("Authorization");
+
+            if(accessToken != null){
+
+                // Bearer 부분 제거 후 순수 토큰만 획득
+                accessToken = accessToken.split(" ")[1];  
+
+            }
 
             // 토큰이 없다면 다음 필터로 넘김
             if (accessToken == null) {
@@ -60,7 +67,7 @@ public class JwtFilter extends OncePerRequestFilter{
             }
 
             // 토큰이 access인지 확인 (발급시 페이로드에 명시)
-            String category = jwtUtil.getCategory(accessToken);
+             String category = jwtUtil.getCategory(accessToken);
 
             // 액세스 토큰이 아니면
             if (!category.equals("access")) { 
