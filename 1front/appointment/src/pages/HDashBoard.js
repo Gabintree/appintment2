@@ -1,5 +1,6 @@
 // HDashBoard.js
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import './HDashBoard.css';
 import ReservationManagement from './ReservationManagement';
 import StatusSelect from './StatusSelect';
@@ -16,24 +17,49 @@ const HDashBoard = () => {
     const [error, setError] = useState("");
 
 
-    // (로그인 인증) 토큰값 만료 체크 
-    const handleAccessToken = async () => {
-        try{
-            const accessToken = localStorage.getItem('login-token');
-            console.log("login-token 값 : ", accessToken);
-            
-            if(!accessToken){
-                throw error("인증이 만료되었습니다. 다시 로그인 해주세요.");
-            }
-        }catch (error) {
-            setError("인증에 오류가 발생했습니다. 관리자에게 문의해주세요.");
-        }
-    }
 
-    useEffect(() => {
-        // (로그인 인증) 토큰값 만료 체크  실행
-        handleAccessToken();
-    })
+    const accessToken = localStorage.getItem('login-token');
+    async function getAdminId(){
+
+        // const params = {
+        //     role : "ROLE_ADMIN",
+        // };
+
+        await axios.get("/api/admin", {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+            }
+        // }, {params}) 
+         }) 
+        .then(function (response){
+            if(response.status == 200){
+                console.log("토근 인증 완료");
+            }            
+            else{
+                console.log("토큰 인증 다른 코드", response.data);
+            }
+        })
+        .catch(function(error){
+            console.log("인증 오류 : ", error);
+            alert("다시 로그인 해주세요.");
+          }) 
+    };
+
+    getAdminId();
+
+    // // (로그인 인증) 토큰값 만료 체크 
+    // const handleAccessToken = async () => {
+    //     try{
+    //         const accessToken = localStorage.getItem('login-token');
+    //         console.log("login-token 값 : ", accessToken);
+            
+    //         if(!accessToken){
+    //             throw error("인증이 만료되었습니다. 다시 로그인 해주세요.");
+    //         }
+    //     }catch (error) {
+    //         setError("인증에 오류가 발생했습니다. 관리자에게 문의해주세요.");
+    //     }
+    // }
 
     useEffect(() => {
         // 로그인 시 사용자 이름을 가져오는 예시
