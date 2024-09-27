@@ -19,30 +19,39 @@ const HDashBoard = () => {
 
 
     const accessToken = localStorage.getItem('login-token');
+    const userId = sessionStorage.getItem("userId");
     async function getAdminId(){
 
-        // const params = {
-        //     role : "ROLE_ADMIN",
-        // };
+        try{
+            const data = {
+                hospitalId: userId,
+            };
+    
+            await axios.post("/api/admin", JSON.stringify(data), {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json; charset=utf8",
+                }
+            })
+            .then(function (response){
+                if(response.status == 200){
+                    console.log("토근 인증 완료");
+                    console.log(response.data);
+                    const name =response.data;
+                    setUserName(name);
+                }            
+                else{
+                    console.log("토큰 인증 다른 코드", response.data);
+                }
+            })
+            .catch(function(error){
+                console.log("인증 오류 : ", error);
+                alert("다시 로그인 해주세요.");
+              })             
+        } catch (err) {
 
-        await axios.get("/api/admin", {
-            headers: {
-                "Authorization": `Bearer ${accessToken}`,
-            }
-        // }, {params}) 
-         }) 
-        .then(function (response){
-            if(response.status == 200){
-                console.log("토근 인증 완료");
-            }            
-            else{
-                console.log("토큰 인증 다른 코드", response.data);
-            }
-        })
-        .catch(function(error){
-            console.log("인증 오류 : ", error);
-            alert("다시 로그인 해주세요.");
-          }) 
+            setError("등록 중 오류가 발생했습니다.");
+        }        
     };
 
     getAdminId();
@@ -62,26 +71,26 @@ const HDashBoard = () => {
     // }
 
     useEffect(() => {
-        // 로그인 시 사용자 이름을 가져오는 예시
-        const fetchUserName = async () => {
-            // 여기서 API 호출을 통해 사용자 이름을 가져올 수 있습니다.
-            // 예시로 하드코딩된 이름을 사용합니다.
-            const fetchedName = '한국대학병원'; // 실제 API 호출로 대체
-            setUserName(fetchedName);
-        };
+        // // 로그인 시 사용자 이름을 가져오는 예시
+        // const fetchUserName = async () => {
+        //     // 여기서 API 호출을 통해 사용자 이름을 가져올 수 있습니다.
+        //     // 예시로 하드코딩된 이름을 사용합니다.
+        //     const fetchedName = '한국대학병원'; // 실제 API 호출로 대체
+        //     setUserName(fetchedName);
+        // };
 
-        // 임의의 예약 데이터 추가
-        const fetchReservations = async () => {
-            const dummyData = [
-                { id: 1, date: '2023-10-01', time: '10:00', name: '김철수', birth: '1990-01-01', department: '내과', status: '확정', changer: '홍길동' },
-                { id: 2, date: '2023-10-02', time: '11:00', name: '이영희', birth: '1985-05-05', department: '내과', status: '확정', changer: '홍길동' },
-                { id: 3, date: '2023-10-03', time: '09:30', name: '박민수', birth: '1992-03-15', department: '내과', status: '대기', changer: '홍길동' },
-            ];
-            setReservations(dummyData);
-        };
+        // // 임의의 예약 데이터 추가
+        // const fetchReservations = async () => {
+        //     const dummyData = [
+        //         { id: 1, date: '2023-10-01', time: '10:00', name: '김철수', birth: '1990-01-01', department: '내과', status: '확정', changer: '홍길동' },
+        //         { id: 2, date: '2023-10-02', time: '11:00', name: '이영희', birth: '1985-05-05', department: '내과', status: '확정', changer: '홍길동' },
+        //         { id: 3, date: '2023-10-03', time: '09:30', name: '박민수', birth: '1992-03-15', department: '내과', status: '대기', changer: '홍길동' },
+        //     ];
+        //     setReservations(dummyData);
+        // };
 
-        fetchUserName();
-        fetchReservations();
+        // fetchUserName();
+        // fetchReservations();
     }, []); // 컴포넌트가 마운트될 때 한 번만 실행
 
     const handleStatusChange = (status) => {
