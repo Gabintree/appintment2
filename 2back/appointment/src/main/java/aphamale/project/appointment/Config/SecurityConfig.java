@@ -152,7 +152,7 @@ public class SecurityConfig {
         
 
         // Logout 필터 추가, LogoutFilter.class 보다 먼저 실행 됨.
-        http.addFilterBefore(new CustomLogoutFilter(jwtUtil, userInfoRepository), LogoutFilter.class);
+        http.addFilterBefore(new CustomLogoutFilter(jwtUtil, userInfoRepository, hospitalInfoRepository), LogoutFilter.class);
 
         // 세션 설정                    
         http.sessionManagement((session) -> session
@@ -212,7 +212,7 @@ public class SecurityConfig {
         
 
         // Logout 필터 추가, LogoutFilter.class 보다 먼저 실행 됨.
-        http.addFilterBefore(new CustomLogoutFilter(jwtUtil, userInfoRepository), LogoutFilter.class);
+        http.addFilterBefore(new CustomLogoutFilter(jwtUtil, userInfoRepository, hospitalInfoRepository), LogoutFilter.class);
 
         // 세션 설정                    
         http.sessionManagement((session) -> session

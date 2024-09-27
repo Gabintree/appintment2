@@ -2,9 +2,12 @@ package aphamale.project.appointment.Jwt;
 
 import java.io.IOException;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.GenericFilterBean;
 
+import aphamale.project.appointment.Domain.HospitalInfoDomain;
 import aphamale.project.appointment.Domain.UserInfoDomain;
+import aphamale.project.appointment.Repository.HospitalInfoRepository;
 import aphamale.project.appointment.Repository.UserInfoRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -19,10 +22,12 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
     private final JwtUtil jwtUtil;
     private final UserInfoRepository userInfoRepository;
+    private final HospitalInfoRepository hospitalInfoRepository;
 
-    public CustomLogoutFilter(JwtUtil jwtUtil, UserInfoRepository userInfoRepository){
+    public CustomLogoutFilter(JwtUtil jwtUtil, UserInfoRepository userInfoRepository, HospitalInfoRepository hospitalInfoRepository){
         this.jwtUtil = jwtUtil;
         this.userInfoRepository = userInfoRepository;
+        this.hospitalInfoRepository = hospitalInfoRepository;
     }
 
     // GenericFilterBean 안에 기본으로 제공하는 doFilter
@@ -63,7 +68,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
             }
         }
 
-        String userId = jwtUtil.getUsername(refresh);     
+        String userId = jwtUtil.getUsername(refresh);
+        String role = jwtUtil.getRole(refresh);
 
         // refresh null check
         if (refresh == null) {
@@ -101,8 +107,18 @@ public class CustomLogoutFilter extends GenericFilterBean {
         // }
 
         //DB에 저장되어 있는지 확인
-        UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
-        String getRefresh = userInfoDomain.getJwtRefresh();   
+        String getRefresh = "";
+
+        if(role.equals("USER")){
+
+            UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
+            getRefresh = userInfoDomain.getJwtRefresh();   
+
+        }else{
+            HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(userId).orElseThrow(() -> new UsernameNotFoundException(userId));
+            getRefresh = hospitalInfoDomain.getJwtRefresh(); 
+
+        }  
         
         if (!refresh.equals(getRefresh)) {
             // response status code
@@ -113,11 +129,17 @@ public class CustomLogoutFilter extends GenericFilterBean {
         // Refresh 토큰 DB에서 제거
         // userInfoRepository.deleteByRefresh(refresh);
 
-        userInfoDomain = userInfoRepository.findByUserId(userId);
-        userInfoDomain.setJwtRefresh("");   // jwt_refresh 컬럼을 공백 처리
+        if(role.equals("USER")){
+            UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
+            userInfoDomain.setJwtRefresh("");   // jwt_refresh 컬럼을 공백 처리
+            
+            userInfoRepository.save(userInfoDomain);
+        }else{
+            HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(userId).orElseThrow(() -> new UsernameNotFoundException(userId));
+            hospitalInfoDomain.setJwtRefresh(""); // // jwt_refresh 컬럼을 공백 처리
 
-        userInfoRepository.save(userInfoDomain);
-
+            hospitalInfoRepository.save(hospitalInfoDomain);
+        }
 
         //Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie("refresh", null); // 리프레쉬 토큰 null 값

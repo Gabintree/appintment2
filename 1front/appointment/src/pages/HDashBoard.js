@@ -42,8 +42,11 @@ const HDashBoard = () => {
             .then(function (response){
                 if(response.status == 200){
                     console.log("토큰 인증 완료");
-                    const name =response.data;
-                    setUserName(name);      
+                    const name = response.data;
+                    setUserName(name);  
+                    // 세션 스토리지에 이름도 저장
+                    sessionStorage.setItem('userName', name); 
+    
                 }            
             })
             .catch(function(error){
@@ -88,31 +91,42 @@ const HDashBoard = () => {
         }          
     };
 
-    getAdminId();
+    // 로그아웃 
+    async function logoutOnClick() {
 
-    // // (로그인 인증) 토큰값 만료 체크 
-    // const handleAccessToken = async () => {
-    //     try{
-    //         const accessToken = localStorage.getItem('login-token');
-    //         console.log("login-token 값 : ", accessToken);
-            
-    //         if(!accessToken){
-    //             throw error("인증이 만료되었습니다. 다시 로그인 해주세요.");
-    //         }
-    //     }catch (error) {
-    //         setError("인증에 오류가 발생했습니다. 관리자에게 문의해주세요.");
-    //     }
-    // }
+        try{
+            await axios.post("/api/logout", {}, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json; charset=utf8",
+                    withCredentials: true,
+                }
+            })
+            .then(function (response){
+                if(response.status == 200){
+                    console.log("로그아웃 완료");
+                    
+                    // 로컬 스토리지 액세스 토큰 및 유저 정보 삭제
+                    localStorage.removeItem('login-token');
+                    sessionStorage.removeItem("userId");
+                    sessionStorage.removeItem("userName"); 
+                    navigate("/Home");
+                }            
+            })
+            .catch(function(error){
+                console.log("로그아웃 오류 ", error);
+              })             
+        } catch (err) {
+            setError("로그아웃 중 오류가 발생했습니다.");
+        }   
+    };
+
+
 
     useEffect(() => {
-        // // 로그인 시 사용자 이름을 가져오는 예시
-        // const fetchUserName = async () => {
-        //     // 여기서 API 호출을 통해 사용자 이름을 가져올 수 있습니다.
-        //     // 예시로 하드코딩된 이름을 사용합니다.
-        //     const fetchedName = '한국대학병원'; // 실제 API 호출로 대체
-        //     setUserName(fetchedName);
-        // };
-
+        // 토큰 인증 및 userId 조회 
+        getAdminId();
+        
         // // 임의의 예약 데이터 추가
         // const fetchReservations = async () => {
         //     const dummyData = [
@@ -168,7 +182,7 @@ const HDashBoard = () => {
                     <div className='user-options'>
                         <button className='user-button'>마이페이지</button>
                         <span className='divider'>|</span>
-                        <button className='user-button'>로그아웃</button>
+                        <button className='user-button' onClick={(e) => logoutOnClick()}  >로그아웃</button>
                     </div>
                 </div>
                 <div className='content-area'>
