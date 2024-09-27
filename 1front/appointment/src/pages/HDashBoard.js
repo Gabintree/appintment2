@@ -1,6 +1,8 @@
 // HDashBoard.js
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 import './HDashBoard.css';
 import ReservationManagement from './ReservationManagement';
 import StatusSelect from './StatusSelect';
@@ -14,14 +16,17 @@ const HDashBoard = () => {
     const [reservations, setReservations] = useState([]); // 예약 내역 상태 추가
     const [isDetailsVisible, setIsDetailsVisible] = useState(false); // 상세보기 상태 추가
 
+    // 액세스 토큰 및 userId
+    const [accessToken, setAccessToken] = useState(localStorage.getItem('login-token'));
+    const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
+
+    const navigate = useNavigate();
     const [error, setError] = useState("");
 
 
 
-    const accessToken = localStorage.getItem('login-token');
-    const userId = sessionStorage.getItem("userId");
+    // 화면 로딩시 getId 조회
     async function getAdminId(){
-
         try{
             const data = {
                 hospitalId: userId,
@@ -31,27 +36,56 @@ const HDashBoard = () => {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                     "Content-Type": "application/json; charset=utf8",
+                    withCredentials: true,
                 }
             })
             .then(function (response){
                 if(response.status == 200){
-                    console.log("토근 인증 완료");
-                    console.log(response.data);
+                    console.log("토큰 인증 완료");
                     const name =response.data;
-                    setUserName(name);
+                    setUserName(name);      
                 }            
-                else{
-                    console.log("토큰 인증 다른 코드", response.data);
-                }
             })
             .catch(function(error){
-                console.log("인증 오류 : ", error);
-                alert("다시 로그인 해주세요.");
+                if(error.status == 401){
+                    console.log("인증 오류 401 : 토큰 만료");
+                    // 토큰 재발행 요청
+                    getRefreshToken();
+                }
+                else if(error.status == 403){
+                    console.log("인증 오류 403 : 권한 없음");
+                    alert("해당 페이지는 권한이 없습니다. home으로 이동합니다.");
+                    navigate("/Home");
+                }
               })             
         } catch (err) {
-
             setError("등록 중 오류가 발생했습니다.");
         }        
+    };
+
+    async function getRefreshToken() {
+        try{
+            await axios.post("/api/reissue", {}, {
+                headers: {
+                    "Content-Type": "application/json; charset=utf8",
+                    withCredentials: true,
+                }
+            })
+            .then(function (response2){
+                if(response2.status == 200){
+                    console.log("토큰 재발행 완료");
+                    // 로컬 스토리지에 새로 저장, 변수에도 저장
+                    localStorage.setItem('login-token', response2.headers.access);                    
+                    setAccessToken(response2.headers.access);
+
+                }            
+            })
+            .catch(function(error){
+                console.log("토큰 재발행 오류 ", error);
+              })             
+        } catch (err) {
+            setError("등록 중 오류가 발생했습니다.");
+        }          
     };
 
     getAdminId();

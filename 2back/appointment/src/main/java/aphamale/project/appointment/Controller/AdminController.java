@@ -24,17 +24,20 @@ public class AdminController {
 
     @PostMapping("/api/admin")
     public String getAdmin(@RequestBody HospitalInfoDto hospitalInfoDto) {
-
+    //public HospitalInfoDomain getAdmin(@RequestBody HospitalInfoDto hospitalInfoDto) {
+    //public Object[] getAdmin(@RequestBody HospitalInfoDto hospitalInfoDto) {
         // 병원ID
         String hospitalId = hospitalInfoDto.getHospitalId();
 
-        // 병원명 조회
+        // 해당 계정의 정보 조회
         HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(hospitalId).orElseThrow(() -> new UsernameNotFoundException(hospitalId));
-       
-        // 조회된 병원명 
+
         String hospitalName = hospitalInfoDomain.getHospitalName();
+        //String refreshToken = hospitalInfoDomain.getJwtRefresh();
 
         return hospitalName;
+        //return hospitalInfoDomain;
+        //return new Object[] {hospitalName, refreshToken};
     }
     
     // @GetMapping("/api/admin/id")

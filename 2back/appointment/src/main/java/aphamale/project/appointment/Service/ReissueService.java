@@ -105,7 +105,7 @@ public class ReissueService {
         response.addCookie(createCookie("refresh", newRefresh));   
         
         // Refresh 토큰 저장 DB에 새 Refresh 토큰 저장
-        addRefreshToken(userId, newRefresh, 86400000L);
+        addRefreshToken(userId, newRefresh, role, 86400000L);
 		
         
         return new ResponseEntity<>(HttpStatus.OK);  // 응답 전송 
@@ -125,15 +125,25 @@ public class ReissueService {
         }
 
     // db에 refresh Token update 매서드
-    private void addRefreshToken(String userId, String refresh, Long expiredMs) {
+    private void addRefreshToken(String userId, String refresh, String role, Long expiredMs) {
 
         // Date date = new Date(System.currentTimeMillis() + expiredMs); // 만료 기한 사용 안 하므로
         // userInfoDomain.setExpiration(date.toString()); // 만료 기한 사용 안 하므로
     
-        UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
-        userInfoDomain.setJwtRefresh(refresh);    
+        if(role.equals("USER")){
+            UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
+            userInfoDomain.setJwtRefresh(refresh);    
+    
+            userInfoRepository.save(userInfoDomain);
 
-        userInfoRepository.save(userInfoDomain);
+        }else{
+            HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(userId).orElseThrow(() -> new UsernameNotFoundException(userId));
+            hospitalInfoDomain.setJwtRefresh(refresh);
+
+            hospitalInfoRepository.save(hospitalInfoDomain);
+
+        }
+
     }
 
         
