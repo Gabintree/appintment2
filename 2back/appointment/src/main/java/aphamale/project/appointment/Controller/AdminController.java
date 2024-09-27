@@ -1,15 +1,21 @@
 package aphamale.project.appointment.Controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import aphamale.project.appointment.Domain.HospitalInfoDomain;
 import aphamale.project.appointment.Dto.HospitalInfoDto;
+import aphamale.project.appointment.Dto.HospitalReserveDto;
 import aphamale.project.appointment.Repository.HospitalInfoRepository;
+import aphamale.project.appointment.Service.HospitalReserveService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -17,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AdminController {
 
     private final HospitalInfoRepository hospitalInfoRepository;
+    private final HospitalReserveService hospitalReserveService;
 
-    public AdminController(HospitalInfoRepository hospitalInfoRepository){
+    public AdminController(HospitalInfoRepository hospitalInfoRepository, HospitalReserveService hospitalReserveService){
         this.hospitalInfoRepository = hospitalInfoRepository;
+        this.hospitalReserveService = hospitalReserveService;
     }
 
     @PostMapping("/api/admin")
@@ -40,16 +48,24 @@ public class AdminController {
         //return new Object[] {hospitalName, refreshToken};
     }
     
-    // @GetMapping("/api/admin/id")
-    // public String getAdminId(@RequestParam String hospitalId) {
+    // 예약 내역 관리 조회 
+    @PostMapping("/api/admin/reserveList")
+    public List<HospitalReserveDto> getReserveList(@RequestParam String hospitalId, 
+                                               @RequestParam String groupId, 
+                                               @RequestParam Date fromDate, 
+                                               @RequestParam Date toDate) {
+                                              
+        // 프론트에 보낼 LIST
+        List<HospitalReserveDto> finalHospitalList = new ArrayList<HospitalReserveDto>();
 
-    //     // 병원명 조회
-    //     hospitalInfoRepository.findByHospitalName(hospitalId);
+        List<HospitalReserveDto> reserveList = hospitalReserveService.selectReserveList(hospitalId, groupId, fromDate, toDate);
 
-    //     HospitalInfoDto hospitalInfoDto = new HospitalInfoDto();
-    //     String hospitalName = hospitalInfoDto.getHospitalName();
+        if(reserveList != null){
 
-    //     return hospitalName;
-    // }
+            finalHospitalList.addAll(reserveList);
+        }     
+
+        return finalHospitalList;
+    }
     
 }

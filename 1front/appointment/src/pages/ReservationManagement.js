@@ -1,51 +1,64 @@
 // src/ReservationManagement.js
 // ReservationManagement.js
 import React, { useState } from 'react';
+import axios from "axios";
+
+
+
 import './ReservationManagement.css';
 import StatusAndDetails from './StatusAndDetails';
 
 const ReservationManagement = () => {
+    
     const today = new Date().toISOString().split('T')[0]; // 오늘 날짜
-    const [startDate, setStartDate] = useState(today); // 시작일
-    const [endDate, setEndDate] = useState(''); // 종료일
+    const [startDate, setStartDate] = useState(today); // 조회일자 from
+    const [endDate, setEndDate] = useState(""); // 조회일자 to
     const [filteredReservations, setFilteredReservations] = useState([]); // 필터링된 예약 데이터
     const [isVisible, setIsVisible] = useState(false);
     const [visibleReservationId, setVisibleReservationId] = useState(null); // 현재 상세보기 예약 ID
+
+    const [accessToken, setAccessToken] = useState(localStorage.getItem('login-token'));
+    const [error, setError] = useState("");
 
     const toggleDetails = (id) => {
         setVisibleReservationId(visibleReservationId === id ? null : id); // 클릭한 예약 ID 토글
     };
 
-    // 오늘 날짜를 기준으로 더미 데이터 생성
-    const generateDummyData = () => {
-        const dummyData = [];
-        for (let i = 0; i < 5; i++) {
-            const date = new Date();
-            date.setDate(date.getDate() + i); // 오늘부터 i일 후의 날짜
-            const formattedDate = date.toISOString().split('T')[0];
-            dummyData.push({
-                id: `00000${i + 1}`,
-                date: formattedDate,
-                time: `${9 + i}:00`, // 9시부터 시작
-                name: `환자${i + 1}`,
-                birth: `199${i}-01-01`,
-                department: '내과',
-                status: '예약완료',
-                changer: i % 2 === 0 ? '홍길동' : '한국대학병원', // 변경자: 홀수는 사용자, 짝수는 병원
-            });
-        }
-        return dummyData;
-    };
+    const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
 
-    const exampleData = generateDummyData(); // 더미 데이터 생성
+    // 예약 내역 관리 조회 버튼
+    // async function handleSearchOnClick() {
+    //     console.log("클릭이벤트");
+    //     try{
+    //         const params = {
+    //             hospitalId: userId,
+    //             groupId: "",
+    //             fromDate: startDate,
+    //             toDate : endDate
+    //         };
+    
+    //         await axios.post("/api/admin/reserveList", null, {
+    //             params: params,      
+    //             headers: {
+    //                 "Authorization": `Bearer ${accessToken}`,
+    //                 "Content-Type": "application/json; charset=utf8",
+    //                 withCredentials: true,            
+    //             },
+    //         })
+    //         .then(function (response){
+    //             if(response.status == 200){
+    //                 console.log("조회 완료");    
+    //             }            
+    //         })
+    //         .catch(function(error){
+    //             console.log("error : ", error);
+    //           })             
+    //     } catch (err) {
+    //         setError("등록 중 오류가 발생했습니다.");
+    //     }  
+    // };
 
-    const handleSearch = () => {
-        // 날짜 필터링
-        const filtered = exampleData.filter(reservation => {
-            return reservation.date >= startDate && (endDate ? reservation.date <= endDate : true);
-        });
-        setFilteredReservations(filtered);
-    };
+
     return (
         <div className='reservation-management'>
             <div className='title-bar'><strong>예약 내역 관리</strong></div>
@@ -53,7 +66,7 @@ const ReservationManagement = () => {
                 <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
                 <span>-</span>
                 <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                <button onClick={handleSearch}>조회</button>
+                <button onClick={handleSearchOnClick}>조회</button>
             </div>
             <div className='table-container'>
                 <table>
