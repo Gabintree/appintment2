@@ -1,6 +1,7 @@
 // src/ReservationManagement.js
 // ReservationManagement.js
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 
@@ -19,6 +20,7 @@ const ReservationManagement = () => {
     const [visibleReservationId, setVisibleReservationId] = useState(null); // 현재 상세보기 예약 ID
 
     const [accessToken, setAccessToken] = useState(localStorage.getItem('login-token'));
+    const navigate = useNavigate();
     const [error, setError] = useState("");
 
     const toggleDetails = (id) => {
@@ -26,6 +28,33 @@ const ReservationManagement = () => {
     };
 
     const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
+    
+    // 토큰 재발행
+    async function getRefreshToken() {
+        try{
+            await axios.post("/api/reissue", {}, {
+                headers: {
+                    "Content-Type": "application/json; charset=utf8",
+                    withCredentials: true,
+                }
+            })
+            .then(function (response2){
+                if(response2.status == 200){
+                    console.log("토큰 재발행 완료");
+                    // 로컬 스토리지에 새로 저장, 변수에도 저장
+                    localStorage.setItem('login-token', response2.headers.access);                    
+                    setAccessToken(response2.headers.access);
+                    console.log("response2.headers.access", response2.headers.access);
+                }            
+            })
+            .catch(function(error){
+                console.log("토큰 재발행 오류 ", error);
+              })             
+        } catch (err) {
+            setError("등록 중 오류가 발생했습니다.");
+        }          
+    };
+
 
     // 예약 내역 관리 조회 버튼
     async function handleSearchOnClick() {
@@ -55,6 +84,16 @@ const ReservationManagement = () => {
             })
             .catch(function(error){
                 console.log("error : ", error);
+                if(error.status == 401){
+                    console.log("인증 오류 401 : 토큰 만료");
+                    // 토큰 재발행 요청
+                    getRefreshToken();
+                }
+                else if(error.status == 403){
+                    console.log("인증 오류 403 : 권한 없음");
+                    alert("해당 페이지는 권한이 없습니다. home으로 이동합니다.");
+                    navigate("/Home");
+                }
               })             
         } catch (err) {
             setError("등록 중 오류가 발생했습니다.");
@@ -66,16 +105,15 @@ const ReservationManagement = () => {
         <div className='reservation-management'>
             <div className='title-bar'><strong>예약 내역 관리</strong></div>
             <div className='date-selection'>
-                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}/>
                 <span>-</span>
-                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}/>
                 <button onClick={handleSearchOnClick}>조회</button>
             </div>
             <div className='table-container'>
                 <table>
                     <thead>
-                        <tr>
-                            <th>예약번호</th>
+                        <tr><th>예약번호</th>
                             <th>예약날짜</th>
                             <th>예약시간</th>
                             <th>성명</th>
@@ -89,25 +127,21 @@ const ReservationManagement = () => {
                     <tbody>
                         {filteredReservations.length > 0 ? (
                             filteredReservations.map(reservation => (
-                                <tr key={reservation.reservePk.reserveNo}>
-                                    <td>{reservation.reservePk.reserveNo}</td>
+                                <tr key={reservation.reserveNo}>
+                                    <td>{reservation.reserveNo}</td>
                                     <td>{reservation.reseveDate}</td>
                                     <td>{reservation.reseveTime}</td>
-                                    <td>{reservation.reservePk.userId}</td>
+                                    <td>{reservation.userId}</td>
                                     <td>{reservation.birth}</td>
                                     <td>{reservation.subject}</td>
-                                    <td>{reservation.reseveStatus}</td>
+                                    <td>{reservation.reseveStatus = "I" ? "예약완료" : reservation.reseveStatus = "U" ? "변경완료" : "취소완료"}</td>
                                     <td>
-                                        <button className='detail-button' onClick={() => toggleDetails(reservation.id)} style={{ cursor: 'pointer' }}>상세보기</button>
+                                        <button className='detail-button' onClick={() => toggleDetails(reservation.reserveNo)} style={{ cursor: 'pointer' }}>상세보기</button>
                                     </td>
-                                    <td>{reservation.updateuser}</td> {/* 예약 변경자 추가 */}
+                                    <td>{reservation.updateuser = undefined ? "-" : reservation.updateuser}</td> {/* 예약 변경자 추가 */}
                                 </tr>
                             ))
-                        ) : (
-                            <tr>
-                                <td colSpan="9">예약 내역이 없습니다.</td>
-                            </tr>
-                        )}
+                        ):(<tr><td colSpan="9">예약 내역이 없습니다.</td></tr>)}
                     </tbody>
                 </table>
             </div>

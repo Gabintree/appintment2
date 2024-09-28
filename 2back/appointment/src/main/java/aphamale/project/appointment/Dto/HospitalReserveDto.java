@@ -2,7 +2,6 @@ package aphamale.project.appointment.Dto;
 
 import java.sql.Timestamp;
 import aphamale.project.appointment.Domain.HospitalReserveDomain;
-import aphamale.project.appointment.Domain.ReservePk;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class HospitalReserveDto {
 
-    private ReservePk reservePk; // 예약번호
+    private String reserveNo; // 예약번호
 
     private String userId; // 계정
     private String groupId; // 기관Id
@@ -31,11 +30,13 @@ public class HospitalReserveDto {
     private String updateUser; // 변경자
     private Timestamp updateDate; // 변경일자
 
-        public HospitalReserveDto(ReservePk reservePk, String hospitalName, String hospitalAddres,
+        public HospitalReserveDto(String reserveNo, String userId, String groupId, String hospitalName, String hospitalAddres,
         String subject, Timestamp reserveDate, Timestamp reserveTime, String alarmFlag, String reserveStatus, String remark,
         String insertUser, Timestamp insertDate, String updateUser, Timestamp updateDate){
 
-            this.reservePk = reservePk;
+            this.reserveNo = reserveNo;
+            this.userId = userId;
+            this.groupId = groupId;
             this.hospitalName = hospitalName;
             this.hospitalAddres = hospitalAddres;
             this.subject = subject;
@@ -57,7 +58,9 @@ public class HospitalReserveDto {
             
         HospitalReserveDto hospitalReserveDto = new HospitalReserveDto();
 
-        hospitalReserveDto.setReservePk(hospitalReserveDomain.getReservePk());
+        hospitalReserveDto.setReserveNo(hospitalReserveDomain.getReserveNo());
+        hospitalReserveDto.setUserId(hospitalReserveDomain.getUserId());
+        hospitalReserveDto.setGroupId(hospitalReserveDomain.getGroupId());
         hospitalReserveDto.setHospitalName(hospitalReserveDomain.getHospitalName());
         hospitalReserveDto.setHospitalAddres(hospitalReserveDomain.getHospitalAddres());
         hospitalReserveDto.setSubject(hospitalReserveDomain.getSubject());

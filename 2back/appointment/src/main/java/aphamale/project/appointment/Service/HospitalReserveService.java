@@ -19,13 +19,13 @@ public class HospitalReserveService {
     }
 
     // 예약 목록 조회 
-    public List<HospitalReserveDomain> selectReserveList(String userId, String groupId, Date fromDate, Date toDate){
+    public List<HospitalReserveDomain> selectReserveList(String groupId, Date fromDate, Date toDate){
 
 
         // 데이터 담을 list 생성
         List<HospitalReserveDomain> HospitalList = new ArrayList<>();
 
-        HospitalList = hospitalReserveRepository.findByReserveDateBetween(fromDate, toDate);
+        HospitalList = hospitalReserveRepository.findByGroupIdAndReserveDateBetween(groupId, fromDate, toDate);
 
         return HospitalList;
     }

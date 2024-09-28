@@ -71,12 +71,12 @@ public class AdminController {
             HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(hospitalId).orElseThrow(() -> new UsernameNotFoundException(hospitalId));
             String groupId = hospitalInfoDomain.getGroupId();
     
-            List<HospitalReserveDomain> reserveList = hospitalReserveService.selectReserveList(hospitalId, groupId, fromDate, toDate);
+            List<HospitalReserveDomain> reserveList = hospitalReserveService.selectReserveList(groupId, fromDate, toDate);
     
             if(reserveList != null){
 
                 finalHospitalList = reserveList.stream()
-                                    .map(m -> new HospitalReserveDto(m.getReservePk(), m.getHospitalName(), m.getHospitalAddres(),
+                                    .map(m -> new HospitalReserveDto(m.getReserveNo(), m.getUserId(), m.getGroupId(), m.getHospitalName(), m.getHospitalAddres(),
                                         m.getSubject(), m.getReserveDate(), m.getReserveTime(), m.getAlarmFlag(), m.getReserveStatus(),
                                         m.getRemark(), m.getInsertUser(), m.getInsertDate(), m.getUpdateUser(), m.getUpdateDate()))
                                     .collect(Collectors.toList());

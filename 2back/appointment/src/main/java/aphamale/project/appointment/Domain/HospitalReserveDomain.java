@@ -10,30 +10,27 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Embeddable
-@Entity(name="reserve")
+@Entity
 @Getter
 @Setter
 @Table(name="reserve") // 테이블을 지정하는 기능인 듯
 @DynamicUpdate
 public class HospitalReserveDomain {
 
-    
-    @EmbeddedId
-    private ReservePk reservePk; // 복합키
+    @Id // 기본키라는 뜻임  //@GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
+    private String reserveNo; // 예약번호
 
-    // @Id // 기본키라는 뜻임  //@GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
-    // private String reserveNo; // 예약번호
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private String userId; // 계정
 
-    // @Id
-    // private String userId; // 계정
-
-    // @Id
-    // private String groupId; // 기관Id
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id")
+    private String groupId; // 기관Id
 
     @Column(name="hospital_name")
     private String hospitalName; // 병원명
@@ -76,7 +73,9 @@ public class HospitalReserveDomain {
 
         HospitalReserveDomain hospitalReserveDomain = new HospitalReserveDomain();
 
-        hospitalReserveDomain.setReservePk(hospitalReserveDto.getReservePk());
+        hospitalReserveDomain.setReserveNo(hospitalReserveDto.getReserveNo());
+        hospitalReserveDomain.setUserId(hospitalReserveDto.getUserId());
+        hospitalReserveDomain.setGroupId(hospitalReserveDto.getGroupId());
         hospitalReserveDomain.setHospitalName(hospitalReserveDto.getHospitalName());
         hospitalReserveDomain.setHospitalAddres(hospitalReserveDto.getHospitalAddres());
         hospitalReserveDomain.setSubject(hospitalReserveDto.getSubject());

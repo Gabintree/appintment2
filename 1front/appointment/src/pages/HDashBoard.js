@@ -65,6 +65,7 @@ const HDashBoard = () => {
         }        
     };
 
+    // 토큰 재발행
     async function getRefreshToken() {
         try{
             await axios.post("/api/reissue", {}, {
