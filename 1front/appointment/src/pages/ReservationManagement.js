@@ -46,7 +46,11 @@ const ReservationManagement = () => {
             })
             .then(function (response){
                 if(response.status == 200){
-                    console.log("조회 완료 : ", response.data);    
+                    console.log("조회 완료 : ", response.data);   
+                    setFilteredReservations(response.data);
+                    // const array = [];
+                    // array.push(response.data);
+                    // console.log(array); 
                 }            
             })
             .catch(function(error){
@@ -85,18 +89,18 @@ const ReservationManagement = () => {
                     <tbody>
                         {filteredReservations.length > 0 ? (
                             filteredReservations.map(reservation => (
-                                <tr key={reservation.id}>
-                                    <td>{reservation.id}</td>
-                                    <td>{reservation.date}</td>
-                                    <td>{reservation.time}</td>
-                                    <td>{reservation.name}</td>
+                                <tr key={reservation.reservePk.reserveNo}>
+                                    <td>{reservation.reservePk.reserveNo}</td>
+                                    <td>{reservation.reseveDate}</td>
+                                    <td>{reservation.reseveTime}</td>
+                                    <td>{reservation.reservePk.userId}</td>
                                     <td>{reservation.birth}</td>
-                                    <td>{reservation.department}</td>
-                                    <td>{reservation.status}</td>
+                                    <td>{reservation.subject}</td>
+                                    <td>{reservation.reseveStatus}</td>
                                     <td>
                                         <button className='detail-button' onClick={() => toggleDetails(reservation.id)} style={{ cursor: 'pointer' }}>상세보기</button>
                                     </td>
-                                    <td>{reservation.changer}</td> {/* 예약 변경자 추가 */}
+                                    <td>{reservation.updateuser}</td> {/* 예약 변경자 추가 */}
                                 </tr>
                             ))
                         ) : (
