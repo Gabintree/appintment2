@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import moment from 'moment';
 
 
 
@@ -59,6 +60,8 @@ const ReservationManagement = () => {
     // 예약 내역 관리 조회 버튼
     async function handleSearchOnClick() {
         console.log("클릭이벤트");
+        // 재발행한 경우 변경된 액세스토큰을 로컬스토리지에서 조회
+        setAccessToken(localStorage.getItem('login-token'));
         try{
             const data = {
                 hospitalId: userId,
@@ -75,11 +78,9 @@ const ReservationManagement = () => {
             })
             .then(function (response){
                 if(response.status == 200){
-                    console.log("조회 완료 : ", response.data);   
-                    setFilteredReservations(response.data);
-                    // const array = [];
-                    // array.push(response.data);
-                    // console.log(array); 
+                    console.log("조회 완료 : ", response.data); 
+                    const changedData = response.data;
+                    setFilteredReservations(changedData);
                 }            
             })
             .catch(function(error){
@@ -99,7 +100,6 @@ const ReservationManagement = () => {
             setError("등록 중 오류가 발생했습니다.");
         }  
     };
-
 
     return (
         <div className='reservation-management'>
@@ -126,11 +126,12 @@ const ReservationManagement = () => {
                     </thead>
                     <tbody>
                         {filteredReservations.length > 0 ? (
+
                             filteredReservations.map(reservation => (
                                 <tr key={reservation.reserveNo}>
                                     <td>{reservation.reserveNo}</td>
-                                    <td>{reservation.reseveDate}</td>
-                                    <td>{reservation.reseveTime}</td>
+                                    <td>{moment(reservation.reserveDate).format("yyyy-MM-DD")}</td>
+                                    <td>{moment(reservation.reserveTime).format("hh:mm")}</td>
                                     <td>{reservation.userId}</td>
                                     <td>{reservation.birth}</td>
                                     <td>{reservation.subject}</td>
@@ -138,7 +139,7 @@ const ReservationManagement = () => {
                                     <td>
                                         <button className='detail-button' onClick={() => toggleDetails(reservation.reserveNo)} style={{ cursor: 'pointer' }}>상세보기</button>
                                     </td>
-                                    <td>{reservation.updateuser = undefined ? "-" : reservation.updateuser}</td> {/* 예약 변경자 추가 */}
+                                    <td>{!reservation.updateUser ? "-" : reservation.updateUser}</td> {/* 예약 변경자 추가 */}
                                 </tr>
                             ))
                         ):(<tr><td colSpan="9">예약 내역이 없습니다.</td></tr>)}

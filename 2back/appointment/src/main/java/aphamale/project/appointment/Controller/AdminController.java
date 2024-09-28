@@ -59,13 +59,14 @@ public class AdminController {
         // 프론트에 보낼 LIST
         List<HospitalReserveDto> finalHospitalList = new ArrayList<HospitalReserveDto>();
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd"); // 0000년 00월 00일
+        //SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm");// 00:00
 
         try{
 
             String hospitalId = searchParam.get("hospitalId");
-            Date fromDate = format.parse(searchParam.get("fromDate"));
-            Date toDate = format.parse(searchParam.get("toDate"));
+            Date fromDate = formatDate.parse(searchParam.get("fromDate"));
+            Date toDate = formatDate.parse(searchParam.get("toDate"));
                       
             // groupId 찾기
             HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(hospitalId).orElseThrow(() -> new UsernameNotFoundException(hospitalId));
@@ -79,12 +80,26 @@ public class AdminController {
                                     .map(m -> new HospitalReserveDto(m.getReserveNo(), m.getUserId(), m.getGroupId(), m.getHospitalName(), m.getHospitalAddres(),
                                         m.getSubject(), m.getReserveDate(), m.getReserveTime(), m.getAlarmFlag(), m.getReserveStatus(),
                                         m.getRemark(), m.getInsertUser(), m.getInsertDate(), m.getUpdateUser(), m.getUpdateDate()))
-                                    .collect(Collectors.toList());
+                                    .collect(Collectors.toList());                  
             }     
-        
         }catch(Exception ex){
             System.out.println(ex.toString());
         }
         return finalHospitalList; 
     }
 }
+
+
+
+//     // 일자, 시간 format 변경
+//     for(int i = 0; i < finalHospitalList.size(); i++){
+//         String changedDate = formatDate.format(finalHospitalList.get(i).getReserveDate());
+//         finalHospitalList.set(i, changedDate);
+//    }   
+
+
+// 날짜 변환
+// String date1 = formatDate.format(finalHospitalList.get(0).getReserveDate());
+// System.out.println(date1);
+// String time1 = formatTime.format(finalHospitalList.get(0).getReserveTime());
+// System.out.println(time1);
