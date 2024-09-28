@@ -5,18 +5,29 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import aphamale.project.appointment.Dto.HospitalReserveDto;
+
+import aphamale.project.appointment.Domain.HospitalReserveDomain;
+import aphamale.project.appointment.Repository.HospitalReserveRepository;
 
 @Service
 public class HospitalReserveService {
 
+    private final HospitalReserveRepository hospitalReserveRepository;
+
+    public HospitalReserveService(HospitalReserveRepository hospitalReserveRepository){
+        this.hospitalReserveRepository = hospitalReserveRepository;
+    }
+
     // 예약 목록 조회 
-    public List<HospitalReserveDto> selectReserveList(String userId, String groupId, Date fromDate, Date toDate){
+    public List<HospitalReserveDomain> selectReserveList(String userId, String groupId, Date fromDate, Date toDate){
+
 
         // 데이터 담을 list 생성
-        List<HospitalReserveDto> hospitalList = new ArrayList<>();
+        List<HospitalReserveDomain> HospitalList = new ArrayList<>();
 
-        return hospitalList;
+        HospitalList = hospitalReserveRepository.findByReserveDateBetween(fromDate, toDate);
+
+        return HospitalList;
     }
     
 }

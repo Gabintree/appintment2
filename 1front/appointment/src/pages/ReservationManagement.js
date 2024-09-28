@@ -7,6 +7,7 @@ import axios from "axios";
 
 import './ReservationManagement.css';
 import StatusAndDetails from './StatusAndDetails';
+import reactSelect from 'react-select';
 
 const ReservationManagement = () => {
     
@@ -27,36 +28,34 @@ const ReservationManagement = () => {
     const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
 
     // 예약 내역 관리 조회 버튼
-    // async function handleSearchOnClick() {
-    //     console.log("클릭이벤트");
-    //     try{
-    //         const params = {
-    //             hospitalId: userId,
-    //             groupId: "",
-    //             fromDate: startDate,
-    //             toDate : endDate
-    //         };
+    async function handleSearchOnClick() {
+        console.log("클릭이벤트");
+        try{
+            const data = {
+                hospitalId: userId,
+                fromDate: startDate,
+                toDate : endDate
+            };
     
-    //         await axios.post("/api/admin/reserveList", null, {
-    //             params: params,      
-    //             headers: {
-    //                 "Authorization": `Bearer ${accessToken}`,
-    //                 "Content-Type": "application/json; charset=utf8",
-    //                 withCredentials: true,            
-    //             },
-    //         })
-    //         .then(function (response){
-    //             if(response.status == 200){
-    //                 console.log("조회 완료");    
-    //             }            
-    //         })
-    //         .catch(function(error){
-    //             console.log("error : ", error);
-    //           })             
-    //     } catch (err) {
-    //         setError("등록 중 오류가 발생했습니다.");
-    //     }  
-    // };
+            await axios.post("/api/admin/reserveList", JSON.stringify(data), {     
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json; charset=utf8",
+                    withCredentials: true,            
+                },
+            })
+            .then(function (response){
+                if(response.status == 200){
+                    console.log("조회 완료 : ", response.data);    
+                }            
+            })
+            .catch(function(error){
+                console.log("error : ", error);
+              })             
+        } catch (err) {
+            setError("등록 중 오류가 발생했습니다.");
+        }  
+    };
 
 
     return (

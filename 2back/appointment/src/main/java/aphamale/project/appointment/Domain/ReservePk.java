@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Data
-public class ReserveNo implements Serializable{
+public class ReservePk implements Serializable{
 
     @Column(name = "reserve_no")
     private String reserveNo; // 예약번호
