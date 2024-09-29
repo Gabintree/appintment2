@@ -76,6 +76,7 @@ public class UserInfoService {
 
     }catch(Exception ex){
         System.out.println("회원가입 오류 : " + ex.toString());
+        bool = "false";
     } 
 
         return bool;

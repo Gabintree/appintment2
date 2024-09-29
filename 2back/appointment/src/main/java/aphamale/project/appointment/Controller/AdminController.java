@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,11 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import aphamale.project.appointment.Domain.HospitalInfoDomain;
+import aphamale.project.appointment.Domain.HospitalStatusDomain;
 import aphamale.project.appointment.Dto.HospitalInfoDto;
-import aphamale.project.appointment.Dto.HospitalReserveDto;
+import aphamale.project.appointment.Dto.HospitalStatusDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Repository.HospitalInfoRepository;
+import aphamale.project.appointment.Repository.HospitalStatusRepository;
 import aphamale.project.appointment.Service.HospitalReserveService;
+import aphamale.project.appointment.Service.HospitalStatusServeice;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,13 +29,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AdminController {
 
     private final HospitalInfoRepository hospitalInfoRepository;
+    private final HospitalStatusRepository hospitalStatusRepository;
     private final HospitalReserveService hospitalReserveService;
+    private final HospitalStatusServeice hospitalStatusServeice;
 
-    public AdminController(HospitalInfoRepository hospitalInfoRepository, HospitalReserveService hospitalReserveService){
+    public AdminController(HospitalInfoRepository hospitalInfoRepository, 
+                           HospitalReserveService hospitalReserveService, 
+                           HospitalStatusServeice hospitalStatusServeice,
+                           HospitalStatusRepository hospitalStatusRepository){
         this.hospitalInfoRepository = hospitalInfoRepository;
         this.hospitalReserveService = hospitalReserveService;
+        this.hospitalStatusServeice = hospitalStatusServeice;
+        this.hospitalStatusRepository = hospitalStatusRepository;
     }
 
+    // 병원명 찾기
     @PostMapping("/api/admin")
     public String getAdmin(@RequestBody HospitalInfoDto hospitalInfoDto) {
     //public HospitalInfoDomain getAdmin(@RequestBody HospitalInfoDto hospitalInfoDto) {
@@ -79,6 +89,41 @@ public class AdminController {
 
         return reserveList; 
     }
+
+    // 병원 대기 상태값 저장
+    @PostMapping("/api/admin/saveStatus")
+    public String saveStatus(@RequestBody HospitalStatusDto hospitalStatusDto) {
+
+        // 병원ID
+        String hospitalId = hospitalStatusDto.getHospitalId();
+        // groupId 찾기
+        HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(hospitalId).orElseThrow(() -> new UsernameNotFoundException(hospitalId));
+        String groupId = hospitalInfoDomain.getGroupId();
+
+        // 찾은 groupId dto에 넣기
+        hospitalStatusDto.setGroupId(groupId);
+
+        // 저장
+        String saveResult = hospitalStatusServeice.StatusSave(hospitalStatusDto);
+
+        return saveResult;
+    }
+
+    @PostMapping("/api/admin/getStatus")
+    public String getStatus(@RequestBody HospitalStatusDto hospitalStatusDto) {
+
+        // 병원ID
+        String hospitalId = hospitalStatusDto.getHospitalId();
+        // groupId 찾기
+        HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(hospitalId).orElseThrow(() -> new UsernameNotFoundException(hospitalId));
+        String groupId = hospitalInfoDomain.getGroupId();
+
+        HospitalStatusDomain hospitalStatusDomain = hospitalStatusRepository.findByHospitalIdAndGroupId(hospitalId, groupId);
+        String rushHourFlag = hospitalStatusDomain.getRushHourFlag();    
+
+        return rushHourFlag;
+    }
+
 }
 
 

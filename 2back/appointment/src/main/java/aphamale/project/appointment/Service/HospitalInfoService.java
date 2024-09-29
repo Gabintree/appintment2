@@ -43,8 +43,6 @@ public class HospitalInfoService {
         if (isExist){
             // 이미 존재한다면,
             bool = "false";
-
-            return bool;
         }
         else{
 
@@ -67,11 +65,11 @@ public class HospitalInfoService {
 
             bool = "true";
 
-            return bool;
         }
 
     }catch(Exception ex){
         System.out.println("회원가입 오류 : " + ex.toString());
+        bool = "false";
     } 
 
         return bool;

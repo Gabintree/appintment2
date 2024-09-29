@@ -109,7 +109,7 @@ const ReservationManagement = () => {
 
     // 예약 내역 관리 조회 버튼
     async function handleSearchOnClick() {
-        console.log("약 내역 관리 조회 클릭");
+        console.log("예약 내역 관리 조회 클릭");
         try{
             const data = {
                 hospitalId: userId,
@@ -120,7 +120,7 @@ const ReservationManagement = () => {
             await reqestApi.post("/api/admin/reserveList", JSON.stringify(data))
             .then(function (response){
                 if(response.status == 200){
-                    console.log("조회 완료 : ", response.data); 
+                    console.log("예약 내역 조회 완료 : ", response.data); 
                     const changedData = response.data;
                     setFilteredReservations(changedData);
                 }            

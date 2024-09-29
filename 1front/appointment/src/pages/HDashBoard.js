@@ -32,8 +32,8 @@ export async function getRefreshToken() {
 
 
 const HDashBoard = () => {
-    const [userName, setUserName] = useState(""); // 사용자 이름 상태
-    const [waitingStatus, setWaitingStatus] = useState(""); // 대기 상태 추가
+    const [userName, setUserName] = useState(""); // 사용자 이름
+    const [waitingStatus, setWaitingStatus] = useState(""); // 대기 상태 값
     const [isDetailsVisible, setIsDetailsVisible] = useState(false); // 상세보기 상태 추가
 
     // userId
@@ -109,7 +109,7 @@ const HDashBoard = () => {
     
            await reqestApi.post("/api/admin", JSON.stringify(data))
             .then(function (response){
-                if(response.status == 200){
+                if(response.status === 200){
                     console.log("토큰 인증 완료");
                     // 병원명, 세션 스토리지 저장
                     const name = response.data;
@@ -124,6 +124,30 @@ const HDashBoard = () => {
             setError("작업중 오류가 발생했습니다.");
         }        
     };
+
+        // 화면 로딩시 상태값 조회 
+        async function selectHospitalStatus() {
+            console.log("상태값 조회");
+           try{
+               const data = {
+                   hospitalId: sessionStorage.getItem('userId'),
+               };
+       
+               await reqestApi.post("/api/admin/getStatus", JSON.stringify(data))
+               .then(function (response){
+                   if(response.status === 200){
+                       console.log("상태값 조회 완료 : ", response.data); 
+                       const status = response.data;
+                       setWaitingStatus(status);
+                   }            
+               })
+               .catch(function(error){
+                   console.log("error : ", error);
+                 })             
+           } catch (err) {
+               setError("작업 중 오류가 발생했습니다.");
+           }  
+       }
 
     // 로그아웃 
     async function logoutOnClick() {
@@ -152,11 +176,9 @@ const HDashBoard = () => {
     useEffect(() => {
         // 토큰 인증 및 userId 조회 
         getAdminId();        
+        // 상태값 조회
+        selectHospitalStatus();
     }, []); // 마운트 될 때 한 번만 실행
-
-    const handleStatusChange = (status) => {
-        setWaitingStatus(status); // 대기 상태 업데이트
-    };
 
     const handleDetailClick = () => {
         setIsDetailsVisible(prev => !prev); // 상세보기 토글
@@ -164,11 +186,11 @@ const HDashBoard = () => {
 
     const getColor = () => {
         switch (waitingStatus) {
-            case '여유':
+            case 0 :
                 return '#87DBD8';
-            case '보통':
+            case 1 :
                 return '#FFBF75';
-            case '혼잡':
+            case 2 :
                 return '#FF675E';
             default:
                 return 'gray';
@@ -207,7 +229,7 @@ const HDashBoard = () => {
                     </div>
                     <div className='main-right'> {/* 1 비율 부분 */}
                         <div className='section'> {/* 첫 번째 섹션 */}
-                            <StatusSelect onStatusChange={handleStatusChange} /> {/* 상태 변경 핸들러 추가 */}
+                            <StatusSelect /> {/*상태 변경 핸들러 추가*/}
 
                         </div>
                         <div className='section'> {/* 두 번째 섹션 */}

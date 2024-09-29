@@ -1,6 +1,5 @@
 package aphamale.project.appointment.Repository;
 
-import java.security.Timestamp;
 import java.util.Date;
 import java.util.List;
 
