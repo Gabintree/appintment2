@@ -180,6 +180,11 @@ const HDashBoard = () => {
         selectHospitalStatus();
     }, []); // 마운트 될 때 한 번만 실행
 
+    // 홈으로 이동
+    async function homeOnClick() {
+        navigate("/Home");        
+    }
+
     const handleDetailClick = () => {
         setIsDetailsVisible(prev => !prev); // 상세보기 토글
     };
@@ -215,7 +220,7 @@ const HDashBoard = () => {
                         <div className={`color-circle`} style={{ backgroundColor: getColor(), display: 'inline-block' }}></div> {/* 색깔 원 */}
                         <strong>{userName}</strong> 님</h2>
                     <div className='user-options'>
-                        <button className='user-button'>홈</button>
+                        <button className='user-button' onClick={(e) => homeOnClick()}>홈</button>
                         <span className='divider'>|</span>
                         <button className='user-button'>마이페이지</button>
                         <span className='divider'>|</span>
