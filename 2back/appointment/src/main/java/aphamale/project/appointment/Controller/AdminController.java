@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import aphamale.project.appointment.Domain.HospitalInfoDomain;
 import aphamale.project.appointment.Domain.HospitalStatusDomain;
+import aphamale.project.appointment.Dto.HospitalAlarmDto;
 import aphamale.project.appointment.Dto.HospitalInfoDto;
 import aphamale.project.appointment.Dto.HospitalStatusDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
+import aphamale.project.appointment.Repository.HospitalAlarmRepository;
 import aphamale.project.appointment.Repository.HospitalInfoRepository;
 import aphamale.project.appointment.Repository.HospitalStatusRepository;
+import aphamale.project.appointment.Service.HospitalAlarmService;
 import aphamale.project.appointment.Service.HospitalReserveService;
 import aphamale.project.appointment.Service.HospitalStatusServeice;
 
@@ -32,15 +35,18 @@ public class AdminController {
     private final HospitalStatusRepository hospitalStatusRepository;
     private final HospitalReserveService hospitalReserveService;
     private final HospitalStatusServeice hospitalStatusServeice;
+    private final HospitalAlarmService hospitalAlarmService;
 
     public AdminController(HospitalInfoRepository hospitalInfoRepository, 
                            HospitalReserveService hospitalReserveService, 
                            HospitalStatusServeice hospitalStatusServeice,
-                           HospitalStatusRepository hospitalStatusRepository){
+                           HospitalStatusRepository hospitalStatusRepository,
+                           HospitalAlarmService hospitalAlarmService){
         this.hospitalInfoRepository = hospitalInfoRepository;
         this.hospitalReserveService = hospitalReserveService;
         this.hospitalStatusServeice = hospitalStatusServeice;
         this.hospitalStatusRepository = hospitalStatusRepository;
+        this.hospitalAlarmService = hospitalAlarmService;
     }
 
     // 병원명 찾기
@@ -122,6 +128,25 @@ public class AdminController {
         String rushHourFlag = hospitalStatusDomain.getRushHourFlag();    
 
         return rushHourFlag;
+    }
+
+    // 병원 SMS 수신 정보 저장
+    @PostMapping("/api/admin/saveSmsAlarm")
+    public String saveSmsAlarm(@RequestBody HospitalAlarmDto hospitalAlarmDto) {
+
+        // 병원ID
+        String hospitalId = hospitalAlarmDto.getHospitalId();
+        // groupId 찾기
+        HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(hospitalId).orElseThrow(() -> new UsernameNotFoundException(hospitalId));
+        String groupId = hospitalInfoDomain.getGroupId();
+
+        // 찾은 groupId dto에 넣기
+        hospitalAlarmDto.setGroupId(groupId);
+
+        // 저장
+        String saveResult = hospitalAlarmService.AlarmFlagSave(hospitalAlarmDto);
+
+        return saveResult;
     }
 
 }
