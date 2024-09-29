@@ -1,13 +1,12 @@
 // src/ReservationManagement.js
 // ReservationManagement.js
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from 'moment';
 
 import './ReservationManagement.css';
 import StatusAndDetails from './StatusAndDetails';
-import reactSelect from 'react-select';
 
 // axios 인스턴스
 export const reqestApi = axios.create({
@@ -32,22 +31,26 @@ export async function getRefreshToken() {
 
 const ReservationManagement = () => {
     
+    const nowDate = new Date();
     const today = new Date().toISOString().split('T')[0]; // 오늘 날짜
+    const after3month =  new Date(nowDate.setMonth(nowDate.getMonth() + 3)).toISOString().split('T')[0]; // 3개월
+
     const [startDate, setStartDate] = useState(today); // 조회일자 from
-    const [endDate, setEndDate] = useState(""); // 조회일자 to
+    const [endDate, setEndDate] = useState(after3month); // 조회일자 to
     const [filteredReservations, setFilteredReservations] = useState([]); // 필터링된 예약 데이터
     const [isVisible, setIsVisible] = useState(false);
     const [visibleReservationId, setVisibleReservationId] = useState(null); // 현재 상세보기 예약 ID
 
-    const [accessToken, setAccessToken] = useState(localStorage.getItem('login-token'));
+
     const navigate = useNavigate();
     const [error, setError] = useState("");
+    const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
 
     const toggleDetails = (id) => {
         setVisibleReservationId(visibleReservationId === id ? null : id); // 클릭한 예약 ID 토글
     };
 
-    const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
+
 
     // interceptor 적용
     reqestApi.interceptors.response.use(
@@ -98,9 +101,15 @@ const ReservationManagement = () => {
         },
     );
 
+    useEffect(() => {
+        // 예약 내역 관리 조회 
+        handleSearchOnClick();      
+    }, []); // 마운트 될 때 한 번만 실행
+
+
     // 예약 내역 관리 조회 버튼
     async function handleSearchOnClick() {
-        console.log("클릭이벤트");
+        console.log("약 내역 관리 조회 클릭");
         try{
             const data = {
                 hospitalId: userId,
@@ -129,7 +138,7 @@ const ReservationManagement = () => {
             <div className='title-bar'><strong>예약 내역 관리</strong></div>
             <div className='date-selection'>
                 <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}/>
-                <span>-</span>
+                <span>~ </span>
                 <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}/>
                 <button onClick={handleSearchOnClick}>조회</button>
             </div>

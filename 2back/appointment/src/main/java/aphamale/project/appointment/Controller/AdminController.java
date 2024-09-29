@@ -12,9 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import aphamale.project.appointment.Domain.HospitalInfoDomain;
-import aphamale.project.appointment.Dto.GetHospitalReserveListDto;
 import aphamale.project.appointment.Dto.HospitalInfoDto;
 import aphamale.project.appointment.Dto.HospitalReserveDto;
+import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Repository.HospitalInfoRepository;
 import aphamale.project.appointment.Service.HospitalReserveService;
 
@@ -59,7 +59,7 @@ public class AdminController {
         List<GetHospitalReserveListDto> reserveList = new ArrayList<GetHospitalReserveListDto>();
 
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd"); // 0000년 00월 00일
-        SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm");// 00:00
+        //SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm");// 00:00
 
         try{
 

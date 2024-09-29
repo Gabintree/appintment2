@@ -1,13 +1,9 @@
-package aphamale.project.appointment.Dto;
+package aphamale.project.appointment.Dto.Interface;
 
 import java.sql.Time;
 import java.sql.Timestamp;
 
 
-// @Getter
-// @Setter
-// @NoArgsConstructor // 기본 생성자를 자동으로 만들어 줌
-// @ToString
 public interface GetHospitalReserveListDto {
 
     String getReserveNo(); // 예약번호

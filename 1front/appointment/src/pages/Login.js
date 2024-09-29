@@ -69,7 +69,11 @@ const Login = () => {
                   })
                   .catch(function(error){
                     console.log("로그인 오류 : ", error);
-                    alert("ID와 비밀번호를 확인해주세요.");
+                    if(error.status === 504){
+                      alert("backend 실행 여부 확인 필요.");
+                    }else{
+                      alert("ID와 비밀번호를 확인해주세요.");
+                    }
                   })                                       
             } catch (err) {
                 setError("로그인 중 오류가 발생했습니다. 관리자에게 문의하세요.");

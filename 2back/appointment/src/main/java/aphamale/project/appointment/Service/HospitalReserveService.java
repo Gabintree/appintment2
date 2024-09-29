@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import aphamale.project.appointment.Dto.GetHospitalReserveListDto;
+import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Repository.HospitalReserveRepository;
 
 @Service

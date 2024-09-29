@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import aphamale.project.appointment.Domain.HospitalReserveDomain;
-import aphamale.project.appointment.Dto.GetHospitalReserveListDto;
+import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 
 
 @Repository
