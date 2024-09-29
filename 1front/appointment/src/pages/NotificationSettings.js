@@ -82,6 +82,11 @@ const NotificationSettings = () => {
         },
     );
 
+    useEffect(() => {
+        // SMS 수신 정보 조회
+        selectAlarmInfo();    
+    }, []); // 마운트 될 때 한 번만 실행
+
 
     // SMS 수신 정보 저장 버튼
     async function handleSaveOnClick() {
@@ -97,6 +102,30 @@ const NotificationSettings = () => {
            .then(function (response){
                if(response.status === 200){
                    console.log("SMS 수신 정보 저장 완료 : ", response.data); 
+               }            
+           })
+           .catch(function(error){
+               console.log("error : ", error);
+             })             
+       } catch (err) {
+           setError("작업 중 오류가 발생했습니다.");
+       }  
+   }
+
+    // SMS 수신 정보 조회 
+    async function selectAlarmInfo() {
+        console.log("SMS 수신 정보 조회");
+       try{
+           const data = {
+               hospitalId: sessionStorage.getItem('userId'),
+           };
+   
+           await reqestApi.post("/api/admin/getSmsAlarm", JSON.stringify(data))
+           .then(function (response){
+               if(response.status === 200){
+                setReceiveNotification(response.data.alarmFlag);
+                setContact(response.data.phone);
+                   console.log("SMS 수신 정보 조회 완료 : ", response.data);              
                }            
            })
            .catch(function(error){

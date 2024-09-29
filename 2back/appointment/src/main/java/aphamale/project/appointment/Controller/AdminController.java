@@ -2,6 +2,7 @@ package aphamale.project.appointment.Controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.text.SimpleDateFormat;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import aphamale.project.appointment.Domain.HospitalAlarmDomain;
 import aphamale.project.appointment.Domain.HospitalInfoDomain;
 import aphamale.project.appointment.Domain.HospitalStatusDomain;
 import aphamale.project.appointment.Dto.HospitalAlarmDto;
@@ -33,6 +35,7 @@ public class AdminController {
 
     private final HospitalInfoRepository hospitalInfoRepository;
     private final HospitalStatusRepository hospitalStatusRepository;
+    private final HospitalAlarmRepository hospitalAlarmRepository;
     private final HospitalReserveService hospitalReserveService;
     private final HospitalStatusServeice hospitalStatusServeice;
     private final HospitalAlarmService hospitalAlarmService;
@@ -41,12 +44,14 @@ public class AdminController {
                            HospitalReserveService hospitalReserveService, 
                            HospitalStatusServeice hospitalStatusServeice,
                            HospitalStatusRepository hospitalStatusRepository,
-                           HospitalAlarmService hospitalAlarmService){
+                           HospitalAlarmService hospitalAlarmService,
+                           HospitalAlarmRepository hospitalAlarmRepository){
         this.hospitalInfoRepository = hospitalInfoRepository;
         this.hospitalReserveService = hospitalReserveService;
         this.hospitalStatusServeice = hospitalStatusServeice;
         this.hospitalStatusRepository = hospitalStatusRepository;
         this.hospitalAlarmService = hospitalAlarmService;
+        this.hospitalAlarmRepository = hospitalAlarmRepository;
     }
 
     // 병원명 찾기
@@ -115,6 +120,7 @@ public class AdminController {
         return saveResult;
     }
 
+    // 상태값 조회
     @PostMapping("/api/admin/getStatus")
     public String getStatus(@RequestBody HospitalStatusDto hospitalStatusDto) {
 
@@ -147,6 +153,28 @@ public class AdminController {
         String saveResult = hospitalAlarmService.AlarmFlagSave(hospitalAlarmDto);
 
         return saveResult;
+    }
+
+    // SMS 수신 정보 조회
+    @PostMapping("/api/admin/getSmsAlarm")
+    public Map<String, String> getSmsAlarm(@RequestBody HospitalAlarmDto hospitalAlarmDto) {
+
+        // 병원ID
+        String hospitalId = hospitalAlarmDto.getHospitalId();
+        // groupId 찾기
+        HospitalInfoDomain hospitalInfoDomain = hospitalInfoRepository.findByHospitalId(hospitalId).orElseThrow(() -> new UsernameNotFoundException(hospitalId));
+        String groupId = hospitalInfoDomain.getGroupId();
+
+        HospitalAlarmDomain hospitalAlarmDomain = hospitalAlarmRepository.findByHospitalIdAndGroupId(hospitalId, groupId);
+
+        String phone = hospitalAlarmDomain.getPhone();
+        String alarmFlag = hospitalAlarmDomain.getAlarmFlag();    
+
+        Map<String, String> alarmInfo = new HashMap<>();
+        alarmInfo.put("phone", phone);
+        alarmInfo.put("alarmFlag", alarmFlag);
+
+        return alarmInfo;
     }
 
 }
