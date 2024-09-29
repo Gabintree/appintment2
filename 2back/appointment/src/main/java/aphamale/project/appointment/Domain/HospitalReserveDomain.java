@@ -4,18 +4,14 @@ import java.sql.Timestamp;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import aphamale.project.appointment.Dto.HospitalReserveDto;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Embeddable
-@Entity
+@Entity(name="reserve")
 @Getter
 @Setter
 @Table(name="reserve") // 테이블을 지정하는 기능인 듯
@@ -25,10 +21,10 @@ public class HospitalReserveDomain {
     @Id // 기본키라는 뜻임  //@GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private String reserveNo; // 예약번호
 
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @Column(name="user_id")
     private String userId; // 계정
 
-    @JoinColumn(name = "group_id", referencedColumnName = "group_id")
+    @Column(name="group_id")
     private String groupId; // 기관Id
 
     @Column(name="hospital_name")
@@ -68,28 +64,28 @@ public class HospitalReserveDomain {
     private Timestamp updateDate; // 변경일자 
 
     // dto -> entity 객체로 변환하는 메서드
-    public static HospitalReserveDomain ToHospitalReserveDomain(HospitalReserveDto hospitalReserveDto){
+    // public static HospitalReserveDomain ToHospitalReserveDomain(HospitalReserveDto hospitalReserveDto){
 
-        HospitalReserveDomain hospitalReserveDomain = new HospitalReserveDomain();
+    //     HospitalReserveDomain hospitalReserveDomain = new HospitalReserveDomain();
 
-        hospitalReserveDomain.setReserveNo(hospitalReserveDto.getReserveNo());
-        hospitalReserveDomain.setUserId(hospitalReserveDto.getUserId());
-        hospitalReserveDomain.setGroupId(hospitalReserveDto.getGroupId());
-        hospitalReserveDomain.setHospitalName(hospitalReserveDto.getHospitalName());
-        hospitalReserveDomain.setHospitalAddres(hospitalReserveDto.getHospitalAddres());
-        hospitalReserveDomain.setSubject(hospitalReserveDto.getSubject());
-        hospitalReserveDomain.setReserveDate(hospitalReserveDto.getReserveDate());
-        hospitalReserveDomain.setReserveTime(hospitalReserveDto.getReserveTime());
-        hospitalReserveDomain.setAlarmFlag(hospitalReserveDto.getAlarmFlag());
-        hospitalReserveDomain.setReserveStatus(hospitalReserveDto.getReserveStatus());
-        hospitalReserveDomain.setRemark(hospitalReserveDto.getRemark());
-        hospitalReserveDomain.setInsertUser(hospitalReserveDto.getInsertUser());
-        hospitalReserveDomain.setInsertDate(hospitalReserveDto.getInsertDate());
-        hospitalReserveDomain.setUpdateUser(hospitalReserveDto.getUpdateUser());
-        hospitalReserveDomain.setUpdateDate(hospitalReserveDto.getUpdateDate());
+    //     hospitalReserveDomain.setReserveNo(hospitalReserveDto.getReserveNo());
+    //     hospitalReserveDomain.setUserId(hospitalReserveDto.getUserId());
+    //     hospitalReserveDomain.setGroupId(hospitalReserveDto.getGroupId());
+    //     hospitalReserveDomain.setHospitalName(hospitalReserveDto.getHospitalName());
+    //     hospitalReserveDomain.setHospitalAddres(hospitalReserveDto.getHospitalAddres());
+    //     hospitalReserveDomain.setSubject(hospitalReserveDto.getSubject());
+    //     hospitalReserveDomain.setReserveDate(hospitalReserveDto.getReserveDate());
+    //     hospitalReserveDomain.setReserveTime(hospitalReserveDto.getReserveTime());
+    //     hospitalReserveDomain.setAlarmFlag(hospitalReserveDto.getAlarmFlag());
+    //     hospitalReserveDomain.setReserveStatus(hospitalReserveDto.getReserveStatus());
+    //     hospitalReserveDomain.setRemark(hospitalReserveDto.getRemark());
+    //     hospitalReserveDomain.setInsertUser(hospitalReserveDto.getInsertUser());
+    //     hospitalReserveDomain.setInsertDate(hospitalReserveDto.getInsertDate());
+    //     hospitalReserveDomain.setUpdateUser(hospitalReserveDto.getUpdateUser());
+    //     hospitalReserveDomain.setUpdateDate(hospitalReserveDto.getUpdateDate());
 
-        return hospitalReserveDomain;
-    }
+    //     return hospitalReserveDomain;
+    // }
 
     
 

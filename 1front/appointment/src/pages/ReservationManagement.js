@@ -154,9 +154,9 @@ const ReservationManagement = () => {
                                 <tr key={reservation.reserveNo}>
                                     <td>{reservation.reserveNo}</td>
                                     <td>{moment(reservation.reserveDate).format("yyyy-MM-DD")}</td>
-                                    <td>{moment(reservation.reserveTime).format("hh:mm")}</td>
-                                    <td>{reservation.userId}</td>
-                                    <td>{reservation.birth}</td>
+                                    <td>{reservation.reserveTime}</td>
+                                    <td>{reservation.userName}</td>
+                                    <td>{reservation.birthDate}</td>
                                     <td>{reservation.subject}</td>
                                     <td>{reservation.reseveStatus = "I" ? "예약완료" : reservation.reseveStatus = "U" ? "변경완료" : "취소완료"}</td>
                                     <td>

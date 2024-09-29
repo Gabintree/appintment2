@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+@Entity(name="hospital_info")
 @Getter
 @Setter
 @Table(name="hospital_info") // 테이블을 지정하는 기능인 듯
@@ -21,28 +21,28 @@ public class HospitalInfoDomain {
     @Id // 기본키라는 뜻임  //@GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private String hospitalId; // 계정
 
-    @Column
+    @Column(name="hospital_pw")
     private String hospitalPw; // 비밀번호
 
-    @Column
+    @Column(name="corporate_no")
     private String corporateNo; // 사업자등록번호
 
-    @Column
+    @Column(name="group_id")
     private String groupId; // 기관ID
 
-    @Column
+    @Column(name="hospital_name")
     private String hospitalName; // 병원명    
    
-    @Column
+    @Column(name="hospital_address")
     private String hospitalAddress; // 병원주소
 
-    @Column
+    @Column(name="tell_no")
     private String tellNo; // 연락처
 
-    @Column
+    @Column(name="insert_date")
     private Timestamp insertDate; // 회원가입일
 
-    @Column
+    @Column(name="update_date")
     private Timestamp updateDate; // 정보수정일
 
     @Column

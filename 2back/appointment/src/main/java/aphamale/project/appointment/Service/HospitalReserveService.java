@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import aphamale.project.appointment.Domain.HospitalReserveDomain;
+import aphamale.project.appointment.Dto.GetHospitalReserveListDto;
 import aphamale.project.appointment.Repository.HospitalReserveRepository;
 
 @Service
@@ -19,15 +19,17 @@ public class HospitalReserveService {
     }
 
     // 예약 목록 조회 
-    public List<HospitalReserveDomain> selectReserveList(String groupId, Date fromDate, Date toDate){
+    public List<GetHospitalReserveListDto> selectReserveList(String groupId, Date fromDate, Date toDate){
 
 
         // 데이터 담을 list 생성
-        List<HospitalReserveDomain> HospitalList = new ArrayList<>();
+        List<GetHospitalReserveListDto> HospitalList = new ArrayList<>();
 
-        HospitalList = hospitalReserveRepository.findByGroupIdAndReserveDateBetween(groupId, fromDate, toDate);
+        HospitalList = hospitalReserveRepository.getItemsOfByReserveNo(groupId, fromDate, toDate);
 
         return HospitalList;
     }
     
 }
+
+

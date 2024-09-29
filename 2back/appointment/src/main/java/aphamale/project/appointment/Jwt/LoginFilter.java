@@ -79,7 +79,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // userId 찾기
         String userId = "";
-        if(role.equals("USER")){
+        if(role.equals("ROLE_USER")){
             // 사용자    
             CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
             userId = customUserDetails.getUsername();
@@ -153,7 +153,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // Date date = new Date(System.currentTimeMillis() + expiredMs); // 만료 기한 사용 안 하므로
         // userInfoDomain.setExpiration(date.toString()); // 만료 기한 사용 안 하므로 w주석
 
-        if(role.equals("USER")){
+        if(role.equals("ROLE_USER")){
             UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
             userInfoDomain.setJwtRefresh(refresh);
     

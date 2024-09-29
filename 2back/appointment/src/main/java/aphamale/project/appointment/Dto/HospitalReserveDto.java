@@ -1,7 +1,6 @@
 package aphamale.project.appointment.Dto;
 
 import java.sql.Timestamp;
-import aphamale.project.appointment.Domain.HospitalReserveDomain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,50 +29,51 @@ public class HospitalReserveDto {
     private String updateUser; // 변경자
     private Timestamp updateDate; // 변경일자
 
-        public HospitalReserveDto(String reserveNo, String userId, String groupId, String hospitalName, String hospitalAddres,
-        String subject, Timestamp reserveDate, Timestamp reserveTime, String alarmFlag, String reserveStatus, String remark,
-        String insertUser, Timestamp insertDate, String updateUser, Timestamp updateDate){
+        // public HospitalReserveDto(String reserveNo, String userId, String groupId, String hospitalName, String hospitalAddres,
+        // String subject, Timestamp reserveDate, Timestamp reserveTime, String alarmFlag, String reserveStatus, String remark,
+        // String insertUser, Timestamp insertDate, String updateUser, Timestamp updateDate){
 
-            this.reserveNo = reserveNo;
-            this.userId = userId;
-            this.groupId = groupId;
-            this.hospitalName = hospitalName;
-            this.hospitalAddres = hospitalAddres;
-            this.subject = subject;
-            this.reserveDate = reserveDate;
-            this.reserveTime = reserveTime;
-            this.alarmFlag = alarmFlag;
-            this.reserveStatus = reserveStatus;
-            this.remark = remark;
-            this.insertUser = insertUser;
-            this.insertDate = insertDate;
-            this.updateUser = updateUser;
-            this.updateDate = updateDate;
-        }
+        //     this.reserveNo = reserveNo;
+        //     this.userId = userId;
+        //     this.groupId = groupId;
+        //     this.hospitalName = hospitalName;
+        //     this.hospitalAddres = hospitalAddres;
+        //     this.subject = subject;
+        //     this.reserveDate = reserveDate;
+        //     this.reserveTime = reserveTime;
+        //     this.alarmFlag = alarmFlag;
+        //     this.reserveStatus = reserveStatus;
+        //     this.remark = remark;
+        //     this.insertUser = insertUser;
+        //     this.insertDate = insertDate;
+        //     this.updateUser = updateUser;
+        //     this.updateDate = updateDate;
+
+        // }
 
 
   
-        // entity -> dto  객체로 변환하는 메서드
-        public static HospitalReserveDto ToHospitalReserveDto(HospitalReserveDomain hospitalReserveDomain){
+    //     // entity -> dto  객체로 변환하는 메서드
+    //     public static HospitalReserveDto ToHospitalReserveDto(HospitalReserveDomain hospitalReserveDomain){
             
-        HospitalReserveDto hospitalReserveDto = new HospitalReserveDto();
+    //     HospitalReserveDto hospitalReserveDto = new HospitalReserveDto();
 
-        hospitalReserveDto.setReserveNo(hospitalReserveDomain.getReserveNo());
-        hospitalReserveDto.setUserId(hospitalReserveDomain.getUserId());
-        hospitalReserveDto.setGroupId(hospitalReserveDomain.getGroupId());
-        hospitalReserveDto.setHospitalName(hospitalReserveDomain.getHospitalName());
-        hospitalReserveDto.setHospitalAddres(hospitalReserveDomain.getHospitalAddres());
-        hospitalReserveDto.setSubject(hospitalReserveDomain.getSubject());
-        hospitalReserveDto.setReserveDate(hospitalReserveDomain.getReserveDate());
-        hospitalReserveDto.setReserveTime(hospitalReserveDomain.getReserveTime());
-        hospitalReserveDto.setAlarmFlag(hospitalReserveDomain.getAlarmFlag());
-        hospitalReserveDto.setReserveStatus(hospitalReserveDomain.getReserveStatus());
-        hospitalReserveDto.setRemark(hospitalReserveDomain.getRemark());
-        hospitalReserveDto.setInsertUser(hospitalReserveDomain.getInsertUser());
-        hospitalReserveDto.setInsertDate(hospitalReserveDomain.getInsertDate());
-        hospitalReserveDto.setUpdateUser(hospitalReserveDomain.getUpdateUser());
-        hospitalReserveDto.setUpdateDate(hospitalReserveDomain.getUpdateDate());
+    //     hospitalReserveDto.setReserveNo(hospitalReserveDomain.getReserveNo());
+    //     hospitalReserveDto.setUserId(hospitalReserveDomain.getUserId());
+    //     hospitalReserveDto.setGroupId(hospitalReserveDomain.getGroupId());
+    //     hospitalReserveDto.setHospitalName(hospitalReserveDomain.getHospitalName());
+    //     hospitalReserveDto.setHospitalAddres(hospitalReserveDomain.getHospitalAddres());
+    //     hospitalReserveDto.setSubject(hospitalReserveDomain.getSubject());
+    //     hospitalReserveDto.setReserveDate(hospitalReserveDomain.getReserveDate());
+    //     hospitalReserveDto.setReserveTime(hospitalReserveDomain.getReserveTime());
+    //     hospitalReserveDto.setAlarmFlag(hospitalReserveDomain.getAlarmFlag());
+    //     hospitalReserveDto.setReserveStatus(hospitalReserveDomain.getReserveStatus());
+    //     hospitalReserveDto.setRemark(hospitalReserveDomain.getRemark());
+    //     hospitalReserveDto.setInsertUser(hospitalReserveDomain.getInsertUser());
+    //     hospitalReserveDto.setInsertDate(hospitalReserveDomain.getInsertDate());
+    //     hospitalReserveDto.setUpdateUser(hospitalReserveDomain.getUpdateUser());
+    //     hospitalReserveDto.setUpdateDate(hospitalReserveDomain.getUpdateDate());
 
-        return hospitalReserveDto;
-    }
+    //     return hospitalReserveDto;
+    // }
 }
