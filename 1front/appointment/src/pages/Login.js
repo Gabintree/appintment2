@@ -51,13 +51,12 @@ const Login = () => {
                 }})   
                 .then(function (response){
                     if(response.status == 200){
-                      alert("로그인이 완료되었습니다.");
+                      console.log("로그인이 완료되었습니다.");
 
                       // 액세스 토큰 로컬 스토리지에 저장, userId 세션 스토리지 저장
                       if(response.headers.access){
                         localStorage.setItem('login-token', response.headers.access);
-                        sessionStorage.setItem('userId', Id)
-                        
+                        sessionStorage.setItem('userId', Id)                        
                       }
 
                       if(formGbn === "userBtn"){

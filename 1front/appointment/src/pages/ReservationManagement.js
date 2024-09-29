@@ -5,11 +5,30 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from 'moment';
 
-
-
 import './ReservationManagement.css';
 import StatusAndDetails from './StatusAndDetails';
 import reactSelect from 'react-select';
+
+// axios 인스턴스
+export const reqestApi = axios.create({
+    // baseURL: `${process.env.REACT_APP_SERVER_IP}`, // 안 씀
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem('login-token')}`,
+        "Content-Type": "application/json; charset=utf8",
+        withCredentials: true,
+    },
+});
+
+// 토큰 재발행
+export async function getRefreshToken() {
+    const response = await axios.post("/api/reissue", {}, {
+        headers: {
+            "Content-Type": "application/json; charset=utf8",
+            withCredentials: true,
+        }     
+    })
+    return response;           
+}
 
 const ReservationManagement = () => {
     
@@ -29,39 +48,59 @@ const ReservationManagement = () => {
     };
 
     const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
-    
-    // 토큰 재발행
-    async function getRefreshToken() {
-        try{
-            await axios.post("/api/reissue", {}, {
-                headers: {
-                    "Content-Type": "application/json; charset=utf8",
-                    withCredentials: true,
-                }
-            })
-            .then(function (response2){
-                if(response2.status == 200){
-                    console.log("토큰 재발행 완료");
-                    // 로컬 스토리지에 새로 저장, 변수에도 저장
-                    localStorage.setItem('login-token', response2.headers.access);                    
-                    setAccessToken(response2.headers.access);
-                    console.log("response2.headers.access", response2.headers.access);
-                }            
-            })
-            .catch(function(error){
-                console.log("토큰 재발행 오류 ", error);
-              })             
-        } catch (err) {
-            setError("등록 중 오류가 발생했습니다.");
-        }          
-    };
 
+    // interceptor 적용
+    reqestApi.interceptors.response.use(
+        // 200 응답
+        (response) =>{
+            return response;
+        },
+        // 200 외
+        async (error) => {
+            const {
+                config,
+                response: { status },
+            } = error;
+            
+            if(status === 401){
+                if(error.response.statusText === "Unauthorized" ){
+                    const originRequest = config;
+                    try{
+                        // 토큰 재발행 요청
+                        const response = await getRefreshToken();
+                        // 재발행 성공
+                        if(response.status === 200){
+                            console.log("토큰 재발행 완료");
+                            const newAccessToken = response.headers.access;
+                            // 로컬스토리지 NewAccessToken 저장
+                            localStorage.setItem('login-token', newAccessToken);
+                            // 진행중이던 요청 이어서 계속
+                            originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                            return axios(originRequest); 
+                        }
+                    }catch (error){
+                        if(axios.isAxiosError(error)){
+                            if(
+                                error.response?.status === 403){
+                                alert("해당 화면은 권한이 없습니다. home으로 이동합니다.");
+                                navigate("/Home");
+                            }
+                            else{
+                                console.log("error.response?.status : ", error.response?.status);
+                                alert("토큰 재발행 요청중 오류가 발생했습니다. 관리자에게 문의해주세요.");
+                            }
+
+                        }
+                    }                   
+                }
+            }
+            return Promise.reject(error);
+        },
+    );
 
     // 예약 내역 관리 조회 버튼
     async function handleSearchOnClick() {
         console.log("클릭이벤트");
-        // 재발행한 경우 변경된 액세스토큰을 로컬스토리지에서 조회
-        setAccessToken(localStorage.getItem('login-token'));
         try{
             const data = {
                 hospitalId: userId,
@@ -69,13 +108,7 @@ const ReservationManagement = () => {
                 toDate : endDate
             };
     
-            await axios.post("/api/admin/reserveList", JSON.stringify(data), {     
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`,
-                    "Content-Type": "application/json; charset=utf8",
-                    withCredentials: true,            
-                },
-            })
+            await reqestApi.post("/api/admin/reserveList", JSON.stringify(data))
             .then(function (response){
                 if(response.status == 200){
                     console.log("조회 완료 : ", response.data); 
@@ -85,19 +118,9 @@ const ReservationManagement = () => {
             })
             .catch(function(error){
                 console.log("error : ", error);
-                if(error.status == 401){
-                    console.log("인증 오류 401 : 토큰 만료");
-                    // 토큰 재발행 요청
-                    getRefreshToken();
-                }
-                else if(error.status == 403){
-                    console.log("인증 오류 403 : 권한 없음");
-                    alert("해당 페이지는 권한이 없습니다. home으로 이동합니다.");
-                    navigate("/Home");
-                }
               })             
         } catch (err) {
-            setError("등록 중 오류가 발생했습니다.");
+            setError("작업 중 오류가 발생했습니다.");
         }  
     };
 

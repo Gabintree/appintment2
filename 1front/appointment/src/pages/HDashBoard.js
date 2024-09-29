@@ -9,20 +9,96 @@ import StatusSelect from './StatusSelect';
 import StatusAndDetails from './StatusAndDetails.js';
 import NotificationSettings from './NotificationSettings';
 
+// axios 인스턴스
+export const reqestApi = axios.create({
+    // baseURL: `${process.env.REACT_APP_SERVER_IP}`, // 안 씀
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem('login-token')}`,
+        "Content-Type": "application/json; charset=utf8",
+        withCredentials: true,
+    },
+});
+
+// 토큰 재발행
+export async function getRefreshToken() {
+    const response = await axios.post("/api/reissue", {}, {
+        headers: {
+            "Content-Type": "application/json; charset=utf8",
+            withCredentials: true,
+        }     
+    })
+    return response;           
+}
+
 
 const HDashBoard = () => {
     const [userName, setUserName] = useState(""); // 사용자 이름 상태
     const [waitingStatus, setWaitingStatus] = useState(""); // 대기 상태 추가
     const [isDetailsVisible, setIsDetailsVisible] = useState(false); // 상세보기 상태 추가
 
-    // 액세스 토큰 및 userId
-    const [accessToken, setAccessToken] = useState(localStorage.getItem('login-token'));
+    // userId
     const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
 
     const navigate = useNavigate();
     const [error, setError] = useState("");
 
+    // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
+    reqestApi.interceptors.request.use((config) => {
+        const accessToken = localStorage.getItem('login-token');
+        if (config.headers && accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+        return config;
+    });
 
+    // interceptor 적용
+    reqestApi.interceptors.response.use(
+        // 200 응답
+        (response) =>{
+            return response;
+        },
+        // 200 외
+        async (error) => {
+            const {
+                config,
+                response: { status },
+            } = error;
+            
+            if(status === 401){
+                if(error.response.statusText === "Unauthorized" ){
+                    const originRequest = config;
+                    try{
+                        // 토큰 재발행 요청
+                        const response = await getRefreshToken();
+                        // 재발행 성공
+                        if(response.status === 200){
+                            console.log("토큰 재발행 완료");
+                            const newAccessToken = response.headers.access;
+                            // 로컬스토리지 NewAccessToken 저장
+                            localStorage.setItem('login-token', newAccessToken);
+                            // 진행중이던 요청 이어서 계속
+                            originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                            return axios(originRequest); 
+                        }
+                    }catch (error){
+                        if(axios.isAxiosError(error)){
+                            if(
+                                error.response?.status === 403){
+                                alert("해당 화면은 권한이 없습니다. home으로 이동합니다.");
+                                navigate("/Home");
+                            }
+                            else{
+                                console.log("error.response?.status : ", error.response?.status);
+                                alert("토큰 재발행 요청중 오류가 발생했습니다. 관리자에게 문의해주세요.");
+                            }
+
+                        }
+                    }                   
+                }
+            }
+            return Promise.reject(error);
+        },
+    );
 
     // 화면 로딩시 getId 조회
     async function getAdminId(){
@@ -31,78 +107,29 @@ const HDashBoard = () => {
                 hospitalId: userId,
             };
     
-            await axios.post("/api/admin", JSON.stringify(data), {
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`,
-                    "Content-Type": "application/json; charset=utf8",
-                    withCredentials: true,
-                }
-            })
+           await reqestApi.post("/api/admin", JSON.stringify(data))
             .then(function (response){
                 if(response.status == 200){
                     console.log("토큰 인증 완료");
+                    // 병원명, 세션 스토리지 저장
                     const name = response.data;
-                    setUserName(name);  
-                    // 세션 스토리지에 이름도 저장
-                    sessionStorage.setItem('userName', name); 
-    
-                }            
-            })
-            .catch(function(error){
-                if(error.status == 401){
-                    console.log("인증 오류 401 : 토큰 만료");
-                    // 토큰 재발행 요청
-                    getRefreshToken();
-                }
-                else if(error.status == 403){
-                    console.log("인증 오류 403 : 권한 없음");
-                    alert("해당 페이지는 권한이 없습니다. home으로 이동합니다.");
-                    navigate("/Home");
-                }
-              })             
-        } catch (err) {
-            setError("등록 중 오류가 발생했습니다.");
-        }        
-    };
-
-    // 토큰 재발행
-    async function getRefreshToken() {
-        try{
-            await axios.post("/api/reissue", {}, {
-                headers: {
-                    "Content-Type": "application/json; charset=utf8",
-                    withCredentials: true,
-                }
-            })
-            .then(function (response2){
-                if(response2.status == 200){
-                    console.log("토큰 재발행 완료");
-                    // 로컬 스토리지에 새로 저장, 변수에도 저장
-                    localStorage.setItem('login-token', response2.headers.access);                    
-                    setAccessToken(response2.headers.access);
-                    const name = sessionStorage.getItem("userName");
                     setUserName(name);
+                    sessionStorage.setItem('userName', name);     
                 }            
             })
             .catch(function(error){
-                console.log("토큰 재발행 오류 ", error);
+                console.log("error : ", error);
               })             
         } catch (err) {
-            setError("등록 중 오류가 발생했습니다.");
-        }          
+            setError("작업중 오류가 발생했습니다.");
+        }        
     };
 
     // 로그아웃 
     async function logoutOnClick() {
 
         try{
-            await axios.post("/api/logout", {}, {
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`,
-                    "Content-Type": "application/json; charset=utf8",
-                    withCredentials: true,
-                }
-            })
+            await reqestApi.post("/api/logout", {})
             .then(function (response){
                 if(response.status == 200){
                     console.log("로그아웃 완료");
