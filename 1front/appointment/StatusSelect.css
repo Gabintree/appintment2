@@ -1,0 +1,101 @@
+.title-bar {
+    height: 50px; /* 제목 높이 설정 */
+    border-top: 2px solid #000; /* 위쪽 보더 3px */
+    border-bottom: 2px solid #000; /* 아래쪽 보더 3px */
+    display: flex;
+    align-items: center; /* 세로 가운데 정렬 */
+    font-size: 18px; /* 제목 폰트 크기 */
+    width: 100%;
+}
+.status-section {
+    flex: 1;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 가운데 정렬 */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.waiting-status {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding-left: 20px;
+    width: 100%;
+}
+
+.status-button-container{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.color-circle1 {
+    width: 20px; /* 색깔 원 크기 */
+    height: 20px; /* 색깔 원 크기 */
+    border-radius: 50%; /* 원형 */
+    margin-left: 10px;
+    margin-right: 10px; /* 버튼과의 간격 */
+    background-color: #87DBD8; /* 기본 색상 */
+}
+.color-circle2 {
+    width: 20px; /* 색깔 원 크기 */
+    height: 20px; /* 색깔 원 크기 */
+    border-radius: 50%; /* 원형 */
+    margin-left: 10px;
+    margin-right: 10px; /* 버튼과의 간격 */
+    background-color: #FFBF75; /* 기본 색상 */
+}
+.color-circle3 {
+    width: 20px; /* 색깔 원 크기 */
+    height: 20px; /* 색깔 원 크기 */
+    border-radius: 50%; /* 원형 */
+    margin-left: 10px;
+    margin-right: 10px; /* 버튼과의 간격 */
+    background-color: #FF675E; /* 기본 색상 */
+}
+.status-button {
+    width: 25px;
+    height: 25px;
+    border: none;
+    background-color: rgb(173, 173, 173);
+    border-radius: 50%;
+    margin-right: 10px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.status-button.active {
+    background-color: #0FB7B1;
+}
+
+.status-button::before {
+    content: '';
+    width: 10px; /* 뒤의 원 크기 조정 */
+    height: 10px; /* 뒤의 원 크기 조정 */
+    background-color: rgb(255, 255, 255); /* 뒤의 원 색상 */
+    border-radius: 50%;
+    position: absolute; /* 절대 위치 */
+    top: 50%; /* 수직 중앙 정렬 */
+    left: 50%; /* 수평 중앙 정렬 */
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    z-index: 0; /* 뒤의 원이 앞의 원 뒤에 위치하도록 설정 */
+}
+
+.save-button-container {
+    display: flex; /* 플렉스 박스 사용 */
+    justify-content: center; /* 가운데 정렬 */
+    width: 100%; /* 전체 너비 사용 */
+    margin-top: 5px; /* 위쪽 여백 추가 */
+}
+
+.save-button {
+    padding: 10px; /* 버튼 패딩 */
+    color: #0FB7B1;
+    background-color: none; /* 버튼 배경색 */
+    border:1px solid #0FB7B1; /* 버튼 텍스트 색상 */
+    cursor: pointer; /* 커서 포인터 */
+}

@@ -1,0 +1,49 @@
+/* src/ReservationManagement.css */
+.reservation-management {
+    padding: 0;
+    height: 100%;
+}
+
+.title-bar {
+    height: 50px; /* 제목 높이 설정 */
+    border-top: 2px solid #000; /* 위쪽 보더 3px */
+    border-bottom: 2px solid #000; /* 아래쪽 보더 3px */
+    display: flex;
+    align-items: center; /* 세로 가운데 정렬 */
+    padding-left: 20px;
+    font-size: 18px; /* 제목 폰트 크기 */
+}
+
+.date-selection {
+    margin: 10px 0;
+    padding: 0 20px;
+}
+.date-selection input,
+.date-selection button {
+    border: 1px solid #ddd; /* 버튼과 입력 필드에 1px 보더 추가 */
+    padding: 8px; /* 패딩 추가 */
+    margin-right: 10px; /* 버튼 간의 여백 추가 */
+}
+
+.table-container {
+    padding: 0 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #CFF1EF;
+}
+
+button {
+    cursor: pointer;
+}
