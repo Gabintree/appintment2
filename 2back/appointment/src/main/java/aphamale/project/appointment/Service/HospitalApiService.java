@@ -111,6 +111,7 @@ public class HospitalApiService {
                     String hpid = GetElementValue(itemElement, "hpid");
                     String dutyName = GetElementValue(itemElement, "dutyName");
                     String dutyAddr = GetElementValue(itemElement, "dutyAddr"); 
+                    String dutyTel1 = GetElementValue(itemElement, "dutyTel1"); // 대표전화
 
                     String dutyTime1s = GetElementValue(itemElement, "dutyTime1s");
                     String dutyTime1c = GetElementValue(itemElement, "dutyTime1c");
@@ -132,7 +133,6 @@ public class HospitalApiService {
                     // String rnum = GetElementValue(itemElement, "rnum");  
                     // String postCdn1 = GetElementValue(itemElement, "postCdn1");
                     // String postCdn2 = GetElementValue(itemElement, "postCdn2");                    
-                    // String dutyTel1 = GetElementValue(itemElement, "dutyTel1");
                     // String dutyTel3 = GetElementValue(itemElement, "dutyTel3");                    
                     // String dutyDiv = GetElementValue(itemElement, "dutyDiv");
                     // String dutyDivNam = GetElementValue(itemElement, "dutyDivNam");
@@ -145,7 +145,7 @@ public class HospitalApiService {
                     // String wgs84Lat = GetElementValue(itemElement, "wgs84Lat");
                     // String wgs84Lon = GetElementValue(itemElement, "wgs84Lon");
                     
-                    HospitalApiDto hospitalApiDto = new HospitalApiDto(hpid, dutyName, dutyAddr,
+                    HospitalApiDto hospitalApiDto = new HospitalApiDto(hpid, dutyName, dutyAddr, dutyTel1,
                                                                        dutyTime1s, dutyTime1c,
                                                                        dutyTime2s, dutyTime2c,
                                                                        dutyTime3s, dutyTime3c,

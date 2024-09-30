@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import moment from 'moment';
 import homeImage from '../images/image_home.png';
 import pic1 from '../images/image_1.png';
 import pic2 from '../images/image_2.png';
@@ -11,10 +12,12 @@ const Home = () => {
   const [selectedGugun, setSelectedGugun] = useState(""); // 구군
   const [selectedDong, setSelectedDong] = useState(""); // 동
   const [selectedSubject, setSelectedSubject] = useState(""); // 진료과목 코드
-  const [selectedSubjectNamae, setSelectedSubjectName ] = useState(""); // 진료과목명
   const [selectedDate, setSelectedDate] = useState(""); // 진료 예정 일자
   const [selectedTime, setSelectedTime] = useState(""); // 진료 예정 시간
+  const [isChecked, setIsChecked] = useState(); // 공휴일 여부
 
+  const [filteredHospitalData, setFilteredHospitalDaata] = useState([]); // 병원 목록
+  const [dayOfWeek, setDayOfWeek] = useState(); // 진료 예정 일자의 요일
   const [error, setError] = useState(""); 
 
   // 시도
@@ -37,10 +40,25 @@ const Home = () => {
       setSelectedSubject(options);
   };
 
+  // 진료 일자 변경
+  function selectedDateOnChange(date){
+    setSelectedDate(date);  
+    // const week = new Date(date).getDay();
+    // setDayOfWeek(week); 
+
+    // 일	0, 월	1, 화	2, 수	3, 목	4, 금	5, 토	6
+  }
+
   // 시간
   function handleOnChangeTime(options) {
       setSelectedTime(options);
   };  
+
+  // 공휴일 체크 박스
+  function checkedOnChange(isChecked){
+    console.log("isChecked", isChecked);
+    setIsChecked(isChecked)
+  };
 
 
   // 병원 목록 조회 검색 버튼튼
@@ -48,7 +66,12 @@ const Home = () => {
     e.preventDefault();
     console.log("병원 목록 조회");
 
-
+    const week = new Date(selectedDate).getDay();
+    setDayOfWeek(week); 
+    // 공휴일이면
+    if(isChecked === true){
+      setDayOfWeek(8);
+    }
 
     try{
         const data = {
@@ -57,7 +80,8 @@ const Home = () => {
           selectedDong: selectedDong,
           selectedSubject: selectedSubject,
           selectedDate: selectedDate,
-          selectedTime: selectedTime,   
+          selectedTime: selectedTime,
+          isChecked: isChecked.toString(),   
         };
 
         await axios.post("/api/hospitalList", JSON.stringify(data), {
@@ -69,6 +93,7 @@ const Home = () => {
         .then(function (response){
             if(response.status === 200){
                 console.log("병원 목록 조회 완료 : ", response.data); 
+               setFilteredHospitalDaata(response.data);
             }            
         })
         .catch(function(error){
@@ -196,7 +221,7 @@ const Home = () => {
                 <input className="text-lg font-semibold bg-transparent border-b-2 border-white pb-2 cursor-pointer"
                     style={{ color: 'white' }}
                     type="date" 
-                    onChange={(e) => setSelectedDate(e.target.value)} />
+                    onChange={(e) => selectedDateOnChange(e.target.value)} />
                 {/* <select
                     className="text-lg font-semibold bg-transparent border-b-2 border-white pb-2 cursor-pointer"
                     style={{ color: 'white' }}
@@ -204,8 +229,17 @@ const Home = () => {
                         <option value="">진료 받을 날짜 선택</option> 
                         <option value="09:00" style={{ color: 'black' }}></option>
                         </select> */}
+
+                {/* 공휴일 여부 체크박스 */}
+                <input className="text-lg font-semibold bg-transparent border-b-2 border-white pb-2 cursor-pointer"
+                          style={{ color: 'white' }}
+                          type="checkbox"
+                          onChange={(e) => checkedOnChange(e.target.checked)}>
+                </input>
+                <label className="text-lg font-semibold bg-transparent border-b-2 border-white pb-2 cursor-pointer"
+                       style={{ color: 'white' }}>공휴일</label>
             </div>
-        
+
             <div className="relative inline-block text-left">
                 <select
                     className="text-lg font-semibold bg-transparent border-b-2 border-white pb-2 cursor-pointer"
@@ -258,28 +292,48 @@ const Home = () => {
 
         <p className="text-center text-3xl mt-8 mb-10 font-bold">현재 예약 가능한 병원 목록</p>
 
-        <div className="flex justify-around mt-5">
-  <div className="text-center border-t-transparent border-l-transparent border-b-2 border-r-2 border-gray-300 p-4">
-    <h1 className="text-s text-gray-600">이비인후과</h1>
-    <h2 className="text-center text-3xl text-teal-500">임이비인후과의원</h2>
-    <p className="text-gray-500">평일 09:00 - 18:00 | 주말 11:00 - 14:00</p>
-    <p className="text-gray-500">📍 680m</p>
-  </div>
+        {filteredHospitalData.length > 0 ? (filteredHospitalData.map(function (item, index){
+          return(
+            <div className="flex justify-around mt-5" key={index}>
+              <div className="text-center border-t-transparent border-l-transparent border-b-2 border-r-2 border-gray-300 p-4">
+                <h1 className="text-s text-gray-600">진료과목</h1>
+                <h2 className="text-center text-3xl text-teal-500">{item.dutyName}</h2>
+                <p className="text-gray-500">{dayOfWeek === 1 ? "월요일 : " + item.dutyTime1s.substring(0, 2) + ":" + item.dutyTime1s.substring(2, 4) + "~" + item.dutyTime1c.substring(0, 2) + ":" + item.dutyTime1c.substring(2, 4)
+                                            : dayOfWeek === 2 ? "화요일 : " + item.dutyTime2s.substring(0, 2) + ":" + item.dutyTime2s.substring(2, 4) + "~" + item.dutyTime2c.substring(0, 2) + ":" + item.dutyTime2c.substring(2, 4)
+                                            : dayOfWeek === 3 ? "수요일 : " + item.dutyTime3s.substring(0, 2) + ":" + item.dutyTime3s.substring(2, 4) + "~" + item.dutyTime3c.substring(0, 2) + ":" + item.dutyTime3c.substring(2, 4)
+                                            : dayOfWeek === 4 ? "목요일 : " + item.dutyTime4s.substring(0, 2) + ":" + item.dutyTime4s.substring(2, 4) + "~" + item.dutyTime4c.substring(0, 2) + ":" + item.dutyTime4c.substring(2, 4)
+                                            : dayOfWeek === 5 ? "금요일 : " + item.dutyTime5s.substring(0, 2) + ":" + item.dutyTime5s.substring(2, 4) + "~" + item.dutyTime5c.substring(0, 2) + ":" + item.dutyTime5c.substring(2, 4)
+                                            : dayOfWeek === 6 ? "토요일 : " + item.dutyTime6s.substring(0, 2) + ":" + item.dutyTime6s.substring(2, 4) + "~" + item.dutyTime6c.substring(0, 2) + ":" + item.dutyTime6c.substring(2, 4)
+                                            : dayOfWeek === 0 ? "일요일 : " + item.dutyTime7s.substring(0, 2) + ":" + item.dutyTime7s.substring(2, 4) + "~" + item.dutyTime7c.substring(0, 2) + ":" + item.dutyTime7c.substring(2, 4)
+                                            :                   "공휴일 : " + item.dutyTime8s.substring(0, 2) + ":" + item.dutyTime8s.substring(2, 4) + "~" + item.dutyTime8c.substring(0, 2) + ":" + item.dutyTime8c.substring(2, 4)}</p>
+                <p className="text-gray-500">대표전화 : {item.dutyTel1}</p>
+              </div>
+            </div>
+          )})
+        ):(<p className="text-center text-3xl mt-8 mb-10 font-bold">해당 조건에 예약 가능한 병원이 없습니다.</p>)}
 
-  <div className="text-center border-t-transparent border-l-transparent border-b-2 border-r-2 border-gray-300 p-4">
-    <h1 className="text-s text-gray-600">이비인후과</h1>
-    <h2 className="text-center text-3xl text-teal-500">비비이비인후과의원</h2>
-    <p className="text-gray-500">평일 08:30 - 18:00 | 주말 정기 휴무</p>
-    <p className="text-gray-500">📍 890m</p>
-  </div>
+        {/* <div className="flex justify-around mt-5">
+          <div className="text-center border-t-transparent border-l-transparent border-b-2 border-r-2 border-gray-300 p-4">
+            <h1 className="text-s text-gray-600">이비인후과</h1>
+            <h2 className="text-center text-3xl text-teal-500">임이비인후과의원</h2>
+            <p className="text-gray-500">평일 09:00 - 18:00 | 주말 11:00 - 14:00</p>
+            <p className="text-gray-500">📍 680m</p>
+          </div>
 
-  <div className="text-center border-t-transparent border-l-transparent border-b-2 border-r-2 border-gray-300 p-4">
-    <h1 className="text-s text-gray-600">이비인후과</h1>
-    <h2 className="text-center text-3xl text-teal-500">문제아이비인후과의원</h2>
-    <p className="text-gray-500">평일 10:00 - 20:00 | 주말 11:00 - 15:00</p>
-    <p className="text-gray-500">📍 1,350m</p>
-  </div>
-</div>
+          <div className="text-center border-t-transparent border-l-transparent border-b-2 border-r-2 border-gray-300 p-4">
+            <h1 className="text-s text-gray-600">이비인후과</h1>
+            <h2 className="text-center text-3xl text-teal-500">비비이비인후과의원</h2>
+            <p className="text-gray-500">평일 08:30 - 18:00 | 주말 정기 휴무</p>
+            <p className="text-gray-500">📍 890m</p>
+          </div>
+
+          <div className="text-center border-t-transparent border-l-transparent border-b-2 border-r-2 border-gray-300 p-4">
+            <h1 className="text-s text-gray-600">이비인후과</h1>
+            <h2 className="text-center text-3xl text-teal-500">문제아이비인후과의원</h2>
+            <p className="text-gray-500">평일 10:00 - 20:00 | 주말 11:00 - 15:00</p>
+            <p className="text-gray-500">📍 1,350m</p>
+          </div>
+        </div> */}
   
     {/* 하단 화면 구성*/}
     </div>

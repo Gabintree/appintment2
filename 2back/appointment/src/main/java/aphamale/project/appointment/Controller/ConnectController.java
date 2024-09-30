@@ -2,7 +2,6 @@ package aphamale.project.appointment.Controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,9 +14,6 @@ import aphamale.project.appointment.Dto.HospitalApiDto;
 import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.MessageApiService;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 
 @RestController
@@ -50,6 +46,7 @@ public class ConnectController {
        String selectedSubject = searchParam.get("selectedSubject");
        String selectedDate = searchParam.get("selectedDate");
        String selectedTime = searchParam.get("selectedTime");
+       String isChecked = searchParam.get("isChecked"); 
 
         // 프론트에 보낼 LIST
         List<HospitalApiDto> finalHospitalList = new ArrayList<HospitalApiDto>();
@@ -66,19 +63,84 @@ public class ConnectController {
             int dayOfWeekValue = date.getDayOfWeek().getValue();
             String dayOfWeek = String.valueOf(dayOfWeekValue);
 
+            // 공휴일 체크박스가 체크된 상태라면, 공휴일로 검색
+            if(isChecked.equals("true")){
+                dayOfWeek = "8";
+            }
+
             // 병원 조건으로 조회
             List<HospitalApiDto> hospitalList_B = hospitalApiService.SelectListApi(selectedSido, selectedGugun, "B", selectedSubject, dayOfWeek); // 병원으로 한 번 조회
-            finalHospitalList.addAll(hospitalList_B);
+
+            // 주소에 동이 검색 조건과 같은 동이면 리스트에 추가.
+            for(int i = 0; i < hospitalList_B.size(); i++){
+                
+                if(hospitalList_B.get(i).getDutyAddr().contains(selectedDong)){
+                    finalHospitalList.add(hospitalList_B.get(i));
+                }
+            }    
 
             // 의원 조건으로 조회
             List<HospitalApiDto> hospitalList_C = hospitalApiService.SelectListApi(selectedSido, selectedGugun, "C", selectedSubject, dayOfWeek); // 의원으로 한 번 조회
-            finalHospitalList.addAll(hospitalList_C);
-
             
-
-            // for(int i = 0; i < hospitalList.size(); i++){
-            //     System.out.println(hospitalList.get(i));
-            // }
+            // 주소에 동이 검색 조건과 같은 동이면 리스트에 추가.
+            for(int i = 0; i < hospitalList_C.size(); i++){
+    
+                if(hospitalList_C.get(i).getDutyAddr().contains(selectedDong)){
+                    finalHospitalList.add(hospitalList_C.get(i));
+                }
+            }   
+            
+            // 해당 요일에 진료시간이 null 이면 remove
+            for(int i = 0; i < finalHospitalList.size(); i++){
+                // dayofWeek가 1이면 월요일
+                if(dayOfWeek.equals("1")){
+                    if(finalHospitalList.get(i).getDutyTime1s() == null || finalHospitalList.get(i).getDutyTime1c() == null){
+                        finalHospitalList.remove(i);
+                    }
+                }
+                // dayofWeek가 2면 화요일
+                else if(dayOfWeek.equals("2")){
+                    if(finalHospitalList.get(i).getDutyTime2s() == null || finalHospitalList.get(i).getDutyTime2c() == null){
+                        finalHospitalList.remove(i);
+                    }
+                }
+                // dayofWeek가 3이면 수요일
+                else if(dayOfWeek.equals("3")){
+                    if(finalHospitalList.get(i).getDutyTime3s() == null || finalHospitalList.get(i).getDutyTime3c() == null){
+                        finalHospitalList.remove(i);
+                    }
+                }   
+                // dayofWeek가 4면 목요일
+                else if(dayOfWeek.equals("4")){
+                    if(finalHospitalList.get(i).getDutyTime4s() == null || finalHospitalList.get(i).getDutyTime4c() == null){
+                        finalHospitalList.remove(i);
+                    }
+                }
+                // dayofWeek가 5면 금요일
+                else if(dayOfWeek.equals("5")){
+                    if(finalHospitalList.get(i).getDutyTime5s() == null || finalHospitalList.get(i).getDutyTime5c() == null){
+                        finalHospitalList.remove(i);
+                    }
+                }  
+                // dayofWeek가 6이면 토요일
+                else if(dayOfWeek.equals("6")){
+                    if(finalHospitalList.get(i).getDutyTime6s() == null || finalHospitalList.get(i).getDutyTime6c() == null){
+                        finalHospitalList.remove(i);
+                    }
+                }
+                // dayofWeek가 7이면 일요일
+                else if(dayOfWeek.equals("7")){
+                    if(finalHospitalList.get(i).getDutyTime7s() == null || finalHospitalList.get(i).getDutyTime7c() == null){
+                        finalHospitalList.remove(i);
+                    }
+                }
+                // dayofWeek가 8이면 공휴일
+                else if(dayOfWeek.equals("8")){
+                if(finalHospitalList.get(i).getDutyTime8s() == null || finalHospitalList.get(i).getDutyTime8c() == null){
+                    finalHospitalList.remove(i);
+                }
+            }               
+        }  
         }catch(Exception ex){
            System.out.println(ex.toString());
         }   

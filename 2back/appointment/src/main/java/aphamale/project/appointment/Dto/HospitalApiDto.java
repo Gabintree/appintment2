@@ -48,7 +48,7 @@ public class HospitalApiDto {
     private String wgs84Lon; // 병원 경도 ex) 127.062146778337
 
 
-    public HospitalApiDto(String  hpid, String dutyName, String dutyAddr, 
+    public HospitalApiDto(String  hpid, String dutyName, String dutyAddr, String dutyTel1,
                                   String dutyTime1s, String dutyTime1c,
                                   String dutyTime2s, String dutyTime2c,
                                   String dutyTime3s, String dutyTime3c,
@@ -60,6 +60,7 @@ public class HospitalApiDto {
         this.hpid = hpid;
         this.dutyName = dutyName;
         this.dutyAddr = dutyAddr;
+        this.dutyTel1 = dutyTel1;
         this.dutyTime1s = dutyTime1s;
         this.dutyTime1c = dutyTime1c;        
         this.dutyTime2s = dutyTime2s;
