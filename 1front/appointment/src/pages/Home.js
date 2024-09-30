@@ -61,7 +61,7 @@ const Home = () => {
   };
 
 
-  // 병원 목록 조회 검색 버튼튼
+  // 병원 목록 조회 검색 버튼
   async function handleSubmit(e) {
     e.preventDefault();
     console.log("병원 목록 조회");
@@ -296,7 +296,7 @@ const Home = () => {
           return(
             <div className="flex justify-around mt-5" key={index}>
               <div className="text-center border-t-transparent border-l-transparent border-b-2 border-r-2 border-gray-300 p-4">
-                <h1 className="text-s text-gray-600">진료과목</h1>
+                <h1 className="text-s text-gray-600">{item.subjectName}</h1>
                 <h2 className="text-center text-3xl text-teal-500">{item.dutyName}</h2>
                 <p className="text-gray-500">{dayOfWeek === 1 ? "월요일 : " + item.dutyTime1s.substring(0, 2) + ":" + item.dutyTime1s.substring(2, 4) + "~" + item.dutyTime1c.substring(0, 2) + ":" + item.dutyTime1c.substring(2, 4)
                                             : dayOfWeek === 2 ? "화요일 : " + item.dutyTime2s.substring(0, 2) + ":" + item.dutyTime2s.substring(2, 4) + "~" + item.dutyTime2c.substring(0, 2) + ":" + item.dutyTime2c.substring(2, 4)

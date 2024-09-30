@@ -153,7 +153,7 @@ public class HospitalApiService {
                                                                        dutyTime5s, dutyTime5c,
                                                                        dutyTime6s, dutyTime6c,
                                                                        dutyTime7s, dutyTime7c,
-                                                                       dutyTime8s, dutyTime8c);
+                                                                       dutyTime8s, dutyTime8c, ""); // subjectName은 컨트롤러에서 따로 
 
                     hospitalList.add(hospitalApiDto);             
                 }

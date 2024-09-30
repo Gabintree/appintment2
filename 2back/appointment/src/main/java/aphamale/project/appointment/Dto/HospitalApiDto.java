@@ -47,6 +47,8 @@ public class HospitalApiDto {
     private String wgs84Lat; // 병원 위도 ex) 37.5142810376461
     private String wgs84Lon; // 병원 경도 ex) 127.062146778337
 
+    private String subjectName; // 진료과목명 
+
 
     public HospitalApiDto(String  hpid, String dutyName, String dutyAddr, String dutyTel1,
                                   String dutyTime1s, String dutyTime1c,
@@ -56,7 +58,7 @@ public class HospitalApiDto {
                                   String dutyTime5s, String dutyTime5c,
                                   String dutyTime6s, String dutyTime6c,
                                   String dutyTime7s, String dutyTime7c,
-                                  String dutyTime8s, String dutyTime8c){
+                                  String dutyTime8s, String dutyTime8c, String subjectName){
         this.hpid = hpid;
         this.dutyName = dutyName;
         this.dutyAddr = dutyAddr;
@@ -76,6 +78,8 @@ public class HospitalApiDto {
         this.dutyTime7s = dutyTime7s;
         this.dutyTime7c = dutyTime7c;   
         this.dutyTime8s = dutyTime8s;
-        this.dutyTime8c = dutyTime8c;   
+        this.dutyTime8c = dutyTime8c; 
+        
+        this.subjectName = subjectName;
     }
 }
