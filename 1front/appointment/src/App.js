@@ -3,6 +3,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 import LoginForm from './pages/LoginForm';
 import HomePage from './pages/HomePage';
+import Reservation from './pages/Reservation';
 
 function App() {
     const [hello, setHello] = useState('');
@@ -17,7 +18,7 @@ function App() {
         <BrowserRouter>
             <div>
                 <h1 className="text-3xl font-bold underline">
-                   {hello}
+                    {hello}
                 </h1>
 
                 {/* 회원가입 폼 */}
@@ -38,6 +39,7 @@ function App() {
                 <Routes>
                     <Route path="/homepage" element={<HomePage />} />
                     <Route path="/login" element={<LoginForm />} />
+                    <Route path="/reservation" element={<Reservation />} />
                 </Routes>
             </div>
         </BrowserRouter>
