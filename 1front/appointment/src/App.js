@@ -4,6 +4,7 @@ import axios from "axios";
 
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home"; // 메인
+import HomePage from './pages/HomePage';
 import Login from "./pages/Login"; // 로그인
 import Register from "./pages/Register"; // 회원가입
 import UserDashboard from "./pages/UserDashboard"; // 사용자 대시보드
@@ -17,11 +18,12 @@ function App() {
   // NavBar 레이아웃 테스트
   return (
     <BrowserRouter>
-      <NavBar />
+      {/* <NavBar /> */}
       {/* 라우팅 설정 */}
       <Routes>
         <Route path="/" element={<Home />} /> 
         <Route path="/home" element={<Home />} /> 
+        <Route path="/homepage" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/UserDashboard" element={<UserDashboard />} />
