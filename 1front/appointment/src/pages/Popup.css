@@ -1,0 +1,107 @@
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 다른 요소 위에 표시 */
+  }
+  
+  .popup-content {
+    background-color: rgb(239, 239, 239);
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px; /* 팝업 너비 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    font-size: 14px;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .reservation-card {
+    display: flex;
+    flex-direction: column;
+    background-color: white; /* 카드 배경색 */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+    margin-top: 10px; /* 카드와 제목 간의 간격 */
+  }
+  
+  .reservation-info {
+    display: flex; /* 수평으로 나란히 배치 */
+    align-items: center; /* 세로 가운데 정렬 */
+  }
+  
+  .hospital-name {
+    font-weight: bold; /* 병원 이름 강조 */
+    margin-right: 10px; /* 색깔 원과의 간격 */
+    font-size: 16px; /* 병원 이름 크기 */
+  }
+  
+  .status-circle {
+    width: 15px; /* 색깔 원 크기 */
+    height: 15px; /* 색깔 원 크기 */
+    border-radius: 50%; /* 원형 */
+    margin-right: 5px; /* 병원 이름과의 간격 */
+  }
+  
+  .hospital-title {
+    font-size: 15px; /* 병원 제목 크기 */
+    color: #000000; /* 병원 제목 색상 */
+    margin-top: 10px;
+  }
+  .date-input-container {
+    cursor: pointer; /* 클릭 가능 커서 */
+  }
+  .date-input {
+    margin-top: 10px; /* 날짜 입력 필드와 제목 간의 간격 */
+    padding: 8px; /* 패딩 */
+    border: 1px solid #ccc; /* 테두리 색상 */
+    border-radius: 4px; /* 둥근 모서리 */
+    width: 100%; /* 전체 너비 */
+  }
+  
+  .time-selection {
+    margin-top: 20px; /* 시간 선택 섹션과 기존 예약 정보 간의 간격 */
+  }
+  
+  .time-buttons {
+    display: flex;
+    flex-wrap: wrap; /* 버튼을 여러 줄로 배치 */
+    gap: 10px; /* 버튼 간의 간격 */
+    margin-top: 10px; /* 제목과 버튼 간의 간격 */
+  }
+  
+  .time-button {
+    padding: 10px 10px; /* 버튼 패딩 */
+    border: 1px solid transparent; /* 기본 테두리 설정 */
+    cursor: pointer; /* 커서 포인터 */
+    width: calc(20% - 8px); /* 버튼 너비를 5개씩 배치 */
+  }
+  /* 예약된 시간 버튼 스타일 */
+  .time-button.disabled {
+    background-color: #d3d3d3; /* 연한 회색 배경 */
+    border-color: #808080; /* 진한 회색 테두리 */
+    color: #808080; /* 진한 회색 텍스트 */
+    cursor: not-allowed; /* 클릭 불가 커서 */
+  }
+  
+  /* 예약 가능한 시간 버튼 스타일 */
+  .time-button:not(.disabled) {
+    background-color: transparent; /* 배경색 없음 */
+    border-color: #0FB7B1; /* 민트색 테두리 */
+    color: #0FB7B1; /* 민트색 텍스트 */
+  }
