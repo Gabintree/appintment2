@@ -1,0 +1,9 @@
+select {
+    color: white;
+    /* 드롭다운 기본 글씨를 흰색으로 설정 */
+}
+
+select option {
+    color: black;
+    /* 드롭다운에서 나오는 옵션 글씨는 검정색 */
+}
