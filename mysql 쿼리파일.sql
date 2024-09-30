@@ -41,7 +41,7 @@ user_id varchar(30),
 group_id varchar(30),
 hospital_name varchar(30),
 hospital_address varchar(100),
-subject varchar(30), -- 진료과목 
+subject_code varchar(30), -- 진료과목 
 reserve_date datetime,
 reserve_time time,
 alarm_flag varchar(1), -- 알림톡 수신 여부
@@ -59,6 +59,8 @@ references user_info(user_id)
 --  hospital_info 인덱스 생성 후 group_id 외래키 추가 처리 
 create index idx_group_id on hospital_info(group_id);
 alter table reserve add foreign key(group_id) references hospital_info(group_id);
+create index idx_subject_code on subjec_info(subject_code);
+alter table reserve add foreign key(subject_code) references subject_info(subject_code);
 
 
 create table hospital_status(
@@ -78,6 +80,12 @@ alarm_flag varchar(1), -- 알림톡 수신 여부
 primary key(hospital_id, group_id),
 foreign key(hospital_id, group_id)
 references hospital_info(hospital_id, group_id)
+);
+
+create table subject_info(
+subject_code varchar(30),
+subject_name varchar(30),
+primary key(subject_code)
 );
 
 select * from user_info;

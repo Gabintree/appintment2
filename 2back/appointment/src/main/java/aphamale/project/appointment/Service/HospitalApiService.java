@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class HospitalApiService {
 
     // 병원 목록 조회 
-    public List<HospitalApiDto> SelectListApi(String selectedSido, String selectedGugun, String selectedBorC, String dayOfWeek){
+    public List<HospitalApiDto> SelectListApi(String selectedSido, String selectedGugun, String selectedBorC, String selectedSubject, String dayOfWeek){
 
         // 데이터 담을 list 생성
         List<HospitalApiDto> hospitalList = new ArrayList<>();
@@ -43,9 +43,9 @@ public class HospitalApiService {
             /* 주소(시군구) */
             urlBuilder.append("&" + URLEncoder.encode("Q1","UTF-8") + "=" + URLEncoder.encode(selectedGugun, "UTF-8")); 
             /* CODE_MST의'H000' 참조(B:병원, C:의원) */
-            urlBuilder.append("&" + URLEncoder.encode("QZ","UTF-8") + "=" + URLEncoder.encode(selectedBorC, "UTF-8"));  // 모두
+            urlBuilder.append("&" + URLEncoder.encode("QZ","UTF-8") + "=" + URLEncoder.encode(selectedBorC, "UTF-8"));  
             /* CODE_MST의'D000' 참조(D001~D029) 진료과목 */ 
-            urlBuilder.append("&" + URLEncoder.encode("QD","UTF-8") + "=" + URLEncoder.encode("D001", "UTF-8"));  // 
+            urlBuilder.append("&" + URLEncoder.encode("QD","UTF-8") + "=" + URLEncoder.encode(selectedSubject, "UTF-8"));  // 진료과목 
             /* 월~일요일(1~7), 공휴일(8) */
             urlBuilder.append("&" + URLEncoder.encode("QT","UTF-8") + "=" + URLEncoder.encode(dayOfWeek, "UTF-8")); // ??
              /* 기관명 */

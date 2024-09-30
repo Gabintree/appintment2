@@ -18,7 +18,7 @@ public class HospitalReserveDto {
     private String groupId; // 기관Id
     private String hospitalName; // 병원명
     private String hospitalAddres; // 병원 주소
-    private String subject; // 진료 과목
+    private String subject_code; // 진료 과목
     private Timestamp reserveDate; // 진료 예약일
     private Timestamp reserveTime; // 진료 예약시간
     private String alarmFlag; // SMS 알림 수신 여부 

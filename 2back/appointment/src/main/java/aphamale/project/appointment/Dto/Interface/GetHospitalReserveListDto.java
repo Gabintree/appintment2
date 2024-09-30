@@ -11,7 +11,7 @@ public interface GetHospitalReserveListDto {
     Time getReserveTime(); // 진료 예약시간
     String getUserName(); // 계정
     String getBirthDate(); // 생년월일
-    String getSubject(); // 진료 과목
+    String getSubjectName(); // 진료 과목
     String getReserveStatus(); // 예약 상태 (I 예약완료, U 변경완료, D 취소완료) 
     String getUpdateUser(); // 변경자 
     

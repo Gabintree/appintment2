@@ -1,54 +1,84 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import homeImage from '../Images/image_home.png';
-import pic1 from '../Images/image_1.png';
-import pic2 from '../Images/image_2.png';
-import pic3 from '../Images/image_3.png';
+import homeImage from '../images/image_home.png';
+import pic1 from '../images/image_1.png';
+import pic2 from '../images/image_2.png';
+import pic3 from '../images/image_3.png';
 
-const HomePage = () => {
+const Home = () => {
 
-    const [selectedSido, setSelectedSido] = useState(""); // 시도구분
-    const [selectedGugun, setSelectedGugun] = useState(""); // 구군
-    const [selectedSubject, setSelectedSubject] = useState(""); // 진료과목
-    const [selectedDate, setSelectedDate] = useState(""); // 진료 예정 일자
-    const [selectedTime, setSelectedTime] = useState(""); // 진료 예정 시간
+  const [selectedSido, setSelectedSido] = useState(""); // 시도구분
+  const [selectedGugun, setSelectedGugun] = useState(""); // 구군
+  const [selectedDong, setSelectedDong] = useState(""); // 동
+  const [selectedSubject, setSelectedSubject] = useState(""); // 진료과목 코드
+  const [selectedSubjectNamae, setSelectedSubjectName ] = useState(""); // 진료과목명
+  const [selectedDate, setSelectedDate] = useState(""); // 진료 예정 일자
+  const [selectedTime, setSelectedTime] = useState(""); // 진료 예정 시간
 
-    const [error, setError] = useState(""); 
+  const [error, setError] = useState(""); 
 
-    // 시도
-    function handleOnChangeSido(options) {
-        setSelectedSido(options);
-    };
+  // 시도
+  function handleOnChangeSido(options) {
+      setSelectedSido(options);
+  };
 
-    // 구군 //시도 선택에 따라서 구군 값이 변경되어야 함.
-    function handleOnChangeGuGun(options) {
-        setSelectedGugun(options);
-    };
+  // 구군 // 시도 선택에 따라서 구군 값이 변경되어야 함.
+  function handleOnChangeDong(options) {
+      setSelectedDong(options);
+  };
 
-    // 진료과목
-    function handleOnChangeSubject(options) {
-        setSelectedSubject(options);
-    };
+  // 동 // 구군 선택에 따라서 구군 값이 변경되어야 함.
+  function handleOnChangeGuGun(options) {
+    setSelectedGugun(options);
+};  
 
-    // 시간
-    function handleOnChangeTime(options) {
-        setSelectedTime(options);
-    };  
+  // 진료과목
+  function handleOnChangeSubject(options) {
+      setSelectedSubject(options);
+  };
+
+  // 시간
+  function handleOnChangeTime(options) {
+      setSelectedTime(options);
+  };  
+
+
+  // 병원 목록 조회 검색 버튼튼
+  async function handleSubmit(e) {
+    e.preventDefault();
+    console.log("병원 목록 조회");
 
 
 
+    try{
+        const data = {
+          selectedSido: selectedSido,
+          selectedGugun: selectedGugun,
+          selectedDong: selectedDong,
+          selectedSubject: selectedSubject,
+          selectedDate: selectedDate,
+          selectedTime: selectedTime,   
+        };
 
-    // 검색 버튼
-    async function handleSubmit(e) {
-        e.preventDefault();
+        await axios.post("/api/hospitalList", JSON.stringify(data), {
+          headers: {
+            //Authorization: `Bearer ${localStorage.getItem('login-token')}`,
+            "Content-Type": "application/json; charset=utf8",
+            //withCredentials: true,
+        }})
+        .then(function (response){
+            if(response.status === 200){
+                console.log("병원 목록 조회 완료 : ", response.data); 
+            }            
+        })
+        .catch(function(error){
+            console.log("error : ", error);
+          })              
 
-        try{
-            
-
-        } catch (err) {
-            setError("등록 중 오류가 발생했습니다.");
-        }
+    } catch (err) {
+        setError("등록 중 오류가 발생했습니다.");
     }
+  }
 
 
   return (
@@ -105,6 +135,21 @@ const HomePage = () => {
                         <option value="강서구" style={{ color: 'black' }}>강서구</option>
                 </select>
             </div>
+
+            <div className="relative inline-block text-left">
+                <select
+                    className="text-lg font-semibold bg-transparent border-b-2 border-white pb-2 cursor-pointer"
+                    style={{ color: 'white' }}
+                    onChange={(e) => handleOnChangeDong(e.target.value)} 
+                    value={selectedDong}
+                >
+                        <option value="">동 선택</option> 
+                        <option value="신사동" style={{ color: 'black' }}>신사동</option>
+                        <option value="수서동" style={{ color: 'black' }}>수서동</option>
+                        <option value="청담동" style={{ color: 'black' }}>청담동</option>
+                        <option value="역삼1동" style={{ color: 'black' }}>역삼1동</option>
+                </select>
+            </div>            
 
             <div className="relative inline-block text-left">
                 <select
@@ -284,4 +329,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Home;

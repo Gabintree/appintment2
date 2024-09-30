@@ -2,9 +2,13 @@ package aphamale.project.appointment.Controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import aphamale.project.appointment.Dto.HospitalApiDto;
@@ -25,18 +29,27 @@ public class ConnectController {
     private final MessageApiService messageApiService;
 
 
-    // 병원 목록 조회
-    @GetMapping("/api/list")
-    public String ListForm() {
-        return "get List";
-    }
+    // // 병원 목록 조회
+    // @GetMapping("/api/list")
+    // public String ListForm() {
+    //     return "get List";
+    // }
 
     // 병원 목록 조회 api
-    @GetMapping("/api/hospitalList")
-    public List<HospitalApiDto> getHospitalApiList(@RequestParam String selectedSido, @RequestParam String selectedGugun,
-                                     @RequestParam String selectedSubject,
-                                     @RequestParam String selectedDate,
-                                     @RequestParam String selectedTime){
+    // @PostMapping("/api/hospitalList")
+    // public List<HospitalApiDto> getHospitalApiList(@RequestParam String selectedSido, @RequestParam String selectedGugun,
+    //                                  @RequestParam String selectedSubject,
+    //                                  @RequestParam String selectedDate,
+    //                                  @RequestParam String selectedTime){
+    @PostMapping("/api/hospitalList")
+    public List<HospitalApiDto> getHospitalApiList(@RequestBody Map<String,String> searchParam){    
+
+       String selectedSido = searchParam.get("selectedSido");
+       String selectedGugun = searchParam.get("selectedGugun");
+       String selectedDong = searchParam.get("selectedDong");
+       String selectedSubject = searchParam.get("selectedSubject");
+       String selectedDate = searchParam.get("selectedDate");
+       String selectedTime = searchParam.get("selectedTime");
 
         // 프론트에 보낼 LIST
         List<HospitalApiDto> finalHospitalList = new ArrayList<HospitalApiDto>();
@@ -54,12 +67,14 @@ public class ConnectController {
             String dayOfWeek = String.valueOf(dayOfWeekValue);
 
             // 병원 조건으로 조회
-            List<HospitalApiDto> hospitalList_B = hospitalApiService.SelectListApi(selectedSido, selectedGugun, "B", dayOfWeek); // 병원으로 한 번 조회
+            List<HospitalApiDto> hospitalList_B = hospitalApiService.SelectListApi(selectedSido, selectedGugun, "B", selectedSubject, dayOfWeek); // 병원으로 한 번 조회
             finalHospitalList.addAll(hospitalList_B);
 
             // 의원 조건으로 조회
-            List<HospitalApiDto> hospitalList_C = hospitalApiService.SelectListApi(selectedSido, selectedGugun, "C", dayOfWeek); // 의원으로 한 번 조회
+            List<HospitalApiDto> hospitalList_C = hospitalApiService.SelectListApi(selectedSido, selectedGugun, "C", selectedSubject, dayOfWeek); // 의원으로 한 번 조회
             finalHospitalList.addAll(hospitalList_C);
+
+            
 
             // for(int i = 0; i < hospitalList.size(); i++){
             //     System.out.println(hospitalList.get(i));

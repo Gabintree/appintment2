@@ -22,12 +22,14 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
                 " t1.reserve_time, " +
                 " t2.user_name, " +
                 " t2.birth_date, " +
-                " t1.subject, " +
+                " t3.subject_name, " +
                 " t1.reserve_status, " +
                 " t1.update_user " +
             " from reserve t1 " +
             " inner join user_info t2" +
             " on t1.user_id = t2.user_id " +
+            " inner join subject_info t3 " +
+            " on t1.subject_code = t3.subject_code " +
             " where t1.group_id = :groupId " +
             " and t1.reserve_date between :fromDate and :toDate ", nativeQuery =true)
     List<GetHospitalReserveListDto> getItemsOfByReserveNo(String groupId, Date fromDate, Date toDate); 

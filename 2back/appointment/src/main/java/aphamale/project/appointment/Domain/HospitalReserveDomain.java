@@ -33,8 +33,8 @@ public class HospitalReserveDomain {
     @Column(name="hospital_address")
     private String hospitalAddres; // 병원 주소
 
-    @Column(name="subject")
-    private String subject; // 진료 과목
+    @Column(name="subject_code")
+    private String subject_code; // 진료 과목
 
     @Column(name="reserve_date")
     private Timestamp reserveDate; // 진료 예약일
