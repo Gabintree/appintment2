@@ -3,7 +3,8 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function(app) {
   app.use(
     createProxyMiddleware({
-      target: 'http://localhost:8080',	// # 서버 URL or localhost:설정한포트번호
+      //target: 'http://localhost:8080',	// # 서버 URL or localhost:설정한포트번호
+      target: 'http://34.64.220.67:8080',
       changeOrigin: true,
       pathFilter: '/api',
     })

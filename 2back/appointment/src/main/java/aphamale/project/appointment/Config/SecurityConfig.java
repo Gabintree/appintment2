@@ -166,7 +166,7 @@ public class SecurityConfig {
                 CorsConfiguration configuration = new CorsConfiguration();
 
                 //configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
-                configuration.setAllowedOriginPatterns(Collections.singletonList("https://web-appointment2react-m1gego797556415b.sel4.cloudtype.app"));
+                configuration.setAllowedOriginPatterns(Collections.singletonList("http://34.64.220.67:8080"));
                 configuration.setAllowedMethods(Arrays.asList("HEAD","GET","POST","PUT","DELETE"));
                 configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
                 configuration.setAllowCredentials(true);
@@ -227,7 +227,7 @@ public class SecurityConfig {
                             CorsConfiguration configuration = new CorsConfiguration();
 
                             //configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
-                            configuration.setAllowedOriginPatterns(Collections.singletonList("https://web-appointment2react-m1gego797556415b.sel4.cloudtype.app"));
+                            configuration.setAllowedOriginPatterns(Collections.singletonList("34.64.220.67"));
                             configuration.setAllowedMethods(Arrays.asList("HEAD","GET","POST","PUT","DELETE"));
                             configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
                             configuration.setAllowCredentials(true);
