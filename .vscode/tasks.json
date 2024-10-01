@@ -1,0 +1,24 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "start",
+			"path": "1front/appointment",
+			"problemMatcher": [],
+			"label": "npm: start - 1front/appointment",
+			"detail": "react-scripts start"
+		},
+		{
+			"type": "java (buildArtifact)",
+			"mainClass": "aphamale.project.appointment.AppointmentApplication",
+			"targetPath": "${workspaceFolder}/${workspaceFolderBasename}.jar",
+			"elements": [
+				"${compileOutput}",
+				"${dependencies}"
+			],
+			"problemMatcher": [],
+			"label": "java (buildArtifact): project2_jwt"
+		}
+	]
+}
