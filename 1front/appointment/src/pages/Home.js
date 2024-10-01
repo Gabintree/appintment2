@@ -14,7 +14,7 @@ const Home = () => {
   const [selectedSubject, setSelectedSubject] = useState(""); // 진료과목 코드
   const [selectedDate, setSelectedDate] = useState(""); // 진료 예정 일자
   const [selectedTime, setSelectedTime] = useState(""); // 진료 예정 시간
-  const [isChecked, setIsChecked] = useState(); // 공휴일 여부
+  const [isChecked, setIsChecked] = useState(false); // 공휴일 여부
 
   const [filteredHospitalData, setFilteredHospitalDaata] = useState([]); // 병원 목록
   const [dayOfWeek, setDayOfWeek] = useState(); // 진료 예정 일자의 요일
