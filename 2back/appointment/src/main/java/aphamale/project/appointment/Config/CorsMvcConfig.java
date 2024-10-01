@@ -12,7 +12,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
         
         corsRegistry.addMapping("/**")
                 //.allowedOrigins("http://localhost:3000");
-                .allowedOrigins("http://34.64.220.67:8080");
+                .allowedOrigins("http://appointment2react:80");
     }
     
 }
