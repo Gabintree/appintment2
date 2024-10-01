@@ -10,8 +10,7 @@ public class CustomServletConfig implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                //.allowedOrigins("http://localhost:3000")
-                .allowedOrigins("http://34.64.220.67:8080")
+                .allowedOrigins("http://localhost:3000")
                 .allowedMethods("HEAD","GET","POST","PUT","DELETE","OPTIONS")
                 .maxAge(3000)
                 .allowedHeaders("Authorization","Cache-Control","Content-Type");

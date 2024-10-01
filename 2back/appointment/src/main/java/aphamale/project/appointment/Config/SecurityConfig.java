@@ -165,8 +165,7 @@ public class SecurityConfig {
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request){
                 CorsConfiguration configuration = new CorsConfiguration();
 
-                //configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
-                configuration.setAllowedOriginPatterns(Collections.singletonList("http://appointment2react:80"));
+                configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
                 configuration.setAllowedMethods(Arrays.asList("HEAD","GET","POST","PUT","DELETE"));
                 configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
                 configuration.setAllowCredentials(true);
@@ -226,8 +225,7 @@ public class SecurityConfig {
                         public CorsConfiguration getCorsConfiguration(HttpServletRequest request){
                             CorsConfiguration configuration = new CorsConfiguration();
 
-                            //configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
-                            configuration.setAllowedOriginPatterns(Collections.singletonList("http://appointment2react:80"));
+                            configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
                             configuration.setAllowedMethods(Arrays.asList("HEAD","GET","POST","PUT","DELETE"));
                             configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
                             configuration.setAllowCredentials(true);
