@@ -71,7 +71,7 @@ const Home = () => {
     // 공휴일이면
     if(isChecked === true){
       setDayOfWeek(8);
-    }
+    };
 
     try{
         const data = {
