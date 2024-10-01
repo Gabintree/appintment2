@@ -3,27 +3,6 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// axios 인스턴스
-export const reqestApi = axios.create({
-  baseURL: `${process.env.REACT_APP_SERVER_IP}`, // 안 씀
-  headers: {
-      Authorization: `Bearer ${localStorage.getItem('login-token')}`,
-      "Content-Type": "application/json; charset=utf8",
-      withCredentials: true,
-  },
-});
-
-// 토큰 재발행
-export async function getRefreshToken() {
-  const response = await axios.post("/api/reissue", {}, {
-      headers: {
-          "Content-Type": "application/json; charset=utf8",
-          withCredentials: true,
-      }     
-  })
-  return response;           
-}
-
 
 const Login = () => {
 
@@ -54,55 +33,6 @@ const Login = () => {
         }
     }
 
-    // interceptor 적용
-    reqestApi.interceptors.response.use(
-      // 200 응답
-      (response) =>{
-          return response;
-      },
-      // 200 외
-      async (error) => {
-          const {
-              config,
-              response: { status },
-          } = error;
-          
-          if(status === 401){
-              if(error.response.statusText === "Unauthorized" ){
-                  const originRequest = config;
-                  try{
-                      // 토큰 재발행 요청
-                      const response = await getRefreshToken();
-                      // 재발행 성공
-                      if(response.status === 200){
-                          console.log("토큰 재발행 완료");
-                          const newAccessToken = response.headers.access;
-                          // 로컬스토리지 NewAccessToken 저장
-                          localStorage.setItem('login-token', newAccessToken);
-                          // 진행중이던 요청 이어서 계속
-                          originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-                          return axios(originRequest); 
-                      }
-                  }catch (error){
-                      if(axios.isAxiosError(error)){
-                          if(
-                              error.response?.status === 403){
-                              alert("해당 화면은 권한이 없습니다. home으로 이동합니다.");
-                              navigate("/Home");
-                          }
-                          else{
-                              console.log("error.response?.status : ", error.response?.status);
-                              alert("토큰 재발행 요청중 오류가 발생했습니다. 관리자에게 문의해주세요.");
-                          }
-
-                      }
-                  }                   
-              }
-          }
-          return Promise.reject(error);
-      },
-  );    
-
     // 제출
     async function handleSubmit(e) {
         e.preventDefault();
@@ -114,7 +44,7 @@ const Login = () => {
 
                   console.log(formData, "formData");
 
-                await reqestApi.post('/api/login', formData, {
+                await axios.post('/api/login', formData, {
                 headers : {
                      // "Content-Type" : "application/json; charset=utf8"
                         "Content-Type" :  "multipart/form-data"
