@@ -11,7 +11,7 @@ import NotificationSettings from './NotificationSettings';
 
 // axios 인스턴스
 export const reqestApi = axios.create({
-    // baseURL: `${process.env.REACT_APP_SERVER_IP}`, // 안 씀
+    baseURL: `${process.env.REACT_APP_API_URL}`, 
     headers: {
         Authorization: `Bearer ${localStorage.getItem('login-token')}`,
         "Content-Type": "application/json; charset=utf8",
