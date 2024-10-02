@@ -169,14 +169,14 @@ const NotificationSettings = () => {
                     <span>SMS 수신 여부</span>
                     <div className="button-container">
                         <div 
-                            className={`circle-button ${receiveNotification ? 'active' : ''}`} 
+                            className={`circle-button ${receiveNotification === "Y" ? 'active' : ''}`} 
                             onClick={() => setReceiveNotification("Y")}
                         >
                             <div className="inner-circle" />
                         </div>
                         <span>예</span>
                         <div 
-                            className={`circle-button ${!receiveNotification ? 'active' : ''}`} 
+                            className={`circle-button ${!receiveNotification === "N" ? 'active' : ''}`} 
                             onClick={() => setReceiveNotification("N")}
                         >
                             <div className="inner-circle" />
