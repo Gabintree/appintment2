@@ -43,7 +43,7 @@ const Login = () => {
 
                   console.log(formData, "formData");
 
-                await axios.post(`${process.env.REACT_APP_API_URL}` + '/api/login', formData, {
+                await axios.post(`${process.env.REACT_APP_API_URL}/api/login`, formData, {
                 headers : {
                      // "Content-Type" : "application/json; charset=utf8"
                         "Content-Type" :  "multipart/form-data"
@@ -68,7 +68,7 @@ const Login = () => {
                   })
                   .catch(function(error){
                     console.log("로그인 오류 : ", error);
-                    if(error.status === 504){
+                    if(error.response && error.response.status === 504){
                       alert("backend 실행 여부 확인 필요.");
                     }else{
                       alert("ID와 비밀번호를 확인해주세요.");
