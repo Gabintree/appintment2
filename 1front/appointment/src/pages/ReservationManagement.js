@@ -10,7 +10,7 @@ import StatusAndDetails from './StatusAndDetails';
 
 // axios 인스턴스
 export const reqestApi = axios.create({
-    // baseURL: `${process.env.REACT_APP_SERVER_IP}`, // 안 씀
+    baseURL: `${process.env.REACT_APP_API_URL}`, 
     headers: {
         Authorization: `Bearer ${localStorage.getItem('login-token')}`,
         "Content-Type": "application/json; charset=utf8",
@@ -20,7 +20,7 @@ export const reqestApi = axios.create({
 
 // 토큰 재발행
 export async function getRefreshToken() {
-    const response = await axios.post("/api/reissue", {}, {
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/reissue`, {}, {
         headers: {
             "Content-Type": "application/json; charset=utf8",
             withCredentials: true,

@@ -84,7 +84,7 @@ const Home = () => {
           isChecked: isChecked.toString(),   
         };
 
-        await axios.post("/api/hospitalList", JSON.stringify(data), {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/hospitalList`, JSON.stringify(data), {
           headers: {
             //Authorization: `Bearer ${localStorage.getItem('login-token')}`,
             "Content-Type": "application/json; charset=utf8",
