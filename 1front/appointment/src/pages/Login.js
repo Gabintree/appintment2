@@ -54,6 +54,8 @@ const Login = () => {
 
                       // 액세스 토큰 로컬 스토리지에 저장, userId 세션 스토리지 저장
                       if(response.headers.access){
+
+                        console.log("response.headers.access : ", response.headers.access);
                         localStorage.setItem('login-token', response.headers.access);
                         sessionStorage.setItem('userId', Id);                    
                       }
