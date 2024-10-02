@@ -117,8 +117,9 @@ public class ReissueService {
 
             Cookie cookie = new Cookie(key, value);
             cookie.setMaxAge(24*60*60);
-            //cookie.setSecure(true);
-            //cookie.setPath("/");
+            cookie.setSecure(true);
+            cookie.setPath("/");
+            cookie.setAttribute("sameSite", "None");      
             cookie.setHttpOnly(true);
         
             return cookie;
