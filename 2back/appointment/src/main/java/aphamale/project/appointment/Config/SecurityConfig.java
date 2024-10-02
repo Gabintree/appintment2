@@ -171,7 +171,7 @@ public class SecurityConfig {
                 configuration.setAllowCredentials(true);
                 configuration.setMaxAge(3600L);
 
-                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                configuration.setExposedHeaders(Arrays.asList("Authorization", "access"));
 
                 return configuration;
 
@@ -231,7 +231,7 @@ public class SecurityConfig {
                             configuration.setAllowCredentials(true);
                             configuration.setMaxAge(3600L);
 
-                            configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                            configuration.setExposedHeaders(Arrays.asList("Authorization", "access"));
 
                             return configuration;
 
