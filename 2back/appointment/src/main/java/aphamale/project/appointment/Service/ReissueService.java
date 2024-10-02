@@ -119,7 +119,7 @@ public class ReissueService {
             cookie.setMaxAge(24*60*60);
             cookie.setSecure(true);
             cookie.setPath("/");
-            //cookie.setAttribute("sameSite", "None");      
+            cookie.setAttribute("SameSite", "None");      
             cookie.setHttpOnly(true);
         
             return cookie;
