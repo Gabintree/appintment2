@@ -176,7 +176,7 @@ const NotificationSettings = () => {
                         </div>
                         <span>예</span>
                         <div 
-                            className={`circle-button ${!receiveNotification === "N" ? 'active' : ''}`} 
+                            className={`circle-button ${receiveNotification === "N" ? 'active' : ''}`} 
                             onClick={() => setReceiveNotification("N")}
                         >
                             <div className="inner-circle" />
