@@ -3,7 +3,6 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
 const Login = () => {
 
     const navigate = useNavigate();
@@ -44,7 +43,7 @@ const Login = () => {
 
                   console.log(formData, "formData");
 
-                await axios.post('/api/login', formData, {
+                await reqestApi.post(`${process.env.REACT_APP_API_URL}` + '/api/login', formData, {
                 headers : {
                      // "Content-Type" : "application/json; charset=utf8"
                         "Content-Type" :  "multipart/form-data"

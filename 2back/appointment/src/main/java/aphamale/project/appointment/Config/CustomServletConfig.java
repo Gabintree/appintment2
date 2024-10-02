@@ -10,7 +10,7 @@ public class CustomServletConfig implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins("http://localhost:3000", "https://web-appointment2react-m1gego797556415b.sel4.cloudtype.app")
                 .allowedMethods("HEAD","GET","POST","PUT","DELETE","OPTIONS")
                 .maxAge(3000)
                 .allowedHeaders("Authorization","Cache-Control","Content-Type");
