@@ -141,7 +141,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Cookie cookie = new Cookie(key, value); // value에는 jwt 값
         cookie.setMaxAge(24*60*60); // 쿠키의 생명 주기 하루?
         cookie.setSecure(true); // https 통신을 할 경우 
-        //cookie.setPath("/"); // 쿠키가 적용될 범위 설정                        
+        cookie.setPath("/"); // 쿠키가 적용될 범위 설정                        
         cookie.setHttpOnly(true); // 클라이언트 -> 서버로 접근하지 못하게 필수적으로 막는 것.
         
         return cookie;
