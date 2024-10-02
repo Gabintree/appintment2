@@ -167,7 +167,7 @@ public class SecurityConfig {
 
                 configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000", "https://web-appointment2react-m1gego797556415b.sel4.cloudtype.app"));
                 configuration.setAllowedMethods(Arrays.asList("HEAD","GET","POST","PUT","DELETE"));
-                configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+                configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "withcredentials"));
                 configuration.setAllowCredentials(true);
                 configuration.setMaxAge(3600L);
 
@@ -227,7 +227,7 @@ public class SecurityConfig {
 
                             configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000", "https://web-appointment2react-m1gego797556415b.sel4.cloudtype.app"));
                             configuration.setAllowedMethods(Arrays.asList("HEAD","GET","POST","PUT","DELETE"));
-                            configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+                            configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "withcredentials"));
                             configuration.setAllowCredentials(true);
                             configuration.setMaxAge(3600L);
 
