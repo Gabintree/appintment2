@@ -155,6 +155,7 @@ const HDashBoard = () => {
         try{
             await reqestApi.post("/api/logout", {})
             .then(function (response){
+                console.log("response : ", response);
                 if(response.status == 200){
                     console.log("로그아웃 완료");
                     
