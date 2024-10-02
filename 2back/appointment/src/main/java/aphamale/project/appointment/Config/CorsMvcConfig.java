@@ -11,8 +11,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
         
         corsRegistry.addMapping("/**")
-                    // .allowedOrigins("http://localhost:3000");
-                    .allowedOrigins("https://web-appointment2react-m1gego797556415b.sel4.cloudtype.app");
+                    .allowedOrigins("http://localhost:3000");
     }
     
 }
