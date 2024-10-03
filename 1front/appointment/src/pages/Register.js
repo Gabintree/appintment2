@@ -3,8 +3,6 @@ import React from "react";
 import { useState, useRef } from "react";
 import { json, useNavigate } from "react-router-dom"; // useRouter 대신 useNavigate 사용
 import axios from "axios";
-import UserDashboard from "./UserDashboard";
-import AdminDashboard from "./HDashBoard";
 
 const Register = () => {
   // 사용자 컬럼
@@ -145,7 +143,7 @@ const Register = () => {
             //console.log('회원가입 성공', response);
             if (response.data == true) {
               alert("회원가입이 완료되었습니다.");
-              navigate("/AdminDashboard");
+              navigate("/HDashBoard");
             } else {
               alert("이미 가입된 ID입니다. 관리자에게 문의하세요.");
             }
