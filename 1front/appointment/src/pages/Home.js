@@ -16,9 +16,28 @@ const Home = () => {
   const [selectedTime, setSelectedTime] = useState(""); // 진료 예정 시간
   const [isChecked, setIsChecked] = useState(false); // 공휴일 여부
 
+  
+  // ㄱ: 페이지 상태 추가
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [itemsPerPage] = useState(5); // 페이지 당 병원 수
+
   const [filteredHospitalData, setFilteredHospitalDaata] = useState([]); // 병원 목록
   const [dayOfWeek, setDayOfWeek] = useState(); // 진료 예정 일자의 요일
   const [error, setError] = useState(""); 
+
+  
+  // ㄱ: 페이지 변경 함수
+  const handleNextPage = () => {
+    if (currentPage < Math.ceil(filteredHospitalData.length / itemsPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   // 시도
   function handleOnChangeSido(options) {
@@ -112,20 +131,16 @@ const Home = () => {
     <nav className="flex justify-between p-6 bg-teal-300">
     <h1 className="text-3xl">LOGO</h1>
     <div className="space-x-4">
-        <a href="/login" className="text-lg font-semibold">로그인</a>
-        <a href="/register" className="text-lg font-semibold">회원가입</a>
+        <a href="/login" className="bg-yellow-400 text-lg font-semibold text-white no-underline">로그인</a>
+        <a href="/register" className="bg-yellow-400 text-lg font-semibold text-white no-underline">회원가입</a>
     </div>
     </nav>
 
     {/* 배경 이미지 및 텍스트 섹션 */}
     <div>
-        <div className="w-auto h-[65vh] bg-cover bg-center"
-             style={{ backgroundImage: `url(${homeImage})` }}>
-
-            <p className="text-lg text-white font-semibold pl-10 pt-10 ml-5 pb-5">
-                불필요한 대기 시간과 복잡한 절차 없이, 스마트하고 편리한 예약 시스템을 경험해보세요.
-            </p>
-            <p className='text-white text-4xl font-semibold tracking-tighter pl-12 ml-3 '>손쉬운 병원 예약<br></br>이제 클릭 한 번으로!</p>
+      <div className="w-auto h-[65vh] bg-cover bg-center" style={{ backgroundImage: `url(${homeImage})` }}>
+        <p className='text-white text-4xl font-semibold tracking-tighter pl-12 ml-3 pt-[10  px]'>손쉬운 병원 예약<br></br>이제 클릭 한 번으로!</p>
+        <p className="text-xl text-white font-bold pl-10 pt-4 mt-[85px] ml-10 pb-5"> 불필요한 대기 시간과 복잡한 절차 없이, 스마트하고 편리한 예약 시스템을 경험해보세요.</p>
 
             {/* 이미지 하단쪽 선택 버튼*/}
             <div className="mt-10 left-0 w-full flex justify-around py-14">
@@ -292,7 +307,9 @@ const Home = () => {
 
         <p className="text-center text-3xl mt-8 mb-10 font-bold">현재 예약 가능한 병원 목록</p>
         <div className="flex justify-around mt-5">
-          {filteredHospitalData.length > 0 ? (filteredHospitalData.map(function (item, index){
+          {filteredHospitalData.length > 0 ? 
+          // 페이지에 맞게 병원 목록을 보여줌
+          (filteredHospitalData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(function (item, index){
             return(
                 <div className="text-center border-t-transparent border-l-transparent border-b-2 border-r-2 border-gray-300 p-4" key={index}>
                   <h1 className="text-s text-gray-600">{item.subjectName}</h1>
@@ -334,6 +351,23 @@ const Home = () => {
             <p className="text-gray-500">📍 1,350m</p>
           </div>
         </div> */}
+
+
+        {/*이전, 다음 버튼 추가 */}
+       <div className="flex justify-center mt-4">
+       <button onClick={handlePrevPage}
+               className={`text-2xl mx-4 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+               disabled={currentPage === 1}
+       >
+       {'<'}
+       </button>
+       <button onClick={handleNextPage}
+               className={`text-2xl mx-4 ${currentPage === Math.ceil(filteredHospitalData.length / itemsPerPage) ? 'opacity-50 cursor-not-allowed' : ''}`}
+               disabled={currentPage === Math.ceil(filteredHospitalData.length / itemsPerPage)}
+       >
+       {'>'}
+       </button>
+     </div>
   
     {/* 하단 화면 구성*/}
     </div>
