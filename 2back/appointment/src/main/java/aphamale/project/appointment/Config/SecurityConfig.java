@@ -171,7 +171,7 @@ public class SecurityConfig {
                 configuration.setAllowCredentials(true);
                 configuration.setMaxAge(3600L);
 
-                configuration.setExposedHeaders(Arrays.asList("Authorization", "access"));
+                configuration.setExposedHeaders(Arrays.asList("Authorization", "access", "Set-Cookie"));
 
                 return configuration;
 
@@ -231,7 +231,7 @@ public class SecurityConfig {
                             configuration.setAllowCredentials(true);
                             configuration.setMaxAge(3600L);
 
-                            configuration.setExposedHeaders(Arrays.asList("Authorization", "access"));
+                            configuration.setExposedHeaders(Arrays.asList("Authorization", "access", "Set-Cookie"));
 
                             return configuration;
 
