@@ -52,7 +52,7 @@ public class UserInfoDomain {
     @Column(name="jwt_role")
     private String jwtRole; // jwt 로그인시 권한 검증 필요 
 
-    @Column(name="jwr_refresh")
+    @Column(name="jwt_refresh")
     private String jwtRefresh; // jwt refresh token 값 저장
 
 
