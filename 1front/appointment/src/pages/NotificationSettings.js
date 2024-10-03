@@ -7,19 +7,19 @@ import './NotificationSettings.css';
 // axios 인스턴스
 export const reqestApi = axios.create({
     baseURL: `${process.env.REACT_APP_API_URL}`,
+    withCredentials: true, 
     headers: {
         Authorization: `Bearer ${localStorage.getItem('login-token')}`,
         "Content-Type": "application/json; charset=utf8",
-        withCredentials: true,
     },
 });
 
 // 토큰 재발행
 export async function getRefreshToken() {
     const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/reissue`, {}, {
+        withCredentials: true, 
         headers: {
             "Content-Type": "application/json; charset=utf8",
-            withCredentials: true,
         }     
     })
     return response;           

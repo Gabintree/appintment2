@@ -101,9 +101,9 @@ const Register = () => {
 
         await axios
         .post(`${process.env.REACT_APP_API_URL}/api/join`, JSON.stringify(data), {
+            withCredentials: true,
             headers: {
               "Content-Type": "application/json; charset=utf8",
-              withCredentials: true,
             },
           })
           .then(function (response) {
@@ -134,9 +134,9 @@ const Register = () => {
 
         await axios
         .post(`${process.env.REACT_APP_API_URL}/api/joinAdmin`, JSON.stringify(data), {
+            withCredentials: true,
             headers: {
               "Content-Type": "application/json; charset=utf8",
-              withCredentials: true,
             },
           })
           .then(function (response) {

@@ -85,10 +85,10 @@ const Home = () => {
         };
 
         await axios.post(`${process.env.REACT_APP_API_URL}/api/hospitalList`, JSON.stringify(data), {
+          withCredentials: true, 
           headers: {
             //Authorization: `Bearer ${localStorage.getItem('login-token')}`,
             "Content-Type": "application/json; charset=utf8",
-            //withCredentials: true,
         }})
         .then(function (response){
             if(response.status === 200){
