@@ -102,9 +102,10 @@ const Register = () => {
         };
 
         await axios
-          .post(`${process.env.REACT_APP_API_URL}/api/join`, JSON.stringify(data), {
+        .post(`${process.env.REACT_APP_API_URL}/api/join`, JSON.stringify(data), {
             headers: {
               "Content-Type": "application/json; charset=utf8",
+              withCredentials: true,
             },
           })
           .then(function (response) {
@@ -134,9 +135,10 @@ const Register = () => {
         };
 
         await axios
-          .post(`${process.env.REACT_APP_API_URL}/api/joinAdmin`, JSON.stringify(data), {
+        .post(`${process.env.REACT_APP_API_URL}/api/joinAdmin`, JSON.stringify(data), {
             headers: {
               "Content-Type": "application/json; charset=utf8",
+              withCredentials: true,
             },
           })
           .then(function (response) {
