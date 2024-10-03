@@ -44,6 +44,7 @@ const Login = () => {
                   console.log(formData, "formData");
 
                 await axios.post(`${process.env.REACT_APP_API_URL}/api/login`, formData, {
+                withCredentials: true, 
                 headers : {
                      // "Content-Type" : "application/json; charset=utf8"
                         "Content-Type" :  "multipart/form-data"
