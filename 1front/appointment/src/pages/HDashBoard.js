@@ -34,7 +34,7 @@ export async function getRefreshToken() {
 const HDashBoard = () => {
     const [userName, setUserName] = useState(""); // 사용자 이름
     const [waitingStatus, setWaitingStatus] = useState(""); // 대기 상태 값
-    const [isDetailsVisible, setIsDetailsVisible] = useState(false); // 상세보기 상태 추가
+    const [reserveNo, setReserveNo] = useState(""); // 자식에게 받아온 예약번호
 
     // userId
     const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
@@ -186,9 +186,12 @@ const HDashBoard = () => {
         navigate("/Home");        
     }
 
-    const handleDetailClick = () => {
-        setIsDetailsVisible(prev => !prev); // 상세보기 토글
-    };
+    // 자식에게 받아온 예약번호
+    const handledReserveNo = (sendFromChild) => {
+        setReserveNo(sendFromChild);
+        console.log(" 받아온 값 : ", sendFromChild);
+        console.log(" 예약번호 : ", reserveNo);
+    }
 
     const getColor = () => {
         switch (waitingStatus) {
@@ -230,7 +233,7 @@ const HDashBoard = () => {
                 </div>
                 <div className='content-area'>
                     <div className='main-left'> {/* 3 비율 부분 */}
-                        <ReservationManagement />
+                        <ReservationManagement sendFromChild={handledReserveNo}/>
                         {/* 추가 콘텐츠를 여기에 넣을 수 있습니다. */}
                     </div>
                     <div className='main-right'> {/* 1 비율 부분 */}
@@ -239,7 +242,8 @@ const HDashBoard = () => {
 
                         </div>
                         <div className='section'> {/* 두 번째 섹션 */}
-                            <StatusAndDetails isVisible={isDetailsVisible}/>
+                            {/* <StatusAndDetails isVisible={isDetailsVisible}/> */}
+                            <StatusAndDetails />
                         </div>
                         <div className='section'> {/* 세 번째 섹션 */}
                         <NotificationSettings />

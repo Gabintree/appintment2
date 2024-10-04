@@ -1,5 +1,5 @@
 // src/StatusAndDetails.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './StatusAndDetails.css';
 
 const StatusAndDetails = () => {
@@ -8,7 +8,7 @@ const StatusAndDetails = () => {
     const [phoneNumber, setPhoneNumber] = useState('010-1234-5678'); // 예시 데이터
     const [notificationContact, setNotificationContact] = useState('');
     const [receiveNotification, setReceiveNotification] = useState(false);
-
+    
     const handleToggle = () => {
         setIsVisible(!isVisible); // 가시성 토글
      };

@@ -29,7 +29,7 @@ export async function getRefreshToken() {
     return response;           
 }
 
-const ReservationManagement = () => {
+const ReservationManagement = ({sendFromChild}) => {
     
     const nowDate = new Date();
     const today = new Date().toISOString().split('T')[0]; // 오늘 날짜
@@ -38,17 +38,15 @@ const ReservationManagement = () => {
     const [startDate, setStartDate] = useState(today); // 조회일자 from
     const [endDate, setEndDate] = useState(after3month); // 조회일자 to
     const [filteredReservations, setFilteredReservations] = useState([]); // 필터링된 예약 데이터
-    const [isVisible, setIsVisible] = useState(false);
-    const [visibleReservationId, setVisibleReservationId] = useState(null); // 현재 상세보기 예약 ID
+    
+    const [selectedReserveNo, setSelectedReserveNo] = useState(""); // 예약 번호
+    
+    const reserveNo = selectedReserveNo;
 
 
     const navigate = useNavigate();
     const [error, setError] = useState("");
     const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
-
-    const toggleDetails = (id) => {
-        setVisibleReservationId(visibleReservationId === id ? null : id); // 클릭한 예약 ID 토글
-    };
 
     // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
     reqestApi.interceptors.request.use((config) => {
@@ -140,6 +138,13 @@ const ReservationManagement = () => {
         }  
     };
 
+    // 예약번호 저장
+    function onClickSelectedReserveNo(value){
+        setSelectedReserveNo(value);
+        console.log("sendFromChild : ", selectedReserveNo);
+        console.log("value : ", value);
+    }
+
     return (
         <div className='reservation-management'>
             <div className='title-bar'><strong>예약 내역 관리</strong></div>
@@ -176,7 +181,11 @@ const ReservationManagement = () => {
                                     <td>{reservation.subjectName}</td>
                                     <td>{reservation.reseveStatus = "I" ? "예약완료" : reservation.reseveStatus = "U" ? "변경완료" : "취소완료"}</td>
                                     <td>
-                                        <button className='detail-button' onClick={() => toggleDetails(reservation.reserveNo)} style={{ cursor: 'pointer' }}>상세보기</button>
+                                        <button className='detail-button' 
+                                                style={{ cursor: 'pointer' }} 
+                                                onClick={() => {onClickSelectedReserveNo(reservation.reserveNo); 
+                                                                sendFromChild(reserveNo);}}
+                                                >상세보기</button>                                                
                                     </td>
                                     <td>{!reservation.updateUser ? "-" : reservation.updateUser}</td> {/* 예약 변경자 추가 */}
                                 </tr>
