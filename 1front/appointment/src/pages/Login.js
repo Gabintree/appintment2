@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -13,6 +13,12 @@ const Login = () => {
     const [userText, setUserText] = useState("사용자");
     const [adminText, setAdminText] = useState("관리자");
     const [error, setError] = useState("");
+
+  useEffect(() => {
+    // 화면 로딩시 사용자 선택되어있게끔
+    formOnChange("userBtn");
+
+  }, []); // 마운트 될 때 한 번만 실행
 
     // 로그인이 사용자인지 관리자인지 표시를 위해 
     function formOnChange(formGbn){
