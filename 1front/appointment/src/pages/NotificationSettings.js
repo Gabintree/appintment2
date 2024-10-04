@@ -33,6 +33,15 @@ const NotificationSettings = () => {
     const navigate = useNavigate();
     const [error, setError] = useState("");
 
+    // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
+    reqestApi.interceptors.request.use((config) => {
+        const accessToken = localStorage.getItem('login-token');
+        if (config.headers && accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+        return config;
+    });
+
     // interceptor 적용
     reqestApi.interceptors.response.use(
         // 200 응답

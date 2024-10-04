@@ -50,7 +50,14 @@ const ReservationManagement = () => {
         setVisibleReservationId(visibleReservationId === id ? null : id); // 클릭한 예약 ID 토글
     };
 
-
+    // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
+    reqestApi.interceptors.request.use((config) => {
+        const accessToken = localStorage.getItem('login-token');
+        if (config.headers && accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+        return config;
+    });
 
     // interceptor 적용
     reqestApi.interceptors.response.use(
