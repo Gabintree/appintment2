@@ -113,8 +113,11 @@ const StatusAndDetails = ({reserveNo}) => {
             .then(function (response){
                 if(response.status == 200){
                     console.log("상세보기 조회 완료 : ", response.data); 
-                    // setSymptoms();
-                    // setPhoneNumber();
+                    console.log("length :  ", response.data.phoneNumber.length);
+                    setSymptoms(response.data.symptoms);
+                    const onChangePhone = phoneOnChange(response.data.phoneNumber);
+                    setPhoneNumber(onChangePhone);
+                    setIsVisible(true);
                 }            
             })
             .catch(function(error){
@@ -125,7 +128,16 @@ const StatusAndDetails = ({reserveNo}) => {
         }  
     };
 
-
+  // 휴대폰 형식(하이픈 추가)
+  function phoneOnChange(phone) {
+    if (phone.length === 10) {
+      return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+    } else if (phone.length === 11) {
+      return phone.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+    } else {
+      return phone;
+    }
+  }    
     const handleToggle = () => {
         setIsVisible(!isVisible); // 가시성 토글
      };

@@ -188,7 +188,7 @@ public class AdminController {
     @PostMapping("/api/admin/reserveDetail")
     public Map<String, String> getReserveDetail(@RequestBody HospitalReserveDto hospitalReserveDto) {
 
-        String reserveNo = hospitalReserveDto.getReserveNo();
+ :         String reserveNo = hospitalReserveDto.getReserveNo();
 
         List<GetHospitalReserveDetailDto> ReserveDetailDto  = hospitalReserveRepository.findByReserveNo(reserveNo);
           
