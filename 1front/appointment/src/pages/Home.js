@@ -8,9 +8,14 @@ import pic3 from '../images/image_3.png';
 
 const Home = () => {
 
-  const [selectedSido, setSelectedSido] = useState(""); // 시도구분
+  const [selectedSido, setSelectedSido] = useState(""); // 시도
+
+  const [gugunOptions, setGugunOptions] = useState([]); // 구군 옵션
   const [selectedGugun, setSelectedGugun] = useState(""); // 구군
+
+  const [dongOptions, setDongOptions] = useState([]); // 동 옵션
   const [selectedDong, setSelectedDong] = useState(""); // 동
+
   const [selectedSubject, setSelectedSubject] = useState(""); // 진료과목 코드
   const [selectedDate, setSelectedDate] = useState(""); // 진료 예정 일자
   const [selectedTime, setSelectedTime] = useState(""); // 진료 예정 시간
@@ -39,20 +44,101 @@ const Home = () => {
     }
   };
 
+  // 콤보박스 변경 이벤트 
+  useEffect(() => {
+    if(selectedSido === "서울특별시"){
+      setGugunOptions(["강남구", "강동구", "강북구", "강서구"]);
+    }else if(selectedSido === "대전광역시"){
+      setGugunOptions(["동구", "중구", "서구", "유성구", "대덕구"]);      
+    }else if(selectedSido === "대구광역시"){
+      setGugunOptions(["중구", "남구", "동구", "북구", "서구"]);
+    }else if(selectedSido === "부산광역시"){
+      setGugunOptions(["중구", "강서구", "동구", "영도구", "동래구"]);      
+    }else{
+      setGugunOptions([]);
+    }
+
+    if(selectedGugun){
+      if(selectedSido === "서울특별시" && selectedGugun === "강남구")
+        setDongOptions(["신사동", "수서동", "청담동", "역삼동"]);
+      else if(selectedSido === "서울특별시" && selectedGugun === "강동구"){
+        setDongOptions(["강일동", "둔촌동", "길동", "성내동"]);
+      }
+      else if(selectedSido === "서울특별시" && selectedGugun === "강북구"){
+        setDongOptions(["상암동", "미아동", "송중동", "송천동"]);
+      }      
+      else if(selectedSido === "서울특별시" && selectedGugun === "강서구"){
+        setDongOptions(["등촌동", "화곡본동", "우정산동", "가양동"]);
+      }  
+      else if(selectedSido === "대전광역시" && selectedGugun === "동구"){
+        setDongOptions(["중앙동", "신인동", "대동", "자양동"]);
+      }
+      else if(selectedSido === "대전광역시" && selectedGugun === "중구"){
+        setDongOptions(["은행선화동", "문창동", "대흥동", "용두동"]);
+      }    
+      else if(selectedSido === "대전광역시" && selectedGugun === "서구"){
+        setDongOptions(["복수동", "변동", "용문동", "괴정동"]);
+      }  
+      else if(selectedSido === "대전광역시" && selectedGugun === "유성구"){
+        setDongOptions(["학하동", "상대동", "원내동", "관평동"]);
+      }  
+      else if(selectedSido === "대전광역시" && selectedGugun === "대덕구"){
+        setDongOptions(["오정동", "대화동", "송촌동", "신탄진동"]);
+      }   
+      else if(selectedSido === "대구광역시" && selectedGugun === "중구"){
+        setDongOptions(["동인동", "삼덕동", "봉산동", "남산동"]);
+      } 
+      else if(selectedSido === "대구광역시" && selectedGugun === "남구"){
+        setDongOptions(["이천동", "봉덕동", "대명동"]);
+      } 
+      else if(selectedSido === "대구광역시" && selectedGugun === "동구"){
+        setDongOptions(["신암동", "신천동", "효목동", "동촌동"]);
+      }     
+      else if(selectedSido === "대구광역시" && selectedGugun === "북구"){
+        setDongOptions(["산격동", "칠성동", "침산동", "복현동"]);
+      }   
+      else if(selectedSido === "대구광역시" && selectedGugun === "서구"){
+        setDongOptions(["내당동", "비산동", "평리동", "본리동"]);
+      }   
+      else if(selectedSido === "부산광역시" && selectedGugun === "중구"){
+        setDongOptions(["중앙동", "남포동", "대청동", "보수동"]);
+      } 
+      else if(selectedSido === "부산광역시" && selectedGugun === "강서구"){
+        setDongOptions(["대저1동", "명지동", "신호동", "지사동"]);
+      } 
+      else if(selectedSido === "부산광역시" && selectedGugun === "동구"){
+        setDongOptions(["초량동", "수정동", "좌천동", "범일동"]);
+      }
+      else if(selectedSido === "부산광역시" && selectedGugun === "영도구"){
+        setDongOptions(["동삼동", "남항동", "신선동", "청학동"]);
+      }
+      else if(selectedSido === "부산광역시" && selectedGugun === "동래구"){
+        setDongOptions(["온천동", "안락동", "명륜동", "사직동"]);
+      }
+      else{
+        setDongOptions([]);
+      }
+    }
+      
+
+  }, [selectedSido, selectedGugun]);
+
   // 시도
   function handleOnChangeSido(options) {
       setSelectedSido(options);
   };
 
-  // 구군 // 시도 선택에 따라서 구군 값이 변경되어야 함.
+   // 구군 // 시도 선택에 따라서 구군 값이 변경되어야 함.
+   function handleOnChangeGuGun(options) {
+    setSelectedGugun(options);
+  };  
+
+  // 동 // 구군 선택에 따라서 구군 값이 변경되어야 함.
   function handleOnChangeDong(options) {
       setSelectedDong(options);
   };
 
-  // 동 // 구군 선택에 따라서 구군 값이 변경되어야 함.
-  function handleOnChangeGuGun(options) {
-    setSelectedGugun(options);
-};  
+
 
   // 진료과목
   function handleOnChangeSubject(options) {
@@ -169,10 +255,9 @@ const Home = () => {
                     value={selectedGugun}
                 >
                         <option value="">구/군 선택</option> 
-                        <option value="강남구" style={{ color: 'black' }}>강남구</option>
-                        <option value="강동구" style={{ color: 'black' }}>강동구</option>
-                        <option value="강북구" style={{ color: 'black' }}>강북구</option>
-                        <option value="강서구" style={{ color: 'black' }}>강서구</option>
+                        {gugunOptions.map((option, index) => (
+                          <option style={{ color: 'black' }} key={option} value={option}>{option}</option> 
+                        ))}
                 </select>
             </div>
 
@@ -184,10 +269,9 @@ const Home = () => {
                     value={selectedDong}
                 >
                         <option value="">동 선택</option> 
-                        <option value="신사동" style={{ color: 'black' }}>신사동</option>
-                        <option value="수서동" style={{ color: 'black' }}>수서동</option>
-                        <option value="청담동" style={{ color: 'black' }}>청담동</option>
-                        <option value="역삼1동" style={{ color: 'black' }}>역삼1동</option>
+                        {dongOptions.map((option, index) => (
+                          <option style={{ color: 'black' }} key={option} value={option}>{option}</option>                        
+                        ))}
                 </select>
             </div>            
 

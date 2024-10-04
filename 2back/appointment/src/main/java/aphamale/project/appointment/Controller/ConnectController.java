@@ -75,7 +75,8 @@ public class ConnectController {
 
             // 주소에 동이 검색 조건과 같은 동이면 리스트에 추가.
             for(int i = 0; i < hospitalList_B.size(); i++){
-                
+                System.out.println("hospitalList_B.get(i).getDutyAddr() : " + hospitalList_B.get(i).getDutyAddr());
+
                 if(hospitalList_B.get(i).getDutyAddr().contains(selectedDong)){
                     hospitalList0.add(hospitalList_B.get(i));
                 }
@@ -86,7 +87,8 @@ public class ConnectController {
             
             // 주소에 동이 검색 조건과 같은 동이면 리스트에 추가.
             for(int i = 0; i < hospitalList_C.size(); i++){
-    
+                System.out.println("hospitalList_C.get(i).getDutyAddr() : " + hospitalList_C.get(i).getDutyAddr());
+
                 if(hospitalList_C.get(i).getDutyAddr().contains(selectedDong)){
                     hospitalList0.add(hospitalList_C.get(i));
                 }
