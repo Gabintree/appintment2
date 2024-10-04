@@ -119,8 +119,7 @@ const Home = () => {
         setDongOptions([]);
       }
     }
-      
-
+   
   }, [selectedSido, selectedGugun]);
 
   // 시도
@@ -199,6 +198,8 @@ const Home = () => {
             if(response.status === 200){
                 console.log("병원 목록 조회 완료 : ", response.data); 
                setFilteredHospitalData(response.data);
+               // 데이터 변경시 
+               setCurrentPage(1);
             }            
         })
         .catch(function(error){
