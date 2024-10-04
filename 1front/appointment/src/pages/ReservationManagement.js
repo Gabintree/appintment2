@@ -9,7 +9,7 @@ import './ReservationManagement.css';
 import StatusAndDetails from './StatusAndDetails';
 
 // axios 인스턴스
-export const reqestApi = axios.create({
+export const requestApi = axios.create({
     baseURL: `${process.env.REACT_APP_API_URL}`, 
     withCredentials: true,
     headers: {
@@ -37,19 +37,18 @@ const ReservationManagement = ({sendFromChild}) => {
 
     const [startDate, setStartDate] = useState(today); // 조회일자 from
     const [endDate, setEndDate] = useState(after3month); // 조회일자 to
-    const [filteredReservations, setFilteredReservations] = useState([]); // 필터링된 예약 데이터
-    
+    const [filteredReservations, setFilteredReservations] = useState([]); // 필터링된 예약 데이터    
     const [selectedReserveNo, setSelectedReserveNo] = useState(""); // 예약 번호
-    
-    const reserveNo = selectedReserveNo;
-
 
     const navigate = useNavigate();
     const [error, setError] = useState("");
     const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
 
+    // 부모에게 넘기는 예약번호 
+    const reserveNo = selectedReserveNo;
+
     // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
-    reqestApi.interceptors.request.use((config) => {
+    requestApi.interceptors.request.use((config) => {
         const accessToken = localStorage.getItem('login-token');
         if (config.headers && accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
@@ -58,7 +57,7 @@ const ReservationManagement = ({sendFromChild}) => {
     });
 
     // interceptor 적용
-    reqestApi.interceptors.response.use(
+    requestApi.interceptors.response.use(
         // 200 응답
         (response) =>{
             return response;
@@ -111,7 +110,6 @@ const ReservationManagement = ({sendFromChild}) => {
         handleSearchOnClick();      
     }, []); // 마운트 될 때 한 번만 실행
 
-
     // 예약 내역 관리 조회 버튼
     async function handleSearchOnClick() {
         console.log("예약 내역 관리 조회 클릭");
@@ -122,7 +120,7 @@ const ReservationManagement = ({sendFromChild}) => {
                 toDate : endDate
             };
     
-            await reqestApi.post("/api/admin/reserveList", JSON.stringify(data))
+            await requestApi.post("/api/admin/reserveList", JSON.stringify(data))
             .then(function (response){
                 if(response.status == 200){
                     console.log("예약 내역 조회 완료 : ", response.data); 
@@ -138,12 +136,6 @@ const ReservationManagement = ({sendFromChild}) => {
         }  
     };
 
-    // 예약번호 저장
-    function onClickSelectedReserveNo(value){
-        setSelectedReserveNo(value);
-        console.log("sendFromChild : ", selectedReserveNo);
-        console.log("value : ", value);
-    }
 
     return (
         <div className='reservation-management'>
@@ -183,8 +175,7 @@ const ReservationManagement = ({sendFromChild}) => {
                                     <td>
                                         <button className='detail-button' 
                                                 style={{ cursor: 'pointer' }} 
-                                                onClick={() => {onClickSelectedReserveNo(reservation.reserveNo); 
-                                                                sendFromChild(reserveNo);}}
+                                                onClick={() => {sendFromChild(reservation.reserveNo)}}
                                                 >상세보기</button>                                                
                                     </td>
                                     <td>{!reservation.updateUser ? "-" : reservation.updateUser}</td> {/* 예약 변경자 추가 */}

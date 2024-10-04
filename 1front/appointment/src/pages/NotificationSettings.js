@@ -5,7 +5,7 @@ import axios from "axios";
 import './NotificationSettings.css';
 
 // axios 인스턴스
-export const reqestApi = axios.create({
+export const requestApi = axios.create({
     baseURL: `${process.env.REACT_APP_API_URL}`,
     withCredentials: true, 
     headers: {
@@ -34,7 +34,7 @@ const NotificationSettings = () => {
     const [error, setError] = useState("");
 
     // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
-    reqestApi.interceptors.request.use((config) => {
+    requestApi.interceptors.request.use((config) => {
         const accessToken = localStorage.getItem('login-token');
         if (config.headers && accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
@@ -43,7 +43,7 @@ const NotificationSettings = () => {
     });
 
     // interceptor 적용
-    reqestApi.interceptors.response.use(
+    requestApi.interceptors.response.use(
         // 200 응답
         (response) =>{
             return response;
@@ -107,7 +107,7 @@ const NotificationSettings = () => {
                alarmFlag: receiveNotification, // SMS 수신 여부
            };
    
-           await reqestApi.post("/api/admin/saveSmsAlarm", JSON.stringify(data))
+           await requestApi.post("/api/admin/saveSmsAlarm", JSON.stringify(data))
            .then(function (response){
                if(response.status === 200){
                    console.log("SMS 수신 정보 저장 완료 : ", response.data); 
@@ -129,7 +129,7 @@ const NotificationSettings = () => {
                hospitalId: sessionStorage.getItem('userId'),
            };
    
-           await reqestApi.post("/api/admin/getSmsAlarm", JSON.stringify(data))
+           await requestApi.post("/api/admin/getSmsAlarm", JSON.stringify(data))
            .then(function (response){
                if(response.status === 200){
                 setReceiveNotification(response.data.alarmFlag);

@@ -7,7 +7,7 @@ import axios from "axios";
 import './StatusSelect.css'; // 스타일을 위한 CSS 파일
 
 // axios 인스턴스
-export const reqestApi = axios.create({
+export const requestApi = axios.create({
     baseURL: `${process.env.REACT_APP_API_URL}`, 
     withCredentials: true,
     headers: {
@@ -35,7 +35,7 @@ const StatusSelect = () => {
     const [error, setError] = useState("");
 
     // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
-    reqestApi.interceptors.request.use((config) => {
+    requestApi.interceptors.request.use((config) => {
         const accessToken = localStorage.getItem('login-token');
         if (config.headers && accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
@@ -44,7 +44,7 @@ const StatusSelect = () => {
     });
 
     // interceptor 적용
-    reqestApi.interceptors.response.use(
+    requestApi.interceptors.response.use(
         // 200 응답
         (response) =>{
             return response;
@@ -105,7 +105,7 @@ const StatusSelect = () => {
                hospitalId: sessionStorage.getItem('userId'),
            };
    
-           await reqestApi.post("/api/admin/getStatus", JSON.stringify(data))
+           await requestApi.post("/api/admin/getStatus", JSON.stringify(data))
            .then(function (response){
                if(response.status === 200){
                    console.log("상태값 조회 완료 : ", response.data); 
@@ -130,7 +130,7 @@ const StatusSelect = () => {
                 rushHourFlag: waitingStatus, // 상태값
             };
     
-            await reqestApi.post("/api/admin/saveStatus", JSON.stringify(data))
+            await requestApi.post("/api/admin/saveStatus", JSON.stringify(data))
             .then(function (response){
                 if(response.status === 200){
                     console.log("상태값 저장 완료 : ", response.data); 

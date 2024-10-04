@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import aphamale.project.appointment.Domain.HospitalReserveDomain;
+import aphamale.project.appointment.Dto.Interface.GetHospitalReserveDetailDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 
 import java.sql.Time;
@@ -17,7 +18,14 @@ import java.sql.Time;
 @Repository
 public interface HospitalReserveRepository extends JpaRepository<HospitalReserveDomain, String> {
 
-    HospitalReserveDomain findByReserveNo(HospitalReserveDomain reserveNo);
+    // 상세보기
+    @Query(value = " select t1.remark, " + 
+                   " t2.phone " + 
+                   " from reserve t1 " + 
+                   " inner join user_info t2 " +
+                   " on t1.user_id = t2.user_id " + 
+                   " where t1.reserve_no = :reserveNo ",  nativeQuery =true)
+    List<GetHospitalReserveDetailDto> findByReserveNo(String reserveNo);
 
     // 예약 내역 조회
     @Query(value = "select t1.reserve_no, " +

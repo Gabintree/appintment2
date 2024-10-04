@@ -10,7 +10,7 @@ import StatusAndDetails from './StatusAndDetails.js';
 import NotificationSettings from './NotificationSettings';
 
 // axios 인스턴스
-export const reqestApi = axios.create({
+export const requestApi = axios.create({
     baseURL: `${process.env.REACT_APP_API_URL}`, 
     withCredentials: true, 
     headers: {
@@ -43,7 +43,7 @@ const HDashBoard = () => {
     const [error, setError] = useState("");
 
     // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
-    reqestApi.interceptors.request.use((config) => {
+    requestApi.interceptors.request.use((config) => {
         const accessToken = localStorage.getItem('login-token');
         if (config.headers && accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
@@ -52,7 +52,7 @@ const HDashBoard = () => {
     });
 
     // interceptor 적용
-    reqestApi.interceptors.response.use(
+    requestApi.interceptors.response.use(
         // 200 응답
         (response) =>{
             return response;
@@ -107,7 +107,7 @@ const HDashBoard = () => {
                 hospitalId: userId,
             };
     
-           await reqestApi.post("/api/admin", JSON.stringify(data))
+           await requestApi.post("/api/admin", JSON.stringify(data))
             .then(function (response){
                 if(response.status === 200){
                     console.log("토큰 인증 완료");
@@ -125,35 +125,35 @@ const HDashBoard = () => {
         }        
     };
 
-        // 화면 로딩시 상태값 조회 
-        async function selectHospitalStatus() {
-            console.log("상태값 조회");
-           try{
-               const data = {
-                   hospitalId: sessionStorage.getItem('userId'),
-               };
-       
-               await reqestApi.post("/api/admin/getStatus", JSON.stringify(data))
-               .then(function (response){
-                   if(response.status === 200){
-                       console.log("상태값 조회 완료 : ", response.data); 
-                       const status = response.data;
-                       setWaitingStatus(status);
-                   }            
-               })
-               .catch(function(error){
-                   console.log("error : ", error);
-                 })             
-           } catch (err) {
-               setError("작업 중 오류가 발생했습니다.");
-           }  
-       }
+    // 화면 로딩시 상태값 조회 
+    async function selectHospitalStatus() {
+        console.log("상태값 조회");
+        try{
+            const data = {
+                hospitalId: sessionStorage.getItem('userId'),
+            };
+    
+            await requestApi.post("/api/admin/getStatus", JSON.stringify(data))
+            .then(function (response){
+                if(response.status === 200){
+                    console.log("상태값 조회 완료 : ", response.data); 
+                    const status = response.data;
+                    setWaitingStatus(status);
+                }            
+            })
+            .catch(function(error){
+                console.log("error : ", error);
+                })             
+        } catch (err) {
+            setError("작업 중 오류가 발생했습니다.");
+        }  
+    }
 
     // 로그아웃 
     async function logoutOnClick() {
 
         try{
-            await reqestApi.post("/api/logout", {})
+            await requestApi.post("/api/logout", {})
             .then(function (response){
                 console.log("response : ", response);
                 if(response.status == 200){
@@ -181,6 +181,11 @@ const HDashBoard = () => {
         selectHospitalStatus();
     }, []); // 마운트 될 때 한 번만 실행
 
+
+    useEffect(() => {
+        
+    }, [reserveNo])
+
     // 홈으로 이동
     async function homeOnClick() {
         navigate("/Home");        
@@ -189,8 +194,6 @@ const HDashBoard = () => {
     // 자식에게 받아온 예약번호
     const handledReserveNo = (sendFromChild) => {
         setReserveNo(sendFromChild);
-        console.log(" 받아온 값 : ", sendFromChild);
-        console.log(" 예약번호 : ", reserveNo);
     }
 
     const getColor = () => {
@@ -239,11 +242,9 @@ const HDashBoard = () => {
                     <div className='main-right'> {/* 1 비율 부분 */}
                         <div className='section'> {/* 첫 번째 섹션 */}
                             <StatusSelect /> {/*상태 변경 핸들러 추가*/}
-
                         </div>
                         <div className='section'> {/* 두 번째 섹션 */}
-                            {/* <StatusAndDetails isVisible={isDetailsVisible}/> */}
-                            <StatusAndDetails />
+                            <StatusAndDetails reserveNo={reserveNo}/>
                         </div>
                         <div className='section'> {/* 세 번째 섹션 */}
                         <NotificationSettings />
