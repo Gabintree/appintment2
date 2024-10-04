@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import aphamale.project.appointment.Domain.HospitalReserveDomain;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 
+import java.sql.Time;
+
+
 
 @Repository
 public interface HospitalReserveRepository extends JpaRepository<HospitalReserveDomain, String> {
@@ -35,4 +38,11 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
     List<GetHospitalReserveListDto> getItemsOfByReserveNo(String groupId, Date fromDate, Date toDate); 
     //List<HospitalReserveDomain> findByGroupIdAndReserveDateBetween(String groupId, Date fromDate, Date toDate);                                              
     
+    // 해당 일자, 시간에 에약 내역이 있는 지 체크 (시간을 hh:mm 까지만 비교)
+    @Query(value = "select count(t1.reserve_no) " +
+                  " from reserve t1 " + 
+                  " where t1.group_id = :groupId " + 
+                  " and t1.reserve_date = :reserveDate " + 
+                  " and time_format(t1.reserve_time, '%H:%i') = time_format(:reserveTime, '%H:%i')", nativeQuery =true)
+    int countByGroupIdAndReserveDateAndReserveTime(String groupId, Date reserveDate, Time reserveTime);
 }

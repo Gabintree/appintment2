@@ -21,7 +21,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [itemsPerPage] = useState(5); // 페이지 당 병원 수
 
-  const [filteredHospitalData, setFilteredHospitalDaata] = useState([]); // 병원 목록
+  const [filteredHospitalData, setFilteredHospitalData] = useState([]); // 병원 목록
   const [dayOfWeek, setDayOfWeek] = useState(); // 진료 예정 일자의 요일
   const [error, setError] = useState(""); 
 
@@ -112,7 +112,7 @@ const Home = () => {
         .then(function (response){
             if(response.status === 200){
                 console.log("병원 목록 조회 완료 : ", response.data); 
-               setFilteredHospitalDaata(response.data);
+               setFilteredHospitalData(response.data);
             }            
         })
         .catch(function(error){

@@ -7,8 +7,12 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.time.LocalTime;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,12 +24,20 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import aphamale.project.appointment.Domain.HospitalSubjectDomain;
 import aphamale.project.appointment.Dto.HospitalApiDto;
+import aphamale.project.appointment.Repository.HospitalReserveRepository;
+import aphamale.project.appointment.Repository.HospitalSubjectInfoRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+
 public class HospitalApiService {
+
+    private final HospitalSubjectInfoRepository hospitalSubjectInfoRepository;
+    private final HospitalReserveRepository hospitalReserveRepository;
+
 
     // 병원 목록 조회 
     public List<HospitalApiDto> SelectListApi(String selectedSido, String selectedGugun, String selectedBorC, String selectedSubject, String dayOfWeek){
@@ -177,7 +189,270 @@ public class HospitalApiService {
         return null;
     }
 
+    // 병원 목록 필터 
+    public List<HospitalApiDto> SelectFilteredList(List<HospitalApiDto> list, String selectedDate, String selectedTime, String selectedSubject, String dayOfWeek){
+    
+        
+        // 예약일자 remove
+        List<HospitalApiDto> hospitalList1 = new ArrayList<HospitalApiDto>();
+        // 예약 시간 remove
+        List<HospitalApiDto> hospitalList2 = new ArrayList<HospitalApiDto>();
+        // 데이터 담을 list 생성
+        List<HospitalApiDto> filteredList = new ArrayList<>();
 
+
+        try{
+
+            // 날짜 형식으로 변경
+            SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd"); // 0000년 00월 00일
+            Date date = formatDate.parse(selectedDate);
+            Date sqlDate = new Date(date.getTime());
+
+
+            // SQL time형식으로 변경 (HH:mm:ss) 형식어야 변환이 된다고 함.
+            String formattedTime = selectedTime.substring(0, 2) + ":" + selectedTime.substring(2, 4) + ":00";
+            Time sqlTime = Time.valueOf(formattedTime);
+
+
+                // 해당 요일에 진료시간이 null 이 아니면 add  
+                for(int i = 0; i < list.size(); i++){
+                    // dayofWeek가 1이면 월요일
+                    if(dayOfWeek.equals("1")){
+                        if(list.get(i).getDutyTime1s() != null || list.get(i).getDutyTime1c() != null){
+                            hospitalList1.add(list.get(i));
+                        }
+                    }
+                    // dayofWeek가 2면 화요일
+                    else if(dayOfWeek.equals("2")){
+                        if(list.get(i).getDutyTime2s() != null || list.get(i).getDutyTime2c() != null){
+                            hospitalList1.add(list.get(i));
+                        }
+                    }
+                    // dayofWeek가 3이면 수요일
+                    else if(dayOfWeek.equals("3")){
+                        if(list.get(i).getDutyTime3s() != null || list.get(i).getDutyTime3c() != null){
+                            hospitalList1.add(list.get(i));
+                        }
+                    }   
+                    // dayofWeek가 4면 목요일
+                    else if(dayOfWeek.equals("4")){
+                        if(list.get(i).getDutyTime4s() != null || list.get(i).getDutyTime4c() != null){
+                            hospitalList1.add(list.get(i));
+                        }
+                    }
+                    // dayofWeek가 5면 금요일
+                    else if(dayOfWeek.equals("5")){
+                        if(list.get(i).getDutyTime5s() != null || list.get(i).getDutyTime5c() != null){
+                            hospitalList1.add(list.get(i));
+                        }
+                    }  
+                    // dayofWeek가 6이면 토요일
+                    else if(dayOfWeek.equals("6")){
+                        if(list.get(i).getDutyTime6s() != null || list.get(i).getDutyTime6c() != null){
+                            hospitalList1.add(list.get(i));
+                        }
+                    }
+                    // dayofWeek가 7이면 일요일
+                    else if(dayOfWeek.equals("7")){
+                        if(list.get(i).getDutyTime7s() != null || list.get(i).getDutyTime7c() != null){
+                            hospitalList1.add(list.get(i));
+                        }
+                    }
+                    // dayofWeek가 8이면 공휴일
+                    else if(dayOfWeek.equals("8")){
+                    if(list.get(i).getDutyTime8s() != null || list.get(i).getDutyTime8c() != null){
+                        hospitalList1.add(list.get(i));
+                        }
+                    }   
+                }  
+                
+                // HospitalList1로 옮겼으니까 삭제하자.
+                list.removeAll(list);
+
+
+                // 예약 시간 분리
+                int hh = Integer.parseInt(selectedTime.substring(0, 2)); 
+                int mm = Integer.parseInt(selectedTime.substring(2, 4));
+
+                LocalTime time = LocalTime.of(hh, mm, 0);
+                System.out.println("time : " + time);
+
+                // 예약 시간이 운영시간 내인 것만 add 
+                for(int t = 0; t < hospitalList1.size(); t++){
+
+                    LocalTime startTime = LocalTime.now();
+                    LocalTime closeTime = LocalTime.now();
+
+                    if(dayOfWeek.equals("1")){
+                        // 시간 time 형식 변환
+                        // 시작 시간
+                        int startHh = Integer.parseInt(hospitalList1.get(t).getDutyTime1s().substring(0, 2)); 
+                        int startMm = Integer.parseInt(hospitalList1.get(t).getDutyTime1s().substring(2, 4));
+
+                        startTime = LocalTime.of(startHh, startMm, 0);
+                        //System.out.println("startTime : " + startTime);
+
+                        // 마감 시간
+                        int closeHh = Integer.parseInt(hospitalList1.get(t).getDutyTime1c().substring(0, 2)); 
+                        int closeMm = Integer.parseInt(hospitalList1.get(t).getDutyTime1c().substring(2, 4));
+
+                        closeTime = LocalTime.of(closeHh, closeMm, 0);
+                        //System.out.println("closeTime : " + closeTime);
+                    }else if(dayOfWeek.equals("2")){
+                        // 시간 time 형식 변환
+                        // 시작 시간
+                        int startHh = Integer.parseInt(hospitalList1.get(t).getDutyTime2s().substring(0, 2)); 
+                        int startMm = Integer.parseInt(hospitalList1.get(t).getDutyTime2s().substring(2, 4));
+
+                        startTime = LocalTime.of(startHh, startMm, 0);
+                        //System.out.println("startTime : " + startTime);
+
+                        // 마감 시간
+                        int closeHh = Integer.parseInt(hospitalList1.get(t).getDutyTime2c().substring(0, 2)); 
+                        int closeMm = Integer.parseInt(hospitalList1.get(t).getDutyTime2c().substring(2, 4));
+
+                        closeTime = LocalTime.of(closeHh, closeMm, 0);
+                        //System.out.println("closeTime : " + closeTime);
+                    }else if(dayOfWeek.equals("3")){
+                        // 시간 time 형식 변환
+                        // 시작 시간
+                        int startHh = Integer.parseInt(hospitalList1.get(t).getDutyTime3s().substring(0, 2)); 
+                        int startMm = Integer.parseInt(hospitalList1.get(t).getDutyTime3s().substring(2, 4));
+
+                        startTime = LocalTime.of(startHh, startMm, 0);
+                        //System.out.println("startTime : " + startTime);
+
+                        // 마감 시간
+                        int closeHh = Integer.parseInt(hospitalList1.get(t).getDutyTime3c().substring(0, 2)); 
+                        int closeMm = Integer.parseInt(hospitalList1.get(t).getDutyTime3c().substring(2, 4));
+
+                        closeTime = LocalTime.of(closeHh, closeMm, 0);
+                        //System.out.println("closeTime : " + closeTime);                    
+
+                    }else if(dayOfWeek.equals("4")){
+                        // 시간 time 형식 변환
+                        // 시작 시간
+                        int startHh = Integer.parseInt(hospitalList1.get(t).getDutyTime4s().substring(0, 2)); 
+                        int startMm = Integer.parseInt(hospitalList1.get(t).getDutyTime4s().substring(2, 4));
+
+                        startTime = LocalTime.of(startHh, startMm, 0);
+                        //System.out.println("startTime : " + startTime);
+
+                        // 마감 시간
+                        int closeHh = Integer.parseInt(hospitalList1.get(t).getDutyTime4c().substring(0, 2)); 
+                        int closeMm = Integer.parseInt(hospitalList1.get(t).getDutyTime4c().substring(2, 4));
+
+                        closeTime = LocalTime.of(closeHh, closeMm, 0);
+                        //System.out.println("closeTime : " + closeTime); 
+                    }else if(dayOfWeek.equals("5")){
+                        // 시간 time 형식 변환
+                        // 시작 시간
+                        int startHh = Integer.parseInt(hospitalList1.get(t).getDutyTime5s().substring(0, 2)); 
+                        int startMm = Integer.parseInt(hospitalList1.get(t).getDutyTime5s().substring(2, 4));
+
+                        startTime = LocalTime.of(startHh, startMm, 0);
+                        //System.out.println("startTime : " + startTime);
+
+                        // 마감 시간
+                        int closeHh = Integer.parseInt(hospitalList1.get(t).getDutyTime5c().substring(0, 2)); 
+                        int closeMm = Integer.parseInt(hospitalList1.get(t).getDutyTime5c().substring(2, 4));
+
+                        closeTime = LocalTime.of(closeHh, closeMm, 0);
+                        //System.out.println("closeTime : " + closeTime); 
+                    }else if(dayOfWeek.equals("6")){
+                        // 시간 time 형식 변환
+                        // 시작 시간
+                        int startHh = Integer.parseInt(hospitalList1.get(t).getDutyTime6s().substring(0, 2)); 
+                        int startMm = Integer.parseInt(hospitalList1.get(t).getDutyTime6s().substring(2, 4));
+
+                        startTime = LocalTime.of(startHh, startMm, 0);
+                        //System.out.println("startTime : " + startTime);
+
+                        // 마감 시간
+                        int closeHh = Integer.parseInt(hospitalList1.get(t).getDutyTime6c().substring(0, 2)); 
+                        int closeMm = Integer.parseInt(hospitalList1.get(t).getDutyTime6c().substring(2, 4));
+
+                        closeTime = LocalTime.of(closeHh, closeMm, 0);
+                        //System.out.println("closeTime : " + closeTime); 
+                    }else if(dayOfWeek.equals("7")){
+                        // 시간 time 형식 변환
+                        // 시작 시간
+                        int startHh = Integer.parseInt(hospitalList1.get(t).getDutyTime7s().substring(0, 2)); 
+                        int startMm = Integer.parseInt(hospitalList1.get(t).getDutyTime7s().substring(2, 4));
+
+                        startTime = LocalTime.of(startHh, startMm, 0);
+                        //System.out.println("startTime : " + startTime);
+
+                        // 마감 시간
+                        int closeHh = Integer.parseInt(hospitalList1.get(t).getDutyTime7c().substring(0, 2)); 
+                        int closeMm = Integer.parseInt(hospitalList1.get(t).getDutyTime7c().substring(2, 4));
+
+                        closeTime = LocalTime.of(closeHh, closeMm, 0);
+                        //System.out.println("closeTime : " + closeTime); 
+                    }else if(dayOfWeek.equals("8")){
+                        // 시간 time 형식 변환
+                        // 시작 시간
+                        int startHh = Integer.parseInt(hospitalList1.get(t).getDutyTime8s().substring(0, 2)); 
+                        int startMm = Integer.parseInt(hospitalList1.get(t).getDutyTime8s().substring(2, 4));
+
+                        startTime = LocalTime.of(startHh, startMm, 0);
+                        //System.out.println("startTime : " + startTime);
+
+                        // 마감 시간
+                        int closeHh = Integer.parseInt(hospitalList1.get(t).getDutyTime8c().substring(0, 2)); 
+                        int closeMm = Integer.parseInt(hospitalList1.get(t).getDutyTime8c().substring(2, 4));
+
+                        closeTime = LocalTime.of(closeHh, closeMm, 0);
+                        //System.out.println("closeTime : " + closeTime); 
+                    }
+
+                    System.out.println("병원명 " + hospitalList1.get(t).getDutyName());
+                    System.out.println( "예약시간 : " + time + "시작 시간 : " + startTime + "마감시간 : " + closeTime + " 결과 : " + (time.isAfter(startTime) && time.isBefore(closeTime.minusMinutes(30))
+                                                                                                    || (time.equals(startTime) || time.equals(closeTime.minusMinutes(30)))));
+
+                    // 예약 시간이 시작시간 이후 이고, 예약시간이 마감시간 30분 전의 이전일 때 add
+                    if((time.isAfter(startTime) && time.isBefore(closeTime.minusMinutes(30))) 
+                        || (time.equals(startTime) || time.equals(closeTime.minusMinutes(30)))){
+                            hospitalList2.add(hospitalList1.get(t));
+                    }
+                }   
+                
+                // HospitalList2에 다 넣었으니까 HospitalList1 삭제하자.
+                hospitalList1.removeAll(hospitalList1);
+            
+                // 진료과목명 찾아오기
+                HospitalSubjectDomain hospitalSubjectDomain = hospitalSubjectInfoRepository.findBySubjectCode(selectedSubject);
+                String SubjectName = hospitalSubjectDomain.getSubjectName();
+
+                // 진료과목명 리스트에 추가하기
+                for(int j = 0; j < hospitalList2.size(); j++){
+                    hospitalList2.get(j).setSubjectName(SubjectName);
+                }
+
+                // 예약된 시간이 있는지 체크 해야 함.
+                for(int j = 0; j < hospitalList2.size(); j++){
+                    // groupdId 찾기
+                    String groupdId = hospitalList2.get(j).getHpid();
+
+                    // 해당 내역 있는 지 count
+                    int result = hospitalReserveRepository.countByGroupIdAndReserveDateAndReserveTime(groupdId, sqlDate, sqlTime);
+                    
+                    // count가 0 이면 예약 내역이 없다는 뜻
+                    if(result == 0){
+                        filteredList.add(hospitalList2.get(j));
+                    }            
+                }  
+
+            // hospitalList2 삭제
+            hospitalList2.removeAll(hospitalList2);
+
+
+        }catch(Exception ex){
+            System.out.println(ex.toString());
+
+        }
+        return filteredList;
+    }
 }
 
 
