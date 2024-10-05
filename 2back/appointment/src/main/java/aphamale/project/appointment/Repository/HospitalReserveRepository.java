@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import aphamale.project.appointment.Domain.HospitalReserveDomain;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveDetailDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
+import aphamale.project.appointment.Dto.Interface.GetSmsContentsDto;
 
 import java.sql.Time;
 
@@ -55,6 +56,23 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
                   " and t1.reserve_date = :reserveDate " + 
                   " and time_format(t1.reserve_time, '%H:%i') = time_format(:reserveTime, '%H:%i')", nativeQuery =true)
     int countByGroupIdAndReserveDateAndReserveTime(String groupId, Date reserveDate, Time reserveTime);
+
+    // 문자 전송 컬럼 조회 
+    @Query(value = "select t2.phone as user_phone, " +
+                    " t3.tell_no as admin_phone, " +
+                    " t1.reserve_no, " + 
+                    " t1.reserve_status as send_message_flag, " +
+                    " t2.user_name, " +
+                    " t3.hospital_name, " +
+                    " date_format(t1.reserve_date, '%Y-%m-%d') as reserve_date, " + 
+                    " date_format(t1.reserve_time,'%H:%i') as reserve_time " +
+                    " from reserve t1 " +
+                    " inner join user_info t2 " +
+                    " on t1.user_id = t2.user_id " +
+                    " inner join hospital_info t3 " +
+                    " on t1.group_id = t3.group_id " + 
+                    " where t1.reserve_no =  :reserveNo ", nativeQuery=true)
+    List<GetSmsContentsDto> getItemOfbSmsContent(String reserveNo);
 
 
 

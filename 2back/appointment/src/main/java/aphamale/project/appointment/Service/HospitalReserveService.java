@@ -9,15 +9,19 @@ import java.util.List;
 
 import aphamale.project.appointment.Domain.HospitalReserveDomain;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
+import aphamale.project.appointment.Dto.Interface.GetSmsContentsDto;
 import aphamale.project.appointment.Repository.HospitalReserveRepository;
 
 @Service
 public class HospitalReserveService {
 
     private final HospitalReserveRepository hospitalReserveRepository;
+    private final MessageApiService messageApiService;
 
-    public HospitalReserveService(HospitalReserveRepository hospitalReserveRepository){
+    public HospitalReserveService(HospitalReserveRepository hospitalReserveRepository,
+                                  MessageApiService messageApiService){
         this.hospitalReserveRepository = hospitalReserveRepository;
+        this.messageApiService = messageApiService;
     }
 
     // 예약 목록 조회 
@@ -51,7 +55,23 @@ public class HospitalReserveService {
             hospitalReserveRepository.save(hospitalReserveDomain);
 
             bool = true;
+            
+            // 예약 취소 안내 문자 전송
+            List<GetSmsContentsDto> smsContentDto = hospitalReserveRepository.getItemOfbSmsContent(reserveNo);
+            
+            if(smsContentDto.get(0) != null){
+                String userPhone = smsContentDto.get(0).getUserPhone();
+                String adminPhone = smsContentDto.get(0).getAdminPhone();
+                String sendReserveNo = smsContentDto.get(0).getReserveNo();
+                String sendMsgFlag = smsContentDto.get(0).getSendMessageFlag();
+                String userName = smsContentDto.get(0).getUserName();
+                String hospitalName = smsContentDto.get(0).getHospitalName();
+                String reserveDate = smsContentDto.get(0).getReserveDate();
+                String reserveTime = smsContentDto.get(0).getReserveTime();
 
+                // 수신자는 환자가 됨
+                messageApiService.sendMessage("ADMIN", userPhone, adminPhone, sendMsgFlag, sendReserveNo, userName, hospitalName, reserveDate, reserveTime);
+            }   
         }catch(Exception ex){
             System.out.println(ex.toString());
         } 

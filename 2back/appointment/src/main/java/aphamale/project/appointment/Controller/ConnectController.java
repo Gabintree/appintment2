@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -110,14 +109,14 @@ public class ConnectController {
         return finalHospitalList;
     }
 
-    // sms 문자 전송
-    @GetMapping("/api/send")
-    public String sendMessage() {
+    // // sms 문자 전송
+    // @GetMapping("/api/send")
+    // public String sendMessage() {
 
-        messageApiService.sendMessage();
+    //     messageApiService.sendMessage();
 
-        return "send api";
-    }
+    //     return "send api";
+    // }
 
     // // 테스트
     // @GetMapping("/api/hello")
