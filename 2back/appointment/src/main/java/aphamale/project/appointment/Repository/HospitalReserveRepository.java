@@ -18,6 +18,8 @@ import java.sql.Time;
 @Repository
 public interface HospitalReserveRepository extends JpaRepository<HospitalReserveDomain, String> {
 
+    HospitalReserveDomain findByReserveNo(String reserveNo);
+
     // 상세보기
     @Query(value = " select t1.remark, " + 
                    " t2.phone " + 
@@ -25,7 +27,7 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
                    " inner join user_info t2 " +
                    " on t1.user_id = t2.user_id " + 
                    " where t1.reserve_no = :reserveNo ",  nativeQuery =true)
-    List<GetHospitalReserveDetailDto> findByReserveNo(String reserveNo);
+    List<GetHospitalReserveDetailDto> getItemReserveNo(String reserveNo);
 
     // 예약 내역 조회
     @Query(value = "select t1.reserve_no, " +
@@ -53,4 +55,7 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
                   " and t1.reserve_date = :reserveDate " + 
                   " and time_format(t1.reserve_time, '%H:%i') = time_format(:reserveTime, '%H:%i')", nativeQuery =true)
     int countByGroupIdAndReserveDateAndReserveTime(String groupId, Date reserveDate, Time reserveTime);
+
+
+
 }

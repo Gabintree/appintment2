@@ -171,7 +171,7 @@ const ReservationManagement = ({sendFromChild}) => {
                                     <td>{reservation.userName}</td>
                                     <td>{reservation.birthDate}</td>
                                     <td>{reservation.subjectName}</td>
-                                    <td>{reservation.reseveStatus = "I" ? "예약완료" : reservation.reseveStatus = "U" ? "변경완료" : "취소완료"}</td>
+                                    <td>{reservation.reserveStatus === "I" ? "예약완료" : reservation.reserveStatus === "U" ? "변경완료" : "취소완료"}</td>
                                     <td>
                                         <button className='detail-button' 
                                                 style={{ cursor: 'pointer' }} 

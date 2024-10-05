@@ -128,36 +128,56 @@ const StatusAndDetails = ({reserveNo}) => {
         }  
     };
 
-  // 휴대폰 형식(하이픈 추가)
-  function phoneOnChange(phone) {
-    if (phone.length === 10) {
-      return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
-    } else if (phone.length === 11) {
-      return phone.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
-    } else {
-      return phone;
-    }
-  }    
-    const handleToggle = () => {
-        setIsVisible(!isVisible); // 가시성 토글
-     };
+    // 휴대폰 형식(하이픈 추가)
+    function phoneOnChange(phone) {
+        if (phone.length === 10) {
+            return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+        } else if (phone.length === 11) {
+            return phone.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+        } else {
+            return phone;
+        }
+    }    
+
+    // 예약 취소 버튼 이벤트 
+    async function handleCancel(){
+        if (window.confirm("예약번호 : " + recieveReserveNo + "항목을 취소하시겠습니까?")) {
+            console.log("예약 취소 버튼 이벤트");
+            try{
+                const data = {
+                    reserveNo: recieveReserveNo,
+                };
+        
+                await requestApi.post("/api/admin/reserveAdminCancel", JSON.stringify(data))
+                .then(function (response){
+                    if(response.status == 200){
+                        console.log("예약 취소 완료 : ", response.data); 
+                        alert('예약이 정상적으로 취소되었습니다.');
+                    }            
+                })
+                .catch(function(error){
+                    console.log("error : ", error);
+                })             
+            } catch (err) {
+                setError("작업 중 오류가 발생했습니다.");
+            }  
+        }
+    };
     
 
     const handleChange = () => {
         alert('예약 변경 팝업');
     };
 
-    const handleCancel = () => {
-        if (window.confirm('취소하시겠습니까?')) {
-            alert('예약이 취소되었습니다.');
-        }
-    };
+
 
     return (
         <div className="status-and-details">
             <h2 className='section-bar'> <strong>해당 예약 상세</strong></h2>
             {isVisible && ( // isVisible이 true일 때만 내용 표시
                 <div className='section-content'>
+                    <h4 style={{ display: 'inline-block', marginRight: '10px' }}>예약번호:</h4>
+                    <p style={{ display: 'inline-block', marginRight: '10px' }}><strong>{recieveReserveNo}</strong></p>
                     <h4>증상:</h4>
                     <p><strong>{symptoms}</strong></p>
                     <h4>전화번호:</h4>

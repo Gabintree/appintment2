@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -188,12 +189,19 @@ public class AdminController {
     @PostMapping("/api/admin/reserveDetail")
     public Map<String, String> getReserveDetail(@RequestBody HospitalReserveDto hospitalReserveDto) {
 
- :         String reserveNo = hospitalReserveDto.getReserveNo();
+        String reserveNo = hospitalReserveDto.getReserveNo();
 
-        List<GetHospitalReserveDetailDto> ReserveDetailDto  = hospitalReserveRepository.findByReserveNo(reserveNo);
+        List<GetHospitalReserveDetailDto> reserveDetailDto  = hospitalReserveRepository.getItemReserveNo(reserveNo);
+
+        String symptoms = "";
+        String phoneNumber = "";
+
+
+        if(reserveDetailDto.get(0) != null){
           
-        String symptoms = ReserveDetailDto.get(0).getRemark(); // 증상
-        String phoneNumber = ReserveDetailDto.get(0).getPhone(); // 사용자 연락처
+            symptoms = reserveDetailDto.get(0).getRemark(); // 증상
+            phoneNumber = reserveDetailDto.get(0).getPhone(); // 사용자 연락처
+        }        
 
         Map<String, String> reserveDetail = new HashMap<>();
         reserveDetail.put("symptoms", symptoms);
@@ -202,6 +210,16 @@ public class AdminController {
         return reserveDetail;
     }
 
+    // 관리자 예약 취소 버튼 
+    @PostMapping("/api/admin/reserveAdminCancel")
+    public boolean deleteReserveAdminCancel(@RequestBody HospitalReserveDto hospitalReserveDto) {
+
+        String reserveNo = hospitalReserveDto.getReserveNo();
+
+        Boolean deleteResult = hospitalReserveService.deleteReserveAdminCancel(reserveNo);
+
+        return deleteResult;
+    }
 
 
 }
