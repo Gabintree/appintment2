@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import './StatusAndDetails.css';
+import ReserveChangePopup from "./ReserveChangePopup";
 
 // axios 인스턴스
 export const requestApi = axios.create({
@@ -31,8 +32,12 @@ const StatusAndDetails = ({reserveNo}) => {
     const [phoneNumber, setPhoneNumber] = useState(""); // 연락처
 
     const [recieveReserveNo, setRecieveReserveNo] = useState(reserveNo); // 부모로부터 받은 예약번호
+    const [isPopupOpen, setIsPopupOpen] = useState(false); // 변경하기 팝업 상태
     const navigate = useNavigate();
     const [error, setError] = useState("");
+    
+    const openPopup = () => setIsPopupOpen(true);  // 변경하기 팝업 열기
+    const closePopup = () => setIsPopupOpen(false); // 변경하기 팝업 닫기
     
     // 부모로부터 전달받은 reserveNo가 변경될 때마다 업데이트
     useEffect(() => {
@@ -162,14 +167,7 @@ const StatusAndDetails = ({reserveNo}) => {
                 setError("작업 중 오류가 발생했습니다.");
             }  
         }
-    };
-    
-
-    const handleChange = () => {
-        alert('예약 변경 팝업');
-    };
-
-
+    }; 
 
     return (
         <div className="status-and-details">
@@ -183,7 +181,10 @@ const StatusAndDetails = ({reserveNo}) => {
                     <h4>전화번호:</h4>
                     <p><strong>{phoneNumber}</strong></p>
                     <div className="button-container">
-                        <button className="action-button1" onClick={handleChange}>변경하기</button>
+                        <button className="action-button1" onClick={openPopup}>변경하기</button>
+                        <ReserveChangePopup isOpen={isPopupOpen} 
+                                            onClose={closePopup}
+                                            reserveNo={recieveReserveNo} />
                         <button className="action-button2" onClick={handleCancel}>취소하기</button>
                     </div>
                 </div>

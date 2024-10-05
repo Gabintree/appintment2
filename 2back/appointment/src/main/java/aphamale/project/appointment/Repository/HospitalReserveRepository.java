@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import aphamale.project.appointment.Domain.HospitalReserveDomain;
+import aphamale.project.appointment.Dto.Interface.GetCurrentReserveDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveDetailDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Dto.Interface.GetSmsContentsDto;
@@ -74,6 +75,21 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
                     " where t1.reserve_no =  :reserveNo ", nativeQuery=true)
     List<GetSmsContentsDto> getItemOfbSmsContent(String reserveNo);
 
+
+
+    // 기존 예약정보 조회 
+    @Query(value = "select t2.subject_name, " +
+                   " t3.hospital_name, " +
+                   " date_format(t1.reserve_date, '%Y-%m-%d') as reserve_date, " + 
+                   " date_format(t1.reserve_time,'%H:%i') as reserve_time, " +
+                   " t1.group_id " +     
+                   " from reserve t1 " +
+                   " inner join subject_info t2 " +
+                   " on t1.subject_code = t2.subject_code " +
+                   " inner join hospital_info t3 " +
+                   " on t1.group_id = t3.group_id " +
+                   " where t1.reserve_no = :reserveNo ", nativeQuery = true)
+    List<GetCurrentReserveDto> getItemsOfCurrentReserveNo(String reserveNo);
 
 
 }

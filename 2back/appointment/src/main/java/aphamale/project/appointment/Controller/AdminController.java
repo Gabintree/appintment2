@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +19,7 @@ import aphamale.project.appointment.Dto.HospitalAlarmDto;
 import aphamale.project.appointment.Dto.HospitalInfoDto;
 import aphamale.project.appointment.Dto.HospitalReserveDto;
 import aphamale.project.appointment.Dto.HospitalStatusDto;
+import aphamale.project.appointment.Dto.Interface.GetCurrentReserveDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveDetailDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Repository.HospitalAlarmRepository;
@@ -221,7 +221,19 @@ public class AdminController {
         return deleteResult;
     }
 
+    // 팝업 기존 예약정보 조회
+    @PostMapping("/api/admin/currentReserve")
+    public List<GetCurrentReserveDto> getCurrentReserve(@RequestBody HospitalReserveDto hospitalReserveDto) {
 
+        String reserveNo = hospitalReserveDto.getReserveNo();        
+        List<GetCurrentReserveDto> currentReserveList = hospitalReserveService.currentReserveData(reserveNo);
+
+        if(currentReserveList == null){
+            return null;
+        }
+
+        return currentReserveList;
+    }    
 }
 
 

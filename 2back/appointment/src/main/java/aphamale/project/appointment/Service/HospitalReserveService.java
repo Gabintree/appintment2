@@ -8,20 +8,26 @@ import java.util.Date;
 import java.util.List;
 
 import aphamale.project.appointment.Domain.HospitalReserveDomain;
+import aphamale.project.appointment.Domain.HospitalSubjectDomain;
+import aphamale.project.appointment.Dto.Interface.GetCurrentReserveDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Dto.Interface.GetSmsContentsDto;
 import aphamale.project.appointment.Repository.HospitalReserveRepository;
+import aphamale.project.appointment.Repository.HospitalSubjectInfoRepository;
 
 @Service
 public class HospitalReserveService {
 
     private final HospitalReserveRepository hospitalReserveRepository;
+    private final HospitalSubjectInfoRepository hospitalSubjectInfoRepository;
     private final MessageApiService messageApiService;
 
     public HospitalReserveService(HospitalReserveRepository hospitalReserveRepository,
+                                  HospitalSubjectInfoRepository hospitalSubjectInfoRepository,
                                   MessageApiService messageApiService){
         this.hospitalReserveRepository = hospitalReserveRepository;
         this.messageApiService = messageApiService;
+        this.hospitalSubjectInfoRepository = hospitalSubjectInfoRepository;
     }
 
     // 예약 목록 조회 
@@ -77,6 +83,18 @@ public class HospitalReserveService {
         } 
 
         return bool;
+    }
+
+    // 팝업 기존 예약정보 조회
+    public List<GetCurrentReserveDto> currentReserveData(String reserveNo){
+
+        // 데이터 담을 list 생성
+        List<GetCurrentReserveDto> currentReserveList = new ArrayList<>();
+        
+        currentReserveList = hospitalReserveRepository.getItemsOfCurrentReserveNo(reserveNo);
+        
+        return currentReserveList;
+
     }
 }
 

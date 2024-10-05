@@ -15,7 +15,6 @@ public interface GetHospitalReserveListDto {
     String getReserveStatus(); // 예약 상태 (I 예약완료, U 변경완료, D 취소완료) 
     String getUpdateUser(); // 변경자 
     
-    
     // public GetHospitalReserveListDto(String reserveNo, Timestamp reserveDate,  Timestamp reserveTime,
     //                                  String userName, String birthDate, String subject, 
     //                                  String reserveStatus, String updateUser){
