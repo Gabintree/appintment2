@@ -31,6 +31,7 @@ const ReserveChangePopup = ({ isOpen, onClose, reserveNo }) => {
 
   const [currentReserve, setCurrentReserve] = useState([]); // 기존 예약 정보
   const [hospitalWorkInfo, setHospitalWorkInfo] = useState([]); // 병원 운영 정보 
+  const [timeList, setTimeList] = useState([]); // 예약 시간 리스트 
   const [selectedTime, setSelectedTime] = useState(""); // 선택된 예약 시간
   const [selectedDate, setSelectedDate] = useState(""); // 선택된 예약 날짜
      
@@ -144,8 +145,120 @@ async function hospitalBaseWorkInfo() {
     }  
 };
 
+// 예약 변경일자 클릭 이벤트
+function onChangeWorkTime(value){
+    setSelectedDate(value);
+    // 해당 일자의 dayOfWeek를 찾자.
+    const dayOfWeek = new Date(value).getDay();
+    // react는 0 일요일 ~ 6 토요일, java는 1 월요일 ~ 7 일요일
+    // 월요일
+    if(dayOfWeek === 1){
+        if(hospitalWorkInfo[0].dutyTime1s){
+            const openTime = stringToTime(hospitalWorkInfo[0].dutyTime1s);
+            const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime1c);
+            // 배열 생성
+            const array = TimeArrayList(openTime, closeTime);
+            setTimeList(array);
+        }
+    }
+    // 화요일
+    else if(dayOfWeek === 2){
+        if(hospitalWorkInfo[0].dutyTime2s){
+            const openTime = stringToTime(hospitalWorkInfo[0].dutyTime2s);
+            const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime2c);
+            // 배열 생성
+            const array = TimeArrayList(openTime, closeTime);
+            setTimeList(array);
+        }
+    }
+    // 수요일
+    else if(dayOfWeek === 3){
+        if(hospitalWorkInfo[0].dutyTime3s){
+            const openTime = stringToTime(hospitalWorkInfo[0].dutyTime3s);
+            const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime3c);
+            // 배열 생성
+            const array = TimeArrayList(openTime, closeTime);
+            setTimeList(array);
+        }
+    }    
+    // 목요일
+    else if(dayOfWeek === 4){
+        if(hospitalWorkInfo[0].dutyTime4s){
+            const openTime = stringToTime(hospitalWorkInfo[0].dutyTime4s);
+            const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime4c);
+            // 배열 생성
+            const array = TimeArrayList(openTime, closeTime);
+            setTimeList(array);
+        }
+    }  
+    // 금요일
+    else if(dayOfWeek === 5){
+        if(hospitalWorkInfo[0].dutyTime5s){
+            const openTime = stringToTime(hospitalWorkInfo[0].dutyTime5s);
+            const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime5c);
+            // 배열 생성
+            const array = TimeArrayList(openTime, closeTime);
+            setTimeList(array);
+        }
+     } 
+    // 토요일
+    else if(dayOfWeek === 6){
+        if(hospitalWorkInfo[0].dutyTime6s){
+            const openTime = stringToTime(hospitalWorkInfo[0].dutyTime6s);
+            const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime6c);
+            // 배열 생성
+            const array = TimeArrayList(openTime, closeTime);
+            setTimeList(array);
+        } 
+    } 
+    // 일요일
+    else if(dayOfWeek === 0){
+        if(hospitalWorkInfo[0].dutyTime7s){
+            const openTime = stringToTime(hospitalWorkInfo[0].dutyTime7s);
+            const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime7c);
+            // 배열 생성
+            const array = TimeArrayList(openTime, closeTime);
+            setTimeList(array);
+        }
+    }  
+    // 공휴일
+    else{
+        if(hospitalWorkInfo[0].dutyTime8s){
+            const openTime = stringToTime(hospitalWorkInfo[0].dutyTime8s);
+            const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime8c);
+            // 배열 생성
+            const array = TimeArrayList(openTime, closeTime);
+            setTimeList(array);
+        }
+    }          
+}
 
+// 문자열을 시간으로 변환(HH:mm)
+function stringToTime(stringTime){
+    const date = new Date();
+    date.setHours(parseInt(stringTime.substring(0, 2), 10));
+    date.setMinutes(parseInt(stringTime.substring(2, 4), 10));
+    date.setSeconds(0);
+    return date;
+}
 
+// 배열 생성
+function TimeArrayList(openTime, closeTime) {
+  
+    // 30분 간격으로 시간을 배열에 추가
+    const timeArray = [];
+    const openTimeDate = new Date(openTime); // date로 변환, 위에서 date로 변환을 했는데 왜 또 ?ㅠㅠ
+    const closeTimeDate = new Date(closeTime);
+    closeTimeDate.setMinutes(closeTimeDate.getMinutes()-30); // 마감시간 30분 전까지만 예약 가능하도록 처리
+
+    while (openTimeDate <= closeTimeDate) {
+        const formattedTime = openTimeDate.toTimeString().substring(0, 5); // 여기서는 또 string으로 해줘야 원하는대로 배열이 생김.
+        timeArray.push(formattedTime);
+        openTimeDate.setMinutes(openTimeDate.getMinutes() + 30); // 30분 추가
+    }  
+    console.log("timeArray", timeArray);
+    return timeArray;
+  }
 
     
   // 이미 예약된 시간 배열
@@ -189,13 +302,13 @@ async function hospitalBaseWorkInfo() {
                 {/* <span className="status-circle" style={{ backgroundColor: '#87DBD8' }}></span> 대기 상태 색깔 원 */}
                 <p className="hospital-title"><strong>{currentReserve[0].hospitalName}</strong></p>
               </div>
-              <div className="date-input-container" onClick={() => document.getElementById('date-input').focus()}>
+              <div className="date-input-container">
                 <input
+                  className="date-input"
                   type="date"
                   id="date-input"
                   value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="date-input"
+                  onChange={(e) => onChangeWorkTime(e.target.value)}                  
                 />
               </div>
               <h4 style={{ display: 'inline', marginLeft: '10px' }}>예약 시간: <strong>{selectedTime || '11:00'}</strong></h4> {/* 선택된 시간 표시 */}
