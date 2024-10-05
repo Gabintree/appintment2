@@ -29,9 +29,10 @@ const ReserveChangePopup = ({ isOpen, onClose, reserveNo }) => {
   const navigate = useNavigate();  
   const [error, setError] = useState("");
 
-  const [currentReserve, setCurrentReserve] = useState([]);
-  const [selectedTime, setSelectedTime] = useState(null); // 선택된 시간 상태
-  const [selectedDate, setSelectedDate] = useState(''); // 선택된 날짜 상태
+  const [currentReserve, setCurrentReserve] = useState([]); // 기존 예약 정보
+  const [hospitalWorkInfo, setHospitalWorkInfo] = useState([]); // 병원 운영 정보 
+  const [selectedTime, setSelectedTime] = useState(""); // 선택된 예약 시간
+  const [selectedDate, setSelectedDate] = useState(""); // 선택된 예약 날짜
      
 // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
 requestApi.interceptors.request.use((config) => {
@@ -93,32 +94,55 @@ requestApi.interceptors.response.use(
 
 useEffect(() => {
 if (reserveNo) {
-    //setSelectedDate(reservation.date || ''); // 예약 날짜 업데이트
-    currentReserveData();
+    currentReserveData(); // 기존 예약정보
+    hospitalBaseWorkInfo(); // 병원 기본 정보
 }}, [reserveNo]);
 
-    // 팝업 기존 예약정보 조회
-    async function currentReserveData() {
-        console.log("팝업 예약정보 조회");
-        try{
-            const data = {
-                reserveNo: reserveNo,
-            };
+// 팝업 기존 예약정보 조회
+async function currentReserveData() {
+    console.log("팝업 예약정보 조회");
+    try{
+        const data = {
+            reserveNo: reserveNo,
+        };
 
-            await requestApi.post("/api/admin/currentReserve", JSON.stringify(data))
-            .then(function (response){
-                if(response.status == 200){
-                    console.log("팝업 예약정보 조회완료 : ", response.data); 
-                    setCurrentReserve(response.data);
-                }            
-            })
-            .catch(function(error){
-                console.log("error : ", error);
-                })             
-        } catch (err) {
-            setError("작업 중 오류가 발생했습니다.");
-        }  
-    };
+        await requestApi.post("/api/admin/currentReserve", JSON.stringify(data))
+        .then(function (response){
+            if(response.status == 200){
+                console.log("팝업 예약정보 조회완료 : ", response.data); 
+                setCurrentReserve(response.data);
+            }            
+        })
+        .catch(function(error){
+            console.log("error : ", error);
+            })             
+    } catch (err) {
+        setError("작업 중 오류가 발생했습니다.");
+    }  
+};
+
+// 병원 운영 정보
+async function hospitalBaseWorkInfo() {
+    console.log("병원 운영 정보 조회");
+    try{
+        const data = {
+            groupId: currentReserve[0].groupId,
+        };
+
+        await requestApi.post("/api/admin/hospitalWorkInfo", JSON.stringify(data))
+        .then(function (response){
+            if(response.status == 200){
+                console.log("병원 운영 정보 조회완료 : ", response.data); 
+                setHospitalWorkInfo(response.data);
+            }            
+        })
+        .catch(function(error){
+            console.log("error : ", error);
+            })             
+    } catch (err) {
+        setError("작업 중 오류가 발생했습니다.");
+    }  
+};
 
 
 

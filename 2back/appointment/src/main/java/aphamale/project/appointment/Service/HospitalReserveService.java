@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import aphamale.project.appointment.Domain.HospitalReserveDomain;
-import aphamale.project.appointment.Domain.HospitalSubjectDomain;
 import aphamale.project.appointment.Dto.Interface.GetCurrentReserveDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Dto.Interface.GetSmsContentsDto;

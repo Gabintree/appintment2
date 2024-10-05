@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import aphamale.project.appointment.Domain.HospitalAlarmDomain;
 import aphamale.project.appointment.Domain.HospitalInfoDomain;
-import aphamale.project.appointment.Domain.HospitalReserveDomain;
 import aphamale.project.appointment.Domain.HospitalStatusDomain;
 import aphamale.project.appointment.Dto.HospitalAlarmDto;
+import aphamale.project.appointment.Dto.HospitalApiDto;
 import aphamale.project.appointment.Dto.HospitalInfoDto;
 import aphamale.project.appointment.Dto.HospitalReserveDto;
 import aphamale.project.appointment.Dto.HospitalStatusDto;
@@ -27,6 +27,7 @@ import aphamale.project.appointment.Repository.HospitalInfoRepository;
 import aphamale.project.appointment.Repository.HospitalReserveRepository;
 import aphamale.project.appointment.Repository.HospitalStatusRepository;
 import aphamale.project.appointment.Service.HospitalAlarmService;
+import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.HospitalReserveService;
 import aphamale.project.appointment.Service.HospitalStatusServeice;
 
@@ -45,6 +46,7 @@ public class AdminController {
     private final HospitalReserveService hospitalReserveService;
     private final HospitalStatusServeice hospitalStatusServeice;
     private final HospitalAlarmService hospitalAlarmService;
+    private final HospitalApiService hospitalApiService;
 
     public AdminController(HospitalInfoRepository hospitalInfoRepository, 
                            HospitalReserveService hospitalReserveService, 
@@ -52,7 +54,8 @@ public class AdminController {
                            HospitalStatusRepository hospitalStatusRepository,
                            HospitalAlarmService hospitalAlarmService,
                            HospitalAlarmRepository hospitalAlarmRepository,
-                           HospitalReserveRepository hospitalReserveRepository){
+                           HospitalReserveRepository hospitalReserveRepository, 
+                           HospitalApiService hospitalApiService){
         this.hospitalInfoRepository = hospitalInfoRepository;
         this.hospitalReserveService = hospitalReserveService;
         this.hospitalStatusServeice = hospitalStatusServeice;
@@ -60,6 +63,7 @@ public class AdminController {
         this.hospitalAlarmService = hospitalAlarmService;
         this.hospitalAlarmRepository = hospitalAlarmRepository;
         this.hospitalReserveRepository = hospitalReserveRepository;
+        this.hospitalApiService = hospitalApiService;
     }
 
     // 병원명 찾기
@@ -234,6 +238,21 @@ public class AdminController {
 
         return currentReserveList;
     }    
+
+    // 팝업 병원 운영 정보 조회
+    @PostMapping("/api/admin/hospitalWorkInfo")
+    public List<HospitalApiDto> getHospitalWorkInfo(@RequestBody HospitalReserveDto hospitalReserveDto) {
+
+        // 병원명으로 데이터 가져오기..... 
+        String groupId = hospitalReserveDto.getGroupId();
+
+        // 데이터 담을 list 생성
+        List<HospitalApiDto> hospitalInfo = new ArrayList<>();
+        hospitalInfo = hospitalApiService.SelectGroupIdApi(groupId);
+
+        return hospitalInfo;
+    }    
+
 }
 
 
