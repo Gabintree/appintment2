@@ -347,7 +347,7 @@ async function changeTimeOnSave() {
         const data = {
             reserveNo: reserveNo,
             reserveDate: selectedDate,
-            reserveTime: selectedTime,
+            reserveTime: new Date(`${selectedDate}T${selectedTime}:00`).toISOString(),
         };
 
         await requestApi.post("/api/admin/changeDateAndTime", JSON.stringify(data))

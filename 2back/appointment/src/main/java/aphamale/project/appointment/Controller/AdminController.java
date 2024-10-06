@@ -278,11 +278,11 @@ public class AdminController {
 
         boolean updateResult = false;
 
-        String groupId = hospitalReserveDto.getGroupId();
+        String reserveNo = hospitalReserveDto.getReserveNo();
         Timestamp reserveDate = hospitalReserveDto.getReserveDate();
         Timestamp reserveTime = hospitalReserveDto.getReserveTime();
 
-        updateResult = hospitalReserveService.updateDateAndTime(groupId, reserveDate, reserveTime);
+        updateResult = hospitalReserveService.updateDateAndTime(reserveNo, reserveDate, reserveTime);
 
         return updateResult;
     }   

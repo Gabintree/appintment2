@@ -120,6 +120,8 @@ public class HospitalReserveService {
             hospitalReserveDomain.setReserveStatus("U"); // 변경
             hospitalReserveDomain.setUpdateDate(timestampToday);
             hospitalReserveDomain.setUpdateUser(hospitalReserveDomain.getHospitalName()); // 변경자는 관리자가 변경했다.
+
+            hospitalReserveRepository.save(hospitalReserveDomain);       
     
             updateResult = true;
 
