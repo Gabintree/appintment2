@@ -95,7 +95,7 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
     @Query(value =  "select date_format(t1.reserve_time,'%H:%i') as reserve_time " +
                     " from reserve t1 " +
                     " where group_id = :groupId " +
-                    " and reserve_date = :reserveDate ", nativeQuery = true)
+                    " and date_format(t1.reserve_date, '%Y-%m-%d') = :reserveDate ", nativeQuery = true)
     List<String> getItemsOfBookedReserveDate(String groupId, String reserveDate);
 
 
