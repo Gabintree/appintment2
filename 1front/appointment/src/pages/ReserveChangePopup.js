@@ -31,9 +31,11 @@ const ReserveChangePopup = ({ isOpen, onClose, reserveNo }) => {
 
   const [currentReserve, setCurrentReserve] = useState([]); // 기존 예약 정보
   const [hospitalWorkInfo, setHospitalWorkInfo] = useState([]); // 병원 운영 정보 
-  const [timeList, setTimeList] = useState([]); // 예약 시간 리스트 
+  const [timeAmList, setTimeAmList] = useState([]); // 예약 시간 리스트(오전) 
+  const [timePmList, setTimePmList] = useState([]); // 예약 시간 리스트(오후) 
+  const today = new Date().toISOString().split('T')[0]; // 오늘 날짜
   const [selectedTime, setSelectedTime] = useState(""); // 선택된 예약 시간
-  const [selectedDate, setSelectedDate] = useState(""); // 선택된 예약 날짜
+  const [selectedDate, setSelectedDate] = useState(today); // 선택된 예약 날짜
      
 // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
 requestApi.interceptors.request.use((config) => {
@@ -97,6 +99,7 @@ useEffect(() => {
 if (reserveNo) {
     currentReserveData(); // 기존 예약정보
     hospitalBaseWorkInfo(); // 병원 기본 정보
+
 }}, [reserveNo]);
 
 // 팝업 기존 예약정보 조회
@@ -157,8 +160,10 @@ function onChangeWorkTime(value){
             const openTime = stringToTime(hospitalWorkInfo[0].dutyTime1s);
             const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime1c);
             // 배열 생성
-            const array = TimeArrayList(openTime, closeTime);
-            setTimeList(array);
+            TimeArrayList(openTime, closeTime);
+        }else{
+            setTimeAmList([]); // 값이 없으면 배열 초기화
+            setTimePmList([]);// 값이 없으면 배열 초기화
         }
     }
     // 화요일
@@ -167,8 +172,10 @@ function onChangeWorkTime(value){
             const openTime = stringToTime(hospitalWorkInfo[0].dutyTime2s);
             const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime2c);
             // 배열 생성
-            const array = TimeArrayList(openTime, closeTime);
-            setTimeList(array);
+           TimeArrayList(openTime, closeTime);
+        }else{
+            setTimeAmList([]); // 값이 없으면 배열 초기화
+            setTimePmList([]);// 값이 없으면 배열 초기화
         }
     }
     // 수요일
@@ -177,8 +184,10 @@ function onChangeWorkTime(value){
             const openTime = stringToTime(hospitalWorkInfo[0].dutyTime3s);
             const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime3c);
             // 배열 생성
-            const array = TimeArrayList(openTime, closeTime);
-            setTimeList(array);
+            TimeArrayList(openTime, closeTime);
+        }else{
+            setTimeAmList([]); // 값이 없으면 배열 초기화
+            setTimePmList([]);// 값이 없으면 배열 초기화
         }
     }    
     // 목요일
@@ -187,8 +196,10 @@ function onChangeWorkTime(value){
             const openTime = stringToTime(hospitalWorkInfo[0].dutyTime4s);
             const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime4c);
             // 배열 생성
-            const array = TimeArrayList(openTime, closeTime);
-            setTimeList(array);
+            TimeArrayList(openTime, closeTime);
+        }else{
+            setTimeAmList([]); // 값이 없으면 배열 초기화
+            setTimePmList([]);// 값이 없으면 배열 초기화
         }
     }  
     // 금요일
@@ -197,8 +208,10 @@ function onChangeWorkTime(value){
             const openTime = stringToTime(hospitalWorkInfo[0].dutyTime5s);
             const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime5c);
             // 배열 생성
-            const array = TimeArrayList(openTime, closeTime);
-            setTimeList(array);
+            TimeArrayList(openTime, closeTime);
+        }else{
+            setTimeAmList([]); // 값이 없으면 배열 초기화
+            setTimePmList([]);// 값이 없으면 배열 초기화
         }
      } 
     // 토요일
@@ -207,8 +220,10 @@ function onChangeWorkTime(value){
             const openTime = stringToTime(hospitalWorkInfo[0].dutyTime6s);
             const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime6c);
             // 배열 생성
-            const array = TimeArrayList(openTime, closeTime);
-            setTimeList(array);
+            TimeArrayList(openTime, closeTime);
+        }else{
+            setTimeAmList([]); // 값이 없으면 배열 초기화
+            setTimePmList([]);// 값이 없으면 배열 초기화
         } 
     } 
     // 일요일
@@ -217,8 +232,10 @@ function onChangeWorkTime(value){
             const openTime = stringToTime(hospitalWorkInfo[0].dutyTime7s);
             const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime7c);
             // 배열 생성
-            const array = TimeArrayList(openTime, closeTime);
-            setTimeList(array);
+            TimeArrayList(openTime, closeTime);
+        }else{
+            setTimeAmList([]); // 값이 없으면 배열 초기화
+            setTimePmList([]);// 값이 없으면 배열 초기화
         }
     }  
     // 공휴일
@@ -227,8 +244,10 @@ function onChangeWorkTime(value){
             const openTime = stringToTime(hospitalWorkInfo[0].dutyTime8s);
             const closeTime = stringToTime(hospitalWorkInfo[0].dutyTime8c);
             // 배열 생성
-            const array = TimeArrayList(openTime, closeTime);
-            setTimeList(array);
+            TimeArrayList(openTime, closeTime);
+        }else{
+            setTimeAmList([]); // 값이 없으면 배열 초기화
+            setTimePmList([]);// 값이 없으면 배열 초기화
         }
     }          
 }
@@ -246,18 +265,28 @@ function stringToTime(stringTime){
 function TimeArrayList(openTime, closeTime) {
   
     // 30분 간격으로 시간을 배열에 추가
-    const timeArray = [];
+    const timeAmArray = [];
+    const timePmArray = [];
+
     const openTimeDate = new Date(openTime); // date로 변환, 위에서 date로 변환을 했는데 왜 또 ?ㅠㅠ
     const closeTimeDate = new Date(closeTime);
     closeTimeDate.setMinutes(closeTimeDate.getMinutes()-30); // 마감시간 30분 전까지만 예약 가능하도록 처리
 
     while (openTimeDate <= closeTimeDate) {
+
+        const hours = openTimeDate.getHours();
         const formattedTime = openTimeDate.toTimeString().substring(0, 5); // 여기서는 또 string으로 해줘야 원하는대로 배열이 생김.
-        timeArray.push(formattedTime);
+        if(hours < 12){
+            timeAmArray.push(formattedTime);
+        }else{
+            timePmArray.push(formattedTime);
+        }
         openTimeDate.setMinutes(openTimeDate.getMinutes() + 30); // 30분 추가
     }  
-    console.log("timeArray", timeArray);
-    return timeArray;
+    console.log("timeAmArray : ", timeAmArray);
+    console.log("timePmArray : ", timePmArray);
+    setTimeAmList(timeAmArray);
+    setTimePmList(timePmArray);
   }
 
     
@@ -315,7 +344,8 @@ function TimeArrayList(openTime, closeTime) {
               <div className="time-selection">
                 <h4>오전</h4>
                 <div className="time-buttons">
-                  {['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00'].map((time) => (
+                {timeAmList.length > 0 ? (
+                  timeAmList.map((time) => (
                     <button
                       key={time}
                       onClick={() => handleTimeClick(time)}
@@ -324,11 +354,13 @@ function TimeArrayList(openTime, closeTime) {
                     >
                       {time}
                     </button>
-                  ))}
+                  ))
+                ) : ("예약 가능한 시간이 없습니다.")}
                 </div>
                 <h4>오후</h4>
                 <div className="time-buttons">
-                  {['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'].map((time) => (
+                {timePmList.length > 0 ? (
+                  timePmList.map((time) => (
                     <button
                       key={time}
                       onClick={() => handleTimeClick(time)}
@@ -337,7 +369,8 @@ function TimeArrayList(openTime, closeTime) {
                     >
                       {time}
                     </button>
-                  ))}
+                  ))
+                ) : ("예약 가능한 시간이 없습니다.")}
                 </div>
               </div>
             </div>
