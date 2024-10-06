@@ -18,15 +18,12 @@ import aphamale.project.appointment.Repository.HospitalSubjectInfoRepository;
 public class HospitalReserveService {
 
     private final HospitalReserveRepository hospitalReserveRepository;
-    private final HospitalSubjectInfoRepository hospitalSubjectInfoRepository;
     private final MessageApiService messageApiService;
 
     public HospitalReserveService(HospitalReserveRepository hospitalReserveRepository,
-                                  HospitalSubjectInfoRepository hospitalSubjectInfoRepository,
                                   MessageApiService messageApiService){
         this.hospitalReserveRepository = hospitalReserveRepository;
         this.messageApiService = messageApiService;
-        this.hospitalSubjectInfoRepository = hospitalSubjectInfoRepository;
     }
 
     // 예약 목록 조회 
@@ -95,6 +92,64 @@ public class HospitalReserveService {
         return currentReserveList;
 
     }
+
+    // 팝업 해당 일자 예약된 시간 조회
+    public List<String> selectBookedList(String groupId, String reserveDate){
+
+        // 데이터 담을 list 생성
+        List<String> bookedList = new ArrayList<>();
+        
+        bookedList = hospitalReserveRepository.getItemsOfBookedReserveDate(groupId, reserveDate);
+
+        return bookedList;
+    }
+
+    // 팝업 예약 일자 및 시간 변경
+    public boolean updateDateAndTime(String reserveNo, Timestamp reserveDate, Timestamp reserveTime){
+
+        boolean updateResult = false;
+
+        // 현재 시간
+        Timestamp timestampToday = new Timestamp(System.currentTimeMillis()); 
+
+        try{
+
+            HospitalReserveDomain hospitalReserveDomain = hospitalReserveRepository.findByReserveNo(reserveNo);
+            hospitalReserveDomain.setReserveDate(reserveDate);
+            hospitalReserveDomain.setReserveTime(reserveTime);
+            hospitalReserveDomain.setReserveStatus("U"); // 변경
+            hospitalReserveDomain.setUpdateDate(timestampToday);
+            hospitalReserveDomain.setUpdateUser(hospitalReserveDomain.getHospitalName()); // 변경자는 관리자가 변경했다.
+    
+            updateResult = true;
+
+            
+            // 예약 변경 안내 문자 전송
+            List<GetSmsContentsDto> smsContentDto = hospitalReserveRepository.getItemOfbSmsContent(reserveNo);
+            
+            if(smsContentDto.get(0) != null){
+                String userPhone = smsContentDto.get(0).getUserPhone();
+                String adminPhone = smsContentDto.get(0).getAdminPhone();
+                String sendReserveNo = smsContentDto.get(0).getReserveNo();
+                String sendMsgFlag = smsContentDto.get(0).getSendMessageFlag();
+                String userName = smsContentDto.get(0).getUserName();
+                String hospitalName = smsContentDto.get(0).getHospitalName();
+                String changeDate = smsContentDto.get(0).getReserveDate();
+                String changeTime = smsContentDto.get(0).getReserveTime();
+
+                // 수신자는 환자가 됨
+                messageApiService.sendMessage("ADMIN", userPhone, adminPhone, sendMsgFlag, sendReserveNo, userName, hospitalName, changeDate, changeTime);
+            }
+        }catch(Exception ex){
+            System.out.println(ex.toString());
+        }
+
+
+
+        return updateResult;
+    }
+
+
 }
 
 

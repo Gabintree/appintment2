@@ -91,5 +91,12 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
                    " where t1.reserve_no = :reserveNo ", nativeQuery = true)
     List<GetCurrentReserveDto> getItemsOfCurrentReserveNo(String reserveNo);
 
+    // 팝업 해당 일자 예약된 시간 조회
+    @Query(value =  "select date_format(t1.reserve_time,'%H:%i') as reserve_time " +
+                    " from reserve t1 " +
+                    " where group_id = :groupId " +
+                    " and reserve_date = :reserveDate ", nativeQuery = true)
+    List<String> getItemsOfBookedReserveDate(String groupId, String reserveDate);
+
 
 }

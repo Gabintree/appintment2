@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import aphamale.project.appointment.Domain.HospitalAlarmDomain;
 import aphamale.project.appointment.Domain.HospitalInfoDomain;
+import aphamale.project.appointment.Domain.HospitalReserveDomain;
 import aphamale.project.appointment.Domain.HospitalStatusDomain;
 import aphamale.project.appointment.Dto.HospitalAlarmDto;
 import aphamale.project.appointment.Dto.HospitalApiDto;
@@ -253,6 +255,37 @@ public class AdminController {
         return hospitalInfo;
     }    
 
+    // 해당 일자에 이미 예약된 정보 조회
+    @PostMapping("/api/admin/bookedTimesList")
+    public List<String> getBookecTimesList(@RequestBody HospitalReserveDto hospitalReserveDto) {
+
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd"); // 0000년 00월 00일
+
+        String groupId = hospitalReserveDto.getGroupId();
+        String reserveDate = formatDate.format(hospitalReserveDto.getReserveDate());
+
+        // 데이터 담을 list 생성
+        List<String> bookedTimesList = new ArrayList<>();
+
+        bookedTimesList = hospitalReserveService.selectBookedList(groupId, reserveDate);
+
+        return bookedTimesList;
+    }   
+
+    // 예약 일자, 시간 변경하기
+    @PostMapping("/api/admin/changeDateAndTime")
+    public boolean updateDateAndTime(@RequestBody HospitalReserveDto hospitalReserveDto) {
+
+        boolean updateResult = false;
+
+        String groupId = hospitalReserveDto.getGroupId();
+        Timestamp reserveDate = hospitalReserveDto.getReserveDate();
+        Timestamp reserveTime = hospitalReserveDto.getReserveTime();
+
+        updateResult = hospitalReserveService.updateDateAndTime(groupId, reserveDate, reserveTime);
+
+        return updateResult;
+    }   
 }
 
 
