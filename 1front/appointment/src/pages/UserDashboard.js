@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ReservePopup from "./ReservePopup";
 
 // axios 인스턴스
 export const requestApi = axios.create({
@@ -46,67 +47,134 @@ const UserDashboard = () => {
 
   const [filteredHospitalData, setFilteredHospitalData] = useState([]); // 병원 목록
   const [dayOfWeek, setDayOfWeek] = useState(); // 진료 예정 일자의 요일
+
+  // userId
+  const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
+  const [userName, setUserName] = useState(""); // 사용자 이름
+  const [hospitalInfo, setHospitalInfo] = useState(); // 팝업에 넘겨줄 병원 정보
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 변경하기 팝업 상태
+  const openPopup = (item) => {
+    setHospitalInfo(item);
+    setIsPopupOpen(true);
+  };  // 변경하기 팝업 열기
+  const closePopup = () => setIsPopupOpen(false); // 변경하기 팝업 닫기
 
-      // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
-      requestApi.interceptors.request.use((config) => {
-        const accessToken = localStorage.getItem('login-token');
-        if (config.headers && accessToken) {
-            config.headers.Authorization = `Bearer ${accessToken}`;
-        }
-        return config;
-    });
+    // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
+    requestApi.interceptors.request.use((config) => {
+      const accessToken = localStorage.getItem('login-token');
+      if (config.headers && accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+      return config;
+  });
 
-    // interceptor 적용
-    requestApi.interceptors.response.use(
-        // 200 응답
-        (response) =>{
-            return response;
-        },
-        // 200 외
-        async (error) => {
-            const {
-                config,
-                response: { status },
-            } = error;
-            
-            if(status === 401){
-                if(error.response.statusText === "Unauthorized" ){
-                    const originRequest = config;
-                    try{
-                        // 토큰 재발행 요청
-                        const response = await getRefreshToken();
-                        // 재발행 성공
-                        if(response.status === 200){
-                            console.log("토큰 재발행 완료");
-                            const newAccessToken = response.headers.access;
-                            // 로컬스토리지 NewAccessToken 저장
-                            localStorage.setItem('login-token', newAccessToken);
-                            // 진행중이던 요청 이어서 계속
-                            originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-                            return axios(originRequest); 
-                        }
-                    }catch (error){
-                        if(axios.isAxiosError(error)){
-                            if(
-                                error.response?.status === 403){
-                                alert("해당 화면은 권한이 없습니다. home으로 이동합니다.");
-                                navigate("/Home");
-                            }
-                            else{
-                                console.log("error.response?.status : ", error.response?.status);
-                                alert("토큰 재발행 요청중 오류가 발생했습니다. 관리자에게 문의해주세요.");
-                            }
+  // interceptor 적용
+  requestApi.interceptors.response.use(
+      // 200 응답
+      (response) =>{
+          return response;
+      },
+      // 200 외
+      async (error) => {
+          const {
+              config,
+              response: { status },
+          } = error;
+          
+          if(status === 401){
+              if(error.response.statusText === "Unauthorized" ){
+                  const originRequest = config;
+                  try{
+                      // 토큰 재발행 요청
+                      const response = await getRefreshToken();
+                      // 재발행 성공
+                      if(response.status === 200){
+                          console.log("토큰 재발행 완료");
+                          const newAccessToken = response.headers.access;
+                          // 로컬스토리지 NewAccessToken 저장
+                          localStorage.setItem('login-token', newAccessToken);
+                          // 진행중이던 요청 이어서 계속
+                          originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                          return axios(originRequest); 
+                      }
+                  }catch (error){
+                      if(axios.isAxiosError(error)){
+                          if(
+                              error.response?.status === 403){
+                              alert("해당 화면은 권한이 없습니다. home으로 이동합니다.");
+                              navigate("/Home");
+                          }
+                          else{
+                              console.log("error.response?.status : ", error.response?.status);
+                              alert("토큰 재발행 요청중 오류가 발생했습니다. 관리자에게 문의해주세요.");
+                          }
 
-                        }
-                    }                   
-                }
-            }
-            return Promise.reject(error);
-        },
-    );
+                      }
+                  }                   
+              }
+          }
+          return Promise.reject(error);
+      },
+  );
 
+  // 화면 로딩시 getId 조회
+  async function getUserId(){
+    try{
+        const data = {
+            userId: userId,
+        };
+
+        await requestApi.post("/api/user", JSON.stringify(data))
+        .then(function (response){
+            if(response.status === 200){
+                console.log("토큰 인증 완료");
+                // 사용자명, 세션 스토리지 저장
+                const name = response.data;
+                setUserName(name);
+                sessionStorage.setItem('userName', name);     
+            }            
+        })
+        .catch(function(error){
+            console.log("error : ", error);
+          })             
+    } catch (err) {
+        setError("작업중 오류가 발생했습니다.");
+    }        
+  }; 
+  
+  useEffect(() => {
+    // 토큰 인증 및 userId 조회 
+    getUserId();        
+}, []); // 마운트 될 때 한 번만 실행  
+
+  // 로그아웃 
+  async function logoutOnClick() {
+
+    try{
+        await requestApi.post("/api/logout", {})
+        .then(function (response){
+            console.log("response : ", response);
+            if(response.status == 200){
+                console.log("로그아웃 완료");
+                
+                // 로컬 스토리지 액세스 토큰 및 유저 정보 삭제
+                localStorage.removeItem('login-token');
+                sessionStorage.removeItem("userId");
+                sessionStorage.removeItem("userName"); 
+                navigate("/Home");
+            }            
+        })
+        .catch(function(error){
+            console.log("로그아웃 오류 ", error);
+          })             
+    } catch (err) {
+        setError("로그아웃 중 오류가 발생했습니다.");
+    }   
+};
+      
   // ㄱ: 페이지 변경 함수
   const handleNextPage = () => {
     if (currentPage < Math.ceil(filteredHospitalData.length / itemsPerPage)) {
@@ -288,9 +356,9 @@ const UserDashboard = () => {
     <div className="min-h-screen bg-gray-100">
       {/* 상단 인사말 및 마이페이지 */}
       <header className="bg-teal-100 p-4 flex justify-between items-center">
-        <h1 className="text-lg font-semibold">어서오세요, 여가현님</h1>
+        <h1 className="text-lg font-semibold">어서오세요, <strong>{userName}</strong> 님</h1>
         <div className="text-right">
-          <a href="#" className="text-sm text-gray-700 font-semibold">마이페이지</a> | <a href="#" className="text-sm text-gray-700 font-semibold">로그아웃</a>
+          <button className="text-sm text-gray-700 font-semibold">마이페이지</button> | <button className="text-sm text-gray-700 font-semibold" onClick={(e) => logoutOnClick()}>로그아웃</button>
         </div>
       </header>
 
@@ -469,9 +537,16 @@ const UserDashboard = () => {
                                                 : "공휴일 : " + item.dutyTime8s.substring(0, 2) + ":" + item.dutyTime8s.substring(2, 4) + "~" + item.dutyTime8c.substring(0, 2) + ":" + item.dutyTime8c.substring(2, 4)}</p>
                     <p className="text-gray-500">대표전화 : {item.dutyTel1}</p>
                     {item.useSite === "Y" && (
-                      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                      <div>
+                      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                              onClick={(e) => openPopup(item)}>
                         예약
                       </button>
+                      <ReservePopup isOpen={isPopupOpen} 
+                                    onClose={closePopup}
+                                    hospitalInfo={hospitalInfo}
+                                    sendSelectedSubject={selectedSubject}/>
+                      </div>
                     )}
 
                   </div>

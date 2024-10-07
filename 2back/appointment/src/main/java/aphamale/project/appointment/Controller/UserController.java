@@ -4,11 +4,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
+
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import aphamale.project.appointment.Domain.HospitalInfoDomain;
+import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.HospitalApiDto;
+import aphamale.project.appointment.Dto.HospitalInfoDto;
+import aphamale.project.appointment.Dto.HospitalReserveDto;
+import aphamale.project.appointment.Dto.UserInfoDto;
+import aphamale.project.appointment.Repository.UserInfoRepository;
 import aphamale.project.appointment.Service.HospitalApiService;
+import aphamale.project.appointment.Service.HospitalReserveService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,15 +30,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
 
     private final HospitalApiService hospitalApiService;
+    private final UserInfoRepository userInfoRepository;
+    private final HospitalReserveService hospitalReserveService;
 
-    public UserController(HospitalApiService hospitalApiService){
+    public UserController(HospitalApiService hospitalApiService,
+                          UserInfoRepository userInfoRepository,
+                          HospitalReserveService hospitalReserveService){
         this.hospitalApiService = hospitalApiService;
+        this.userInfoRepository = userInfoRepository;
+        this.hospitalReserveService = hospitalReserveService;
     }
 
-    // @GetMapping("/api/user/")
-    // public String getAdmin() {
-    //     return "user Controller";
-    // }
+    // 사용자명 찾기
+    @PostMapping("/api/user")
+    public String getUser(@RequestBody UserInfoDto userInfoDto) {
+
+        // userId
+        String userId = userInfoDto.getUserId();
+
+        // 해당 계정의 정보 조회
+        UserInfoDomain userInfoDomain = userInfoRepository.findByUserId(userId);
+
+        String userName = userInfoDomain.getUserName();
+
+        return userName;
+    }
 
     // 유저 대시보드 병원 목록 조회
     @PostMapping("/api/user/hospitalList")
@@ -110,6 +137,58 @@ public class UserController {
          }   
          
          return finalHospitalList;
+    }  
+    
+    // 팝업 병원 운영 정보 조회
+    @PostMapping("/api/user/hospitalWorkInfo")
+    public List<HospitalApiDto> getHospitalWorkInfo(@RequestBody HospitalReserveDto hospitalReserveDto) {
+
+        // 병원명으로 데이터 가져오기..... 
+        String groupId = hospitalReserveDto.getGroupId();
+
+        // 데이터 담을 list 생성
+        List<HospitalApiDto> hospitalInfo = new ArrayList<>();
+        hospitalInfo = hospitalApiService.SelectGroupIdApi(groupId);
+
+        return hospitalInfo;
     }    
+
+    // 해당 일자에 이미 예약된 정보 조회
+    @PostMapping("/api/user/bookedTimesList")
+    public List<String> getBookecTimesList(@RequestBody HospitalReserveDto hospitalReserveDto) {
+
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd"); // 0000년 00월 00일
+
+        String groupId = hospitalReserveDto.getGroupId();
+        String reserveDate = formatDate.format(hospitalReserveDto.getReserveDate());
+
+        // 데이터 담을 list 생성
+        List<String> bookedTimesList = new ArrayList<>();
+
+        bookedTimesList = hospitalReserveService.selectBookedList(groupId, reserveDate);
+
+        return bookedTimesList;
+    }
+
+    // 예약 일자, 시간 저장
+    @PostMapping("/api/user/reserveDateAndTime")
+    public boolean insertDateAndTime(@RequestBody HospitalReserveDto hospitalReserveDto) {
+
+        boolean insertResult = false;
+
+        String userId = hospitalReserveDto.getUserId();
+        String groupId = hospitalReserveDto.getGroupId();
+        String hospitalName = hospitalReserveDto.getHospitalName();
+        String hospitalAddress = hospitalReserveDto.getHospitalAddress();
+        String subjectCode = hospitalReserveDto.getSubjectCode();
+        Timestamp reserveDate = hospitalReserveDto.getReserveDate();
+        Timestamp reserveTime = hospitalReserveDto.getReserveTime();
+        String alarmFlag = hospitalReserveDto.getAlarmFlag();
+        String remark = hospitalReserveDto.getRemark();
+
+        insertResult = hospitalReserveService.insertDateAndTime(userId, groupId, hospitalName, hospitalAddress, subjectCode, reserveDate, reserveTime, alarmFlag, remark);
+
+        return insertResult;
+    }  
     
 }
