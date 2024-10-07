@@ -48,6 +48,7 @@ public class HospitalApiDto {
     private String wgs84Lon; // 병원 경도 ex) 127.062146778337
 
     private String subjectName; // 진료과목명 
+    private String useSite; // 해당 사이트 사용 유무
 
 
     public HospitalApiDto(String  hpid, String dutyName, String dutyAddr, String dutyTel1,
@@ -58,7 +59,7 @@ public class HospitalApiDto {
                                   String dutyTime5s, String dutyTime5c,
                                   String dutyTime6s, String dutyTime6c,
                                   String dutyTime7s, String dutyTime7c,
-                                  String dutyTime8s, String dutyTime8c, String subjectName){
+                                  String dutyTime8s, String dutyTime8c, String subjectName, String useSite){
         this.hpid = hpid;
         this.dutyName = dutyName;
         this.dutyAddr = dutyAddr;
@@ -81,5 +82,6 @@ public class HospitalApiDto {
         this.dutyTime8c = dutyTime8c; 
         
         this.subjectName = subjectName;
+        this.useSite = useSite;
     }
 }

@@ -23,6 +23,9 @@ public interface HospitalInfoRepository extends JpaRepository<HospitalInfoDomain
 
     // DB에 저장된 refresh token 값 조회 
     //HospitalInfoDomain findByJwtRefresh(String JwtRefresh);
+
+    // groupId 존재 여부
+    int countByGroupId(String groupId);
     
     
     }

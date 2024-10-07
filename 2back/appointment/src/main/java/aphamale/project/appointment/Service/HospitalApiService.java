@@ -26,6 +26,7 @@ import org.xml.sax.InputSource;
 
 import aphamale.project.appointment.Domain.HospitalSubjectDomain;
 import aphamale.project.appointment.Dto.HospitalApiDto;
+import aphamale.project.appointment.Repository.HospitalInfoRepository;
 import aphamale.project.appointment.Repository.HospitalReserveRepository;
 import aphamale.project.appointment.Repository.HospitalSubjectInfoRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class HospitalApiService {
 
     private final HospitalSubjectInfoRepository hospitalSubjectInfoRepository;
     private final HospitalReserveRepository hospitalReserveRepository;
+    private final HospitalInfoRepository hospitalInfoRepository;
 
 
     // 병원 목록 조회 
@@ -165,7 +167,7 @@ public class HospitalApiService {
                                                                        dutyTime5s, dutyTime5c,
                                                                        dutyTime6s, dutyTime6c,
                                                                        dutyTime7s, dutyTime7c,
-                                                                       dutyTime8s, dutyTime8c, ""); // subjectName은 컨트롤러에서 따로 
+                                                                       dutyTime8s, dutyTime8c, "" , ""); // subjectName은 컨트롤러에서 따로 // useSite도 user컨트롤러에서 따로
 
                     hospitalList.add(hospitalApiDto);             
                 }
@@ -567,7 +569,7 @@ public class HospitalApiService {
                                                                     dutyTime5s, dutyTime5c,
                                                                     dutyTime6s, dutyTime6c,
                                                                     dutyTime7s, dutyTime7c,
-                                                                    dutyTime8s, dutyTime8c, ""); // subjectName은 컨트롤러에서 따로 
+                                                                    dutyTime8s, dutyTime8c, "", ""); // subjectName은 컨트롤러에서 따로 // useSite도 user컨트롤러에서 따로
 
                     hospitalList.add(hospitalApiDto);             
                 }
@@ -577,14 +579,26 @@ public class HospitalApiService {
         }        
         return hospitalList;
     }
+    
+    // 유저 대시보드 병원목록 조회시 해당 사이트에 계정이 있는 지 유무 컬럼 추가(useSite // Y, N 구분)
+    public List<HospitalApiDto> useSiteHospitalYN(List<HospitalApiDto> filteredList){
+        
+        for(int i = 0; i < filteredList.size(); i++){
 
-    // 기관ID 특정 병원 정보 필터
-    public List<HospitalApiDto> SelectGroupIdFilteredData(List<HospitalApiDto> list){
+            // groupId 조회
+            String groupId = filteredList.get(i).getHpid();
 
-        // 가공된 병원 정보 
-        List<HospitalApiDto> hospitalFilteredData = new ArrayList<HospitalApiDto>();
+            int count = hospitalInfoRepository.countByGroupId(groupId);
 
-        return hospitalFilteredData;
+            // count가 0보다 크면 있는 것.
+            if(count > 0){
+                filteredList.get(i).setUseSite("Y");
+            }else{
+                filteredList.get(i).setUseSite("N");
+            }
+        }
+
+        return filteredList;
     }
 }
 

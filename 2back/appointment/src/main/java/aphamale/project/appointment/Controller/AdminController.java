@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import aphamale.project.appointment.Domain.HospitalAlarmDomain;
 import aphamale.project.appointment.Domain.HospitalInfoDomain;
-import aphamale.project.appointment.Domain.HospitalReserveDomain;
 import aphamale.project.appointment.Domain.HospitalStatusDomain;
 import aphamale.project.appointment.Dto.HospitalAlarmDto;
 import aphamale.project.appointment.Dto.HospitalApiDto;

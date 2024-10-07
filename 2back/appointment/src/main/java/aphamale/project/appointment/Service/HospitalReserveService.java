@@ -12,7 +12,6 @@ import aphamale.project.appointment.Dto.Interface.GetCurrentReserveDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Dto.Interface.GetSmsContentsDto;
 import aphamale.project.appointment.Repository.HospitalReserveRepository;
-import aphamale.project.appointment.Repository.HospitalSubjectInfoRepository;
 
 @Service
 public class HospitalReserveService {
