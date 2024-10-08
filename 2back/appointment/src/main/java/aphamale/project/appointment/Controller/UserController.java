@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.sql.Timestamp;
@@ -11,11 +12,13 @@ import java.sql.Timestamp;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import aphamale.project.appointment.Domain.HospitalReserveDomain;
 import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.HospitalApiDto;
 import aphamale.project.appointment.Dto.HospitalReserveDto;
 import aphamale.project.appointment.Dto.UserInfoDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
+import aphamale.project.appointment.Repository.HospitalReserveRepository;
 import aphamale.project.appointment.Repository.UserInfoRepository;
 import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.HospitalReserveService;
@@ -31,13 +34,16 @@ public class UserController {
     private final HospitalApiService hospitalApiService;
     private final UserInfoRepository userInfoRepository;
     private final HospitalReserveService hospitalReserveService;
+    private final HospitalReserveRepository hospitalReserveRepository;
 
     public UserController(HospitalApiService hospitalApiService,
                           UserInfoRepository userInfoRepository,
-                          HospitalReserveService hospitalReserveService){
+                          HospitalReserveService hospitalReserveService,
+                          HospitalReserveRepository hospitalReserveRepository){
         this.hospitalApiService = hospitalApiService;
         this.userInfoRepository = userInfoRepository;
         this.hospitalReserveService = hospitalReserveService;
+        this.hospitalReserveRepository = hospitalReserveRepository;
     }
 
     // 사용자명 찾기
@@ -213,6 +219,31 @@ public class UserController {
 
         return reserveList; 
     }
+    
+    // 상세보기 데이터 조회
+    @PostMapping("/api/user/detailButtonData")
+    public Map<String, String> getUserDetailButtonData(@RequestBody Map<String, String> searchParam) {
 
+        Map<String, String> detailData = new HashMap<>();
+
+        String reserveNo = searchParam.get("reserveNo");
+            
+        try{
+            
+            HospitalReserveDomain hospitalReserveDomain = hospitalReserveRepository.findByReserveNo(reserveNo);
+            String remark = hospitalReserveDomain.getRemark();
+            String alarmFlag = hospitalReserveDomain.getAlarmFlag();
+
+            detailData.put("reserveNo", reserveNo);
+            detailData.put("remark", remark);
+            detailData.put("alarmFlag", alarmFlag);            
+
+
+        }catch(Exception ex){
+            System.out.println(ex.toString());
+        }
+
+        return detailData; 
+    }
     
 }

@@ -62,7 +62,11 @@ const UserDashboard = () => {
 
   const [searchFromDate, setSearchFromDate] = useState(today); // 조회일자 from
   const [searchToDate, setSearchToDate] = useState(after3month); // 조회일자 to
-  const [filteredReservations, setFilteredReservations] = useState([]); // 필터링된 예약 데이터    
+  const [filteredReservations, setFilteredReservations] = useState([]); // 필터링된 예약 데이터
+  // 상세보기 컬럼 셋
+  const [detailReserveNo, setDetailReserveNo] = useState();;
+  const [detailRemark, setDetailRemark] = useState("");
+  const [detailAlarmFlag, setDetailAlarmFlag] = useState("");    
   
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 변경하기 팝업 상태
   const openPopup = (item) => {
@@ -387,6 +391,31 @@ async function handleSearchOnClick() {
   }  
 };  
 
+// 상세보기 버튼 클릭
+async function detailOnClick(reserveNo){
+    console.log("상세보기 버튼 클릭");
+    try{
+        const data = {
+          reserveNo: reserveNo,
+        };
+
+        await requestApi.post("/api/user/detailButtonData", JSON.stringify(data))
+        .then(function (response){
+            if(response.status == 200){
+                console.log("상세보기 버튼 조회 완료 : ", response.data); 
+                setDetailReserveNo(response.data.reserveNo);
+                setDetailRemark(response.data.remark);
+                setDetailAlarmFlag(response.data.alarmFlag);
+            }            
+        })
+        .catch(function(error){
+            console.log("error : ", error);
+          })             
+    } catch (err) {
+        setError("작업 중 오류가 발생했습니다.");
+    }  
+}; 
+
   
 
   return (
@@ -667,16 +696,17 @@ async function handleSearchOnClick() {
               </thead>
               <tbody>
                 {filteredReservations.length > 0 ? (
-                  filteredReservations.map(reservation => (
+                  filteredReservations.map((reservation, idx) => (
                     <tr key={reservation.reserveNo} className="text-center">
                       <td className="border border-gray-300 p-2">{reservation.reserveNo}</td>
-                      <td className="border border-gray-300 p-2">{moment(reservation.reserveDate).format("yyyy-MM-DD")}</td>
+                      <td className="border border-gray-300 p-2">{moment(reservation.reserveDate).format("YYYY-MM-DD")}</td>
                       <td className="border border-gray-300 p-2">{reservation.reserveTime}</td>
                       <td className="border border-gray-300 p-2">{reservation.hospitalName}</td>
                       <td className="border border-gray-300 p-2">{reservation.subjectName}</td>
                       <td className="border border-gray-300 p-2">{reservation.reserveStatus === "I" ? "예약완료" : reservation.reserveStatus === "U" ? "변경완료" : "취소완료"}</td>
                       <td className="border border-gray-300 p-2">
-                        <button className="text-teal-500">상세보기</button></td>
+                        <button className="text-teal-500"
+                                onClick={() => detailOnClick(reservation.reserveNo)}>상세보기</button></td>
                       <td className="border border-gray-300 p-2">{!reservation.updateUser ? "-" : reservation.updateUser}</td>
 
                     </tr>
@@ -691,20 +721,30 @@ async function handleSearchOnClick() {
         <section className="w-80 bg-white p-4 border-l-2 border-black">
           <h2 className="text-xl font-bold mb-4">상세보기</h2>
           <div className="mb-4">
-            <p className="text-sm font-semibold">증상</p>
-            <p className="text-sm">1주일 간 지속되는 가래와 기침</p>
+          <p className="text-sm font-semibold">예약번호</p>
+          <p className="text-sm">{detailReserveNo}</p>
+            <p className="text-sm font-semibold">증상 및 전달사항</p>
+            <p className="text-sm">{detailRemark}</p>
           </div>
 
           {/* 알림톡 수신 여부 */}
           <div className="mb-4">
-            <p className="text-sm font-semibold">알림톡 수신 여부</p>
+            <p className="text-sm font-semibold">SMS 수신 여부</p>
             <div className="flex items-center space-x-2">
               <label className="flex items-center">
-                <input type="radio" name="notification" className="mr-2" />
+                <input type="radio" 
+                       name="notification" 
+                       className="mr-2" 
+                       value="Y"
+                       checked={detailAlarmFlag === "Y"}/>
                 예
               </label>
               <label className="flex items-center">
-                <input type="radio" name="notification" className="mr-2" />
+                <input type="radio" 
+                       name="notification" 
+                       className="mr-2"
+                       value="N"
+                       checked={detailAlarmFlag === "N"} />
                 아니요
               </label>
             </div>

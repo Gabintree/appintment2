@@ -1,9 +1,5 @@
 package aphamale.project.appointment.Dto.Interface;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-
-
 public interface GetHospitalReserveListDto {
 
     String getReserveNo(); // 예약번호

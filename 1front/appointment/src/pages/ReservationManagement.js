@@ -166,7 +166,7 @@ const ReservationManagement = ({sendFromChild}) => {
                             filteredReservations.map(reservation => (
                                 <tr key={reservation.reserveNo}>
                                     <td>{reservation.reserveNo}</td>
-                                    <td>{moment(reservation.reserveDate).format("yyyy-MM-DD")}</td>
+                                    <td>{moment(reservation.reserveDate).format("YYYY-MM-DD")}</td>
                                     <td>{reservation.reserveTime}</td>
                                     <td>{reservation.userName}</td>
                                     <td>{reservation.birthDate}</td>
