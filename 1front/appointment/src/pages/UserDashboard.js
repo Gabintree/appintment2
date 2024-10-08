@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from 'moment';
 import ReservePopup from "./ReservePopup";
+import ReserveChangeUserPopup from "./ReserveChangeUserPopup";
 
 // axios 인스턴스
 export const requestApi = axios.create({
@@ -68,12 +69,20 @@ const UserDashboard = () => {
   const [detailRemark, setDetailRemark] = useState("");
   const [detailAlarmFlag, setDetailAlarmFlag] = useState("");    
   
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // 변경하기 팝업 상태
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 예약하기 팝업 상태
   const openPopup = (item) => {
     setHospitalInfo(item);
     setIsPopupOpen(true);
-  };  // 변경하기 팝업 열기
-  const closePopup = () => setIsPopupOpen(false); // 변경하기 팝업 닫기
+  };  // 예약하기 팝업 열기
+  const closePopup = () => setIsPopupOpen(false); // 예약하기 팝업 닫기
+
+  const [isChangePopupOpen, setIsChangePopupOpen] = useState(false); // 변경하기 팝업 상태
+  const openChangePopup = () =>{
+    setIsChangePopupOpen(true);  // 변경하기 팝업 열기
+  } 
+  const closeChangePopup = () => setIsChangePopupOpen(false); // 변경하기 팝업 닫기
+
+
 
     // axios 인스턴스 첫 렌더링시 accessToken null 값 해결
     requestApi.interceptors.request.use((config) => {
@@ -416,7 +425,35 @@ async function detailOnClick(reserveNo){
     }  
 }; 
 
+// sms 수신 여부 flag
+function handleAlarmFlagOnChange(value){
+  setDetailAlarmFlag(value);
+}
+
+// 예약 취소 버튼 이벤트 
+async function handleCancel(){
+  if (window.confirm("예약번호 : " + detailReserveNo + "항목을 취소하시겠습니까?")) {
+      console.log("예약 취소 버튼 이벤트");
+      try{
+          const data = {
+              reserveNo: detailReserveNo,
+          };
   
+          await requestApi.post("/api/user/reserveUserCancel", JSON.stringify(data))
+          .then(function (response){
+              if(response.status == 200){
+                  console.log("예약 취소 완료 : ", response.data); 
+                  alert('예약이 정상적으로 취소되었습니다.');
+              }            
+          })
+          .catch(function(error){
+              console.log("error : ", error);
+          })             
+      } catch (err) {
+          setError("작업 중 오류가 발생했습니다.");
+      }  
+  }
+}; 
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -736,7 +773,8 @@ async function detailOnClick(reserveNo){
                        name="notification" 
                        className="mr-2" 
                        value="Y"
-                       checked={detailAlarmFlag === "Y"}/>
+                       checked={detailAlarmFlag === "Y"}
+                       onChange={(e) => handleAlarmFlagOnChange(e.target.value)}/>
                 예
               </label>
               <label className="flex items-center">
@@ -744,7 +782,8 @@ async function detailOnClick(reserveNo){
                        name="notification" 
                        className="mr-2"
                        value="N"
-                       checked={detailAlarmFlag === "N"} />
+                       checked={detailAlarmFlag === "N"}
+                       onChange={(e) => handleAlarmFlagOnChange(e.target.value)}/>
                 아니요
               </label>
             </div>
@@ -752,8 +791,11 @@ async function detailOnClick(reserveNo){
 
           {/* 변경/취소 버튼 */}
           <div className="flex space-x-2">
-            <button className="flex-1 p-2 bg-teal-500 text-white rounded">변경하기</button>
-            <button className="flex-1 p-2 bg-red-500 text-white rounded">취소하기</button>
+            <button className="flex-1 p-2 bg-teal-500 text-white rounded" onClick={openChangePopup}>변경하기</button>
+            <ReserveChangeUserPopup isOpen={isChangePopupOpen} 
+                                onClose={closeChangePopup}
+                                reserveNo={detailReserveNo} />
+            <button className="flex-1 p-2 bg-red-500 text-white rounded"  onClick={handleCancel}>취소하기</button>
           </div>
         </section>
       </div>

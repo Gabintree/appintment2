@@ -118,7 +118,7 @@ async function currentReserveData() {
             reserveNo: reserveNo,
         };
 
-        await requestApi.post("/api/admin/currentReserve", JSON.stringify(data))
+        await requestApi.post("/api/user/currentReserve", JSON.stringify(data))
         .then(function (response){
             if(response.status == 200){
                 console.log("팝업 예약정보 조회완료 : ", response.data); 
@@ -141,7 +141,7 @@ async function hospitalBaseWorkInfo() {
             groupId: currentReserve[0].groupId,
         };
 
-        await requestApi.post("/api/admin/hospitalWorkInfo", JSON.stringify(data))
+        await requestApi.post("/api/user/hospitalWorkInfo", JSON.stringify(data))
         .then(function (response){
             if(response.status == 200){
                 console.log("병원 운영 정보 조회완료 : ", response.data); 
@@ -318,7 +318,7 @@ async function bookedTimesList(searchDate) {
             reserveDate: searchDate,
         };
 
-        await requestApi.post("/api/admin/bookedTimesList", JSON.stringify(data))
+        await requestApi.post("/api/user/bookedTimesList", JSON.stringify(data))
         .then(function (response){
             if(response.status == 200){
                 console.log("이미 예약된 정보 조회완료 : ", response.data); 
@@ -350,7 +350,7 @@ async function changeTimeOnSave() {
             reserveTime: new Date(`${selectedDate}T${selectedTime}:00`).toISOString(),
         };
 
-        await requestApi.post("/api/admin/changeDateAndTime", JSON.stringify(data))
+        await requestApi.post("/api/user/changeDateAndTime", JSON.stringify(data))
         .then(function (response){
             if(response.status == 200){
                 console.log("선택된 날짜 변경 저장 완료 : ", response.data); 
@@ -375,21 +375,21 @@ async function changeTimeOnSave() {
             <h4>기존 예약 정보</h4>
             <div className="reservation-card">
               <div className="reservation-info">
-                <span className="hospital-name">{"currentReserve[0].subjectName"}</span>
+                <span className="hospital-name">{currentReserve[0].subjectName}</span>
                 {/* <span className="status-circle" style={{ backgroundColor: '#87DBD8' }}></span> 대기 상태 색깔 원 */}
-                <p className="hospital-title"><strong>{"currentReserve[0].hospitalName"}</strong></p>
+                <p className="hospital-title"><strong>{currentReserve[0].hospitalName}</strong></p>
               </div>
-              <h4>예약 날짜: <strong>{"currentReserve[0].reserveDate"}</strong></h4>
-              <h4>예약 시간: <strong>{"currentReserve[0].reserveTime"}</strong></h4> {/* 선택된 시간 표시 */}
+              <h4>예약 날짜: <strong>{currentReserve[0].reserveDate}</strong></h4>
+              <h4>예약 시간: <strong>{currentReserve[0].reserveTime}</strong></h4> {/* 선택된 시간 표시 */}
             </div>
           </div>
           <div className="change-reservation">
             <h4>변경 예약 정보</h4>
             <div className="reservation-card">
               <div className="reservation-info">
-                <span className="hospital-name">{"currentReserve[0].subjectName"}</span>
+                <span className="hospital-name">{currentReserve[0].subjectName}</span>
                 {/* <span className="status-circle" style={{ backgroundColor: '#87DBD8' }}></span> 대기 상태 색깔 원 */}
-                <p className="hospital-title"><strong>{"currentReserve[0].hospitalName"}</strong></p>
+                <p className="hospital-title"><strong>{currentReserve[0].hospitalName}</strong></p>
               </div>
               <div className="date-input-container">
                 <input

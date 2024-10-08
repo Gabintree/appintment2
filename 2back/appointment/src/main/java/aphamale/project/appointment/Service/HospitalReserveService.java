@@ -59,22 +59,24 @@ public class HospitalReserveService {
             hospitalReserveRepository.save(hospitalReserveDomain);
 
             bool = true;
-            
-            // 예약 취소 안내 문자 전송
-            List<GetSmsContentsDto> smsContentDto = hospitalReserveRepository.getItemOfbSmsContent(reserveNo);
-            
-            if(smsContentDto.get(0) != null){
-                String userPhone = smsContentDto.get(0).getUserPhone();
-                String adminPhone = smsContentDto.get(0).getAdminPhone();
-                String sendReserveNo = smsContentDto.get(0).getReserveNo();
-                String sendMsgFlag = smsContentDto.get(0).getSendMessageFlag();
-                String userName = smsContentDto.get(0).getUserName();
-                String hospitalName = smsContentDto.get(0).getHospitalName();
-                String reserveDate = smsContentDto.get(0).getReserveDate();
-                String reserveTime = smsContentDto.get(0).getReserveTime();
 
-                // 수신자는 환자가 됨
-                messageApiService.sendMessage("ADMIN", userPhone, adminPhone, sendMsgFlag, sendReserveNo, userName, hospitalName, reserveDate, reserveTime);
+            if(hospitalReserveDomain.getAlarmFlag().equals("Y")){
+                // 예약 취소 안내 문자 전송
+                List<GetSmsContentsDto> smsContentDto = hospitalReserveRepository.getItemOfbSmsContent(reserveNo);
+                
+                if(smsContentDto.get(0) != null){
+                    String userPhone = smsContentDto.get(0).getUserPhone();
+                    String adminPhone = smsContentDto.get(0).getAdminPhone();
+                    String sendReserveNo = smsContentDto.get(0).getReserveNo();
+                    String sendMsgFlag = smsContentDto.get(0).getSendMessageFlag();
+                    String userName = smsContentDto.get(0).getUserName();
+                    String hospitalName = smsContentDto.get(0).getHospitalName();
+                    String reserveDate = smsContentDto.get(0).getReserveDate();
+                    String reserveTime = smsContentDto.get(0).getReserveTime();
+
+                    // 수신자는 환자가 됨
+                    messageApiService.sendMessage("ADMIN", userPhone, adminPhone, sendMsgFlag, sendReserveNo, userName, hospitalName, reserveDate, reserveTime);
+                }            
             }   
         }catch(Exception ex){
             System.out.println(ex.toString());
@@ -126,22 +128,26 @@ public class HospitalReserveService {
             hospitalReserveRepository.save(hospitalReserveDomain);       
 
             updateResult = true;
-            
-            // 예약 변경 안내 문자 전송
-            List<GetSmsContentsDto> smsContentDto = hospitalReserveRepository.getItemOfbSmsContent(reserveNo);
-            
-            if(smsContentDto.get(0) != null){
-                String userPhone = smsContentDto.get(0).getUserPhone();
-                String adminPhone = smsContentDto.get(0).getAdminPhone();
-                String sendReserveNo = smsContentDto.get(0).getReserveNo();
-                String sendMsgFlag = smsContentDto.get(0).getSendMessageFlag();
-                String userName = smsContentDto.get(0).getUserName();
-                String hospitalName = smsContentDto.get(0).getHospitalName();
-                String changeDate = smsContentDto.get(0).getReserveDate();
-                String changeTime = smsContentDto.get(0).getReserveTime();
 
-                // 수신자는 환자가 됨
-                messageApiService.sendMessage("ADMIN", userPhone, adminPhone, sendMsgFlag, sendReserveNo, userName, hospitalName, changeDate, changeTime);
+            if(hospitalReserveDomain.getAlarmFlag().equals("Y")){
+
+                // 예약 변경 안내 문자 전송
+                List<GetSmsContentsDto> smsContentDto = hospitalReserveRepository.getItemOfbSmsContent(reserveNo);
+                
+                if(smsContentDto.get(0) != null){
+                    String userPhone = smsContentDto.get(0).getUserPhone();
+                    String adminPhone = smsContentDto.get(0).getAdminPhone();
+                    String sendReserveNo = smsContentDto.get(0).getReserveNo();
+                    String sendMsgFlag = smsContentDto.get(0).getSendMessageFlag();
+                    String userName = smsContentDto.get(0).getUserName();
+                    String hospitalName = smsContentDto.get(0).getHospitalName();
+                    String changeDate = smsContentDto.get(0).getReserveDate();
+                    String changeTime = smsContentDto.get(0).getReserveTime();
+
+                    // 수신자는 환자가 됨
+                    messageApiService.sendMessage("ADMIN", userPhone, adminPhone, sendMsgFlag, sendReserveNo, userName, hospitalName, changeDate, changeTime);
+            
+                }          
             }
         }catch(Exception ex){
             System.out.println(ex.toString());
@@ -237,6 +243,97 @@ public class HospitalReserveService {
         return reserveList;
     }
 
+        // 팝업 예약 일자 및 시간 변경(사용자/유저)
+        public boolean updateUserDateAndTime(String reserveNo, Timestamp reserveDate, Timestamp reserveTime){
+
+            boolean updateResult = false;
+    
+            // 현재 시간
+            Timestamp timestampToday = new Timestamp(System.currentTimeMillis()); 
+    
+            try{
+    
+                HospitalReserveDomain hospitalReserveDomain = hospitalReserveRepository.findByReserveNo(reserveNo);
+                hospitalReserveDomain.setReserveDate(reserveDate);
+                hospitalReserveDomain.setReserveTime(reserveTime);
+                hospitalReserveDomain.setReserveStatus("U"); // 변경
+                hospitalReserveDomain.setUpdateDate(timestampToday);
+                hospitalReserveDomain.setUpdateUser(hospitalReserveDomain.getUserId()); // 변경자는 사용자가 변경했다.
+    
+                hospitalReserveRepository.save(hospitalReserveDomain);       
+    
+                updateResult = true;
+
+                // 알람 수신 여부가 Y면
+                if(hospitalReserveDomain.getAlarmFlag().equals("Y")){
+                    // 예약 변경 안내 문자 전송
+                    List<GetSmsContentsDto> smsContentDto = hospitalReserveRepository.getItemOfbSmsContent(reserveNo);
+                                    
+                    if(smsContentDto.get(0) != null){
+                        String userPhone = smsContentDto.get(0).getUserPhone();
+                        String adminPhone = smsContentDto.get(0).getAdminPhone();
+                        String sendReserveNo = smsContentDto.get(0).getReserveNo();
+                        String sendMsgFlag = smsContentDto.get(0).getSendMessageFlag();
+                        String userName = smsContentDto.get(0).getUserName();
+                        String hospitalName = smsContentDto.get(0).getHospitalName();
+                        String changeDate = smsContentDto.get(0).getReserveDate();
+                        String changeTime = smsContentDto.get(0).getReserveTime();
+
+                        // 수신자는 환자가 됨
+                        messageApiService.sendMessage("USER", userPhone, adminPhone, sendMsgFlag, sendReserveNo, userName, hospitalName, changeDate, changeTime);
+                    }         
+                }
+            }catch(Exception ex){
+                System.out.println(ex.toString());
+            }
+            return updateResult;
+        }
+
+
+    // 예약 취소(사용자)
+    public boolean deleteReserveUserCancel(String reserveNo){
+
+        Boolean bool = false;
+
+        try{
+
+            // 현재 시간
+            Timestamp timestampToday = new Timestamp(System.currentTimeMillis()); 
+
+            // 취소하기 버튼 클릭시 reserve_status "D"로 변경
+            HospitalReserveDomain hospitalReserveDomain = hospitalReserveRepository.findByReserveNo(reserveNo);
+            hospitalReserveDomain.setReserveStatus("D");
+            hospitalReserveDomain.setUpdateDate(timestampToday);
+            hospitalReserveDomain.setUpdateUser(hospitalReserveDomain.getUserId()); // 변경자는 사용자가 변경했다.
+
+            hospitalReserveRepository.save(hospitalReserveDomain);
+
+            bool = true;
+
+            if(hospitalReserveDomain.getAlarmFlag().equals("Y")){
+                // 예약 취소 안내 문자 전송
+                List<GetSmsContentsDto> smsContentDto = hospitalReserveRepository.getItemOfbSmsContent(reserveNo);
+                
+                if(smsContentDto.get(0) != null){
+                    String userPhone = smsContentDto.get(0).getUserPhone();
+                    String adminPhone = smsContentDto.get(0).getAdminPhone();
+                    String sendReserveNo = smsContentDto.get(0).getReserveNo();
+                    String sendMsgFlag = smsContentDto.get(0).getSendMessageFlag();
+                    String userName = smsContentDto.get(0).getUserName();
+                    String hospitalName = smsContentDto.get(0).getHospitalName();
+                    String reserveDate = smsContentDto.get(0).getReserveDate();
+                    String reserveTime = smsContentDto.get(0).getReserveTime();
+
+                    // 수신자는 환자가 됨
+                    messageApiService.sendMessage("USER", userPhone, adminPhone, sendMsgFlag, sendReserveNo, userName, hospitalName, reserveDate, reserveTime);
+                }            
+            }   
+        }catch(Exception ex){
+            System.out.println(ex.toString());
+        } 
+
+        return bool;
+    }
 }
 
 

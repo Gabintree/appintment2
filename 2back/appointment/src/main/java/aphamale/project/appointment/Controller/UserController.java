@@ -17,6 +17,7 @@ import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.HospitalApiDto;
 import aphamale.project.appointment.Dto.HospitalReserveDto;
 import aphamale.project.appointment.Dto.UserInfoDto;
+import aphamale.project.appointment.Dto.Interface.GetCurrentReserveDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Repository.HospitalReserveRepository;
 import aphamale.project.appointment.Repository.UserInfoRepository;
@@ -229,7 +230,7 @@ public class UserController {
         String reserveNo = searchParam.get("reserveNo");
             
         try{
-            
+
             HospitalReserveDomain hospitalReserveDomain = hospitalReserveRepository.findByReserveNo(reserveNo);
             String remark = hospitalReserveDomain.getRemark();
             String alarmFlag = hospitalReserveDomain.getAlarmFlag();
@@ -245,5 +246,46 @@ public class UserController {
 
         return detailData; 
     }
+
+
+    // 팝업 기존 예약정보 조회
+    @PostMapping("/api/user/currentReserve")
+    public List<GetCurrentReserveDto> getUSerCurrentReserve(@RequestBody HospitalReserveDto hospitalReserveDto) {
+
+        String reserveNo = hospitalReserveDto.getReserveNo();        
+        List<GetCurrentReserveDto> currentReserveList = hospitalReserveService.currentReserveData(reserveNo);
+
+        if(currentReserveList == null){
+            return null;
+        }
+
+        return currentReserveList;
+    } 
+
     
+    // 예약 일자, 시간 변경하기
+    @PostMapping("/api/user/changeDateAndTime")
+    public boolean updateDateAndTime(@RequestBody HospitalReserveDto hospitalReserveDto) {
+
+        boolean updateResult = false;
+
+        String reserveNo = hospitalReserveDto.getReserveNo();
+        Timestamp reserveDate = hospitalReserveDto.getReserveDate();
+        Timestamp reserveTime = hospitalReserveDto.getReserveTime();
+
+        updateResult = hospitalReserveService.updateUserDateAndTime(reserveNo, reserveDate, reserveTime);
+
+        return updateResult;
+    } 
+  
+    // 사용자 예약 취소 버튼 
+    @PostMapping("/api/user/reserveUserCancel")
+    public boolean deleteReserveUserCancel(@RequestBody HospitalReserveDto hospitalReserveDto) {
+
+        String reserveNo = hospitalReserveDto.getReserveNo();
+
+        Boolean deleteResult = hospitalReserveService.deleteReserveUserCancel(reserveNo);
+
+        return deleteResult;
+    }
 }
