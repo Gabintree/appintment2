@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import moment from 'moment';
 import ReservePopup from "./ReservePopup";
 
 // axios 인스턴스
@@ -54,6 +55,14 @@ const UserDashboard = () => {
   const [hospitalInfo, setHospitalInfo] = useState(); // 팝업에 넘겨줄 병원 정보
   const navigate = useNavigate();
   const [error, setError] = useState("");
+
+  const nowDate = new Date();
+  const today = new Date().toISOString().split('T')[0]; // 오늘 날짜
+  const after3month =  new Date(nowDate.setMonth(nowDate.getMonth() + 3)).toISOString().split('T')[0]; // 3개월
+
+  const [searchFromDate, setSearchFromDate] = useState(today); // 조회일자 from
+  const [searchToDate, setSearchToDate] = useState(after3month); // 조회일자 to
+  const [filteredReservations, setFilteredReservations] = useState([]); // 필터링된 예약 데이터    
   
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 변경하기 팝업 상태
   const openPopup = (item) => {
@@ -352,6 +361,34 @@ const UserDashboard = () => {
     }
   }
 
+// 예약 내역 관리 조회 버튼
+async function handleSearchOnClick() {
+  console.log("예약 내역 관리 조회 클릭");
+  try{
+      const data = {
+          userId: userId,
+          fromDate: searchFromDate,
+          toDate : searchToDate
+      };
+
+      await requestApi.post("/api/user/reserveList", JSON.stringify(data))
+      .then(function (response){
+          if(response.status == 200){
+              console.log("예약 내역 조회 완료 : ", response.data); 
+              const changedData = response.data;
+              setFilteredReservations(changedData);
+          }            
+      })
+      .catch(function(error){
+          console.log("error : ", error);
+        })             
+  } catch (err) {
+      setError("작업 중 오류가 발생했습니다.");
+  }  
+};  
+
+  
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* 상단 인사말 및 마이페이지 */}
@@ -600,10 +637,17 @@ const UserDashboard = () => {
 
           {/* 날짜 및 조회 버튼 */}
           <div className="flex items-center mb-4 space-x-2">
-            <input type="date" className="border p-2 rounded" />
-            <span>-</span>
-            <input type="date" className="border p-2 rounded" placeholder="종료일" />
-            <button className="p-2 bg-teal-500 text-white rounded">조회</button>
+            <input type="date" 
+                   className="border p-2 rounded"
+                   value={searchFromDate} 
+                   onChange={(e) => setSearchFromDate(e.target.value)} />
+            <span>~ </span>
+            <input type="date" 
+                   className="border p-2 rounded" 
+                   value={searchToDate} 
+                   onChange={(e) => setSearchToDate(e.target.value)}/>
+            <button className="p-2 bg-teal-500 text-white rounded"
+                    onClick={handleSearchOnClick}>조회</button>
           </div>
 
           {/* 예약 내역 테이블 */}
@@ -622,26 +666,22 @@ const UserDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* 예약 내역 예시 */}
-                {[
-                  { id: '000001', date: '2024.09.09', time: '14:00', hospital: '오비오이비인후과', department: '이비인후과', status: '예약완료' },
-                  { id: '000014', date: '2024.09.09', time: '16:00', hospital: '마이아빠치과', department: '치과', status: '예약완료' },
-                  { id: '000027', date: '2024.09.11', time: '10:00', hospital: '내과내과', department: '내과', status: '변경완료' },
-                  { id: '000105', date: '2024.09.17', time: '11:00', hospital: '필피부과', department: '피부과', status: '예약완료' },
-                ].map((reservation) => (
-                  <tr key={reservation.id} className="text-center">
-                    <td className="border border-gray-300 p-2">{reservation.id}</td>
-                    <td className="border border-gray-300 p-2">{reservation.date}</td>
-                    <td className="border border-gray-300 p-2">{reservation.time}</td>
-                    <td className="border border-gray-300 p-2">{reservation.hospital}</td>
-                    <td className="border border-gray-300 p-2">{reservation.department}</td>
-                    <td className="border border-gray-300 p-2">{reservation.status}</td>
-                    <td className="border border-gray-300 p-2">
-                      <button className="text-teal-500">상세보기</button></td>
-                    <td className="border border-gray-300 p-2">{reservation.change}</td>
+                {filteredReservations.length > 0 ? (
+                  filteredReservations.map(reservation => (
+                    <tr key={reservation.reserveNo} className="text-center">
+                      <td className="border border-gray-300 p-2">{reservation.reserveNo}</td>
+                      <td className="border border-gray-300 p-2">{moment(reservation.reserveDate).format("yyyy-MM-DD")}</td>
+                      <td className="border border-gray-300 p-2">{reservation.reserveTime}</td>
+                      <td className="border border-gray-300 p-2">{reservation.hospitalName}</td>
+                      <td className="border border-gray-300 p-2">{reservation.subjectName}</td>
+                      <td className="border border-gray-300 p-2">{reservation.reserveStatus === "I" ? "예약완료" : reservation.reserveStatus === "U" ? "변경완료" : "취소완료"}</td>
+                      <td className="border border-gray-300 p-2">
+                        <button className="text-teal-500">상세보기</button></td>
+                      <td className="border border-gray-300 p-2">{!reservation.updateUser ? "-" : reservation.updateUser}</td>
 
-                  </tr>
-                ))}
+                    </tr>
+                  )) 
+                ) : (<tr><td colSpan="9">예약 내역이 없습니다.</td></tr>)}
               </tbody>
             </table>
           </div>

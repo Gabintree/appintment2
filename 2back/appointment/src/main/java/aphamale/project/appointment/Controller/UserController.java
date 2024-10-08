@@ -4,19 +4,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.sql.Timestamp;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import aphamale.project.appointment.Domain.HospitalInfoDomain;
 import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.HospitalApiDto;
-import aphamale.project.appointment.Dto.HospitalInfoDto;
 import aphamale.project.appointment.Dto.HospitalReserveDto;
 import aphamale.project.appointment.Dto.UserInfoDto;
+import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Repository.UserInfoRepository;
 import aphamale.project.appointment.Service.HospitalApiService;
 import aphamale.project.appointment.Service.HospitalReserveService;
@@ -190,5 +189,30 @@ public class UserController {
 
         return insertResult;
     }  
+
+    // 예약 내역 관리 조회 
+    @PostMapping("/api/user/reserveList")
+    public List<GetHospitalReserveListDto> getUSerReserveList(@RequestBody Map<String, String> searchParam) {
+
+        List<GetHospitalReserveListDto> reserveList = new ArrayList<GetHospitalReserveListDto>();
+
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd"); // 0000년 00월 00일
+        //SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm");// 00:00
+
+        try{
+
+            String userId = searchParam.get("userId");
+            Date fromDate = formatDate.parse(searchParam.get("fromDate"));
+            Date toDate = formatDate.parse(searchParam.get("toDate"));
+    
+            reserveList = hospitalReserveService.selectUserReserveList(userId, fromDate, toDate);
+
+        }catch(Exception ex){
+            System.out.println(ex.toString());
+        }
+
+        return reserveList; 
+    }
+
     
 }

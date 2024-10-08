@@ -31,10 +31,10 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
                    " where t1.reserve_no = :reserveNo ",  nativeQuery =true)
     List<GetHospitalReserveDetailDto> getItemReserveNo(String reserveNo);
 
-    // 예약 내역 조회
+    // 예약 내역 조회(관리자/병원)
     @Query(value = "select t1.reserve_no, " +
-                " t1.reserve_date, " +
-                " t1.reserve_time, " +
+                " date_format(t1.reserve_date, '%Y-%m-%d') as reserve_date, " +
+                " date_format(t1.reserve_time,'%H:%i') as reserve_time, " +
                 " t2.user_name, " +
                 " t2.birth_date, " +
                 " t3.subject_name, " +
@@ -106,5 +106,22 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
                    " where t1.reserve_no like :currentDate% ", nativeQuery = true)
     String getItemOfMaxReserveNo(String currentDate);
 
+
+    // 예약 내역 조회(사용자/환자)
+    @Query(value = "select t1.reserve_no, " +
+                   " date_format(t1.reserve_date, '%Y-%m-%d') as reserve_date, " +
+                   " date_format(t1.reserve_time,'%H:%i') as reserve_time, " + 
+                   " t2.hospital_name, " +
+                   " t3.subject_name, " +
+                   " t1.reserve_status, " +
+                   " t1.update_user " +    
+                   " from reserve t1 " +
+                   " inner join hospital_info t2 " +
+                   " on t1.group_id = t2.group_id " +
+                   " inner join subject_info t3 " +
+                   " on t1.subject_code = t3.subject_code " +
+                   " where t1.user_id = :userId " +
+                   " and t1.reserve_date between :fromDate and :toDate ", nativeQuery = true)
+    List<GetHospitalReserveListDto> getItemsOfByUserId(String userId, Date fromDate, Date toDate); 
 
 }

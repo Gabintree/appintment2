@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import aphamale.project.appointment.Domain.HospitalReserveDomain;
-import aphamale.project.appointment.Domain.UserInfoDomain;
 import aphamale.project.appointment.Dto.Interface.GetCurrentReserveDto;
 import aphamale.project.appointment.Dto.Interface.GetHospitalReserveListDto;
 import aphamale.project.appointment.Dto.Interface.GetSmsContentsDto;
@@ -22,17 +21,14 @@ public class HospitalReserveService {
 
     private final HospitalReserveRepository hospitalReserveRepository;
     private final MessageApiService messageApiService;
-    private final UserInfoRepository userInfoRepository;
 
     public HospitalReserveService(HospitalReserveRepository hospitalReserveRepository,
-                                  MessageApiService messageApiService,
-                                  UserInfoRepository userInfoRepository){
+                                  MessageApiService messageApiService){
         this.hospitalReserveRepository = hospitalReserveRepository;
         this.messageApiService = messageApiService;
-        this.userInfoRepository = userInfoRepository;
     }
 
-    // 예약 목록 조회 
+    // 예약 목록 조회(관리자)
     public List<GetHospitalReserveListDto> selectReserveList(String groupId, Date fromDate, Date toDate){
 
 
@@ -229,6 +225,18 @@ public class HospitalReserveService {
         }
         return updateResult;
     }
+
+    // 예약 목록 조회(사용자)
+    public List<GetHospitalReserveListDto> selectUserReserveList(String userId, Date fromDate, Date toDate){
+
+        // 데이터 담을 list 생성
+        List<GetHospitalReserveListDto> reserveList = new ArrayList<>();
+
+        reserveList = hospitalReserveRepository.getItemsOfByUserId(userId, fromDate, toDate);
+
+        return reserveList;
+    }
+
 }
 
 

@@ -7,8 +7,11 @@ import java.sql.Timestamp;
 public interface GetHospitalReserveListDto {
 
     String getReserveNo(); // 예약번호
-    Timestamp getReserveDate(); // 진료 예약일
-    Time getReserveTime(); // 진료 예약시간
+    String getReserveDate();
+    String getReserveTime();
+    String getHospitalName(); // 병원명
+    // Timestamp getReserveDate(); // 진료 예약일
+    // Time getReserveTime(); // 진료 예약시간
     String getUserName(); // 계정
     String getBirthDate(); // 생년월일
     String getSubjectName(); // 진료 과목
