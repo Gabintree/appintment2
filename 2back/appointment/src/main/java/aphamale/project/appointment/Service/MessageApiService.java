@@ -53,7 +53,7 @@ public class MessageApiService {
                     message.setFrom(adminPhone);
                     message.setTo(adminPhone); // 수신 대상자가 관리자일 때는, 수신/발신자 모두 병원 연락처.
                     if(sendMessageFlag.equals("I")){
-                        message.setText(hospitalName + "님, 신규 예약이 추가되었습니다. " + "\n"
+                        message.setText(hospitalName + "님, 예약이 추가되었습니다. " + "\n"
                                        + "환자명 : " + userName + "\n"
                                        + "예약 진료 일자 : " + reserveDate + "\n"
                                        + "예약 진료 시간 : " + reserveTime + "\n"
@@ -61,7 +61,7 @@ public class MessageApiService {
                                        + "감사합니다."); 
                     }
                     else if(sendMessageFlag.equals("U")){
-                        message.setText(hospitalName + "님, 신규 예약이 변경되었습니다. " + "\n"
+                        message.setText(hospitalName + "님, 예약이 변경되었습니다. " + "\n"
                                        + "환자명 : " + userName + "\n"
                                        + "변경 진료 일자 : " + reserveDate + "\n"
                                        + "변경 진료 시간 : " + reserveTime + "\n"
@@ -69,7 +69,7 @@ public class MessageApiService {
                                        + "감사합니다."); 
     
                     }else  if(sendMessageFlag.equals("D")){
-                        message.setText(hospitalName + "님, 신규 예약이 취소되었습니다. " + "\n"
+                        message.setText(hospitalName + "님, 예약이 취소되었습니다. " + "\n"
                                        + "환자명 : " + userName + "\n"
                                        + "취소 진료 일자 : " + reserveDate + "\n"
                                        + "취소 진료 시간 : " + reserveTime + "\n"
@@ -78,13 +78,6 @@ public class MessageApiService {
                     }
                     messageService.send(message);
                 }
-
-
-
-
-
-
-
             } catch(NurigoMessageNotReceivedException exception){
 
                   // 발송에 실패한 메시지 목록

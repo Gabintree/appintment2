@@ -39,12 +39,14 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
                 " t2.birth_date, " +
                 " t3.subject_name, " +
                 " t1.reserve_status, " +
-                " t1.update_user " +
+                " t4.hospital_name as update_user " +
             " from reserve t1 " +
             " inner join user_info t2" +
             " on t1.user_id = t2.user_id " +
             " inner join subject_info t3 " +
             " on t1.subject_code = t3.subject_code " +
+            " left outer join hospital_info t4 " +
+            " on t1.update_user = t4.group_id " + 
             " where t1.group_id = :groupId " +
             " and t1.reserve_date between :fromDate and :toDate ", nativeQuery =true)
     List<GetHospitalReserveListDto> getItemsOfByReserveNo(String groupId, Date fromDate, Date toDate); 
@@ -97,6 +99,12 @@ public interface HospitalReserveRepository extends JpaRepository<HospitalReserve
                     " where group_id = :groupId " +
                     " and date_format(t1.reserve_date, '%Y-%m-%d') = :reserveDate ", nativeQuery = true)
     List<String> getItemsOfBookedReserveDate(String groupId, String reserveDate);
+
+    // Max reserveNo 찾기
+    @Query(value = "select max(t1.reserve_no) as reserveNo " +
+                   " from reserve t1 " +
+                   " where t1.reserve_no like :currentDate% ", nativeQuery = true)
+    String getItemOfMaxReserveNo(String currentDate);
 
 
 }
